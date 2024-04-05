@@ -14,5 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileName: Diamond
   tileSprites:
-  - {fileID: 21300000, guid: f91c283a0ea62ba43a98b16c9009a906, type: 3}
-  - {fileID: 21300000, guid: 5e6dbd844d8be104f98f85807af741a9, type: 3}
+  - {fileID: 21300000, guid: 11c99b56ee46646c5bb87c923c842bf5, type: 3}
+  - {fileID: 21300000, guid: 28752e6363ef647849a08a8f60fcb88f, type: 3}
+  - {fileID: 21300000, guid: cbc61b4a54d3445aca8940cb5fadcabb, type: 3}
+  - {fileID: 21300000, guid: 43d034e16308f4e5bb57443833863495, type: 3}
+  - {fileID: 21300000, guid: 5f4e334b5dbcf41c181620203ebe1d39, type: 3}
+  - {fileID: 21300000, guid: dafe31402c771454d9f3926744c9272c, type: 3}
+  - {fileID: 21300000, guid: 7cf187ec3f5924a3ab60496cd6a5ba23, type: 3}
+  - {fileID: 21300000, guid: 9c2d1126c9bea4205a12481d6a812714, type: 3}
+  - {fileID: 21300000, guid: 21bf922d595064d038998785adf80d99, type: 3}
+  - {fileID: 21300000, guid: e0c437744954a49f2b39d1dbd87fa337, type: 3}

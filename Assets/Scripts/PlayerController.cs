@@ -11,25 +11,23 @@ public class PlayerController : MonoBehaviour
 
 
 
-    private Vector2 inputMovement = Vector2.zero;
+    private Vector2 inputMovement;
     Rigidbody2D rb;
     Animator anim;
 
     public GameObject equippedWeapon;
 
     [HideInInspector]
-    public Vector2 spawnPos;
+    public Vector3 spawnPos;
     public Vector2 mousePos;
     public TerrainGeneration terrainGeneration;
-    private List<GameObject> miningObject;
-
-
+    
     public void Spawn()
     {
         GetComponent<Transform>().position = spawnPos;
         rb = GetComponent<Rigidbody2D>();
         anim = transform.GetChild(0).GetComponent<Animator>();
-
+        
         EquipWeapon(gameObject);
     }
 
@@ -93,12 +91,10 @@ public class PlayerController : MonoBehaviour
             foreach (RaycastHit2D hit in hits)
             {
                 GameObject obj = hit.collider.gameObject;
-                Debug.Log("Interacted with: " + obj.name);
+                //Debug.Log(obj.name);
 
-                
-                if (obj.CompareTag("Ground"))
+                if (obj.CompareTag("Ground") || obj.CompareTag("Tree"))
                 {
-                    miningObject.Add(obj);
                     obj.SetActive(false);
                 }
             }

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2176940527481652978}
   - component: {fileID: 7041606045737982685}
   - component: {fileID: 7041606045737982686}
+  - component: {fileID: 1813396582}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -29,12 +30,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2476963587185052455}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 50, y: 39.759808, z: 0}
+  m_LocalPosition: {x: 50, y: 39.759808, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5285426820371033073}
-  - {fileID: 1158291326087111691}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -146,41 +146,21 @@ MonoBehaviour:
   moveSpeed: 5
   jumpHeight: 2.5
   onGround: 0
-  equippedWeapon: {fileID: 6805170423116255223, guid: 09a528dd68982dd4b9b88fa7362d81a2, type: 3}
+  equippedWeapon: {fileID: 0}
   spawnPos: {x: 50, y: 39.759808}
   mousePos: {x: 0, y: 0}
   terrainGeneration: {fileID: 0}
---- !u!1 &6880829253741525486
-GameObject:
+--- !u!210 &1813396582
+SortingGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1158291326087111691}
-  m_Layer: 0
-  m_Name: WeaponSlot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1158291326087111691
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6880829253741525486}
-  m_LocalRotation: {x: 0.0000001872535, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.14, y: 0.5, z: -0.12}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 9205273873539189360}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_GameObject: {fileID: 2476963587185052455}
+  m_Enabled: 1
+  m_SortingLayerID: -900868071
+  m_SortingLayer: 1
+  m_SortingOrder: 0
 --- !u!1001 &5285426820371427703
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -58,7 +58,7 @@ public class TerrainGeneration : MonoBehaviour
     {
         seed = Random.Range(-10000, 10000);
         DrawTextures();
-
+       
     }
 
     private void Start()
@@ -67,16 +67,15 @@ public class TerrainGeneration : MonoBehaviour
         GenerateTerrain();
         player.Spawn();
 
+        RefreshChunk();
     }
     private void FixedUpdate()
     {
-       // RefreshChunk();
+        RefreshChunk();
 
     }
 
-    private void Update()
-    {
-    }
+
 
     public void DrawTextures()
     {
@@ -109,7 +108,9 @@ public class TerrainGeneration : MonoBehaviour
                 GameObject newChunk = new GameObject();
                 newChunk.name = $"X{i}Y{j}";
                 newChunk.transform.parent = transform;
+                newChunk.transform.position = new Vector2((i * chunkSize) + 10, (j * chunkSize) + 10);
                 worldChunks[i, j] = newChunk;
+
             }
 
         }
@@ -119,15 +120,11 @@ public class TerrainGeneration : MonoBehaviour
     void RefreshChunk()
     {
 
-
-
         foreach (Transform child in transform)
         {
-            Debug.Log(child.name);
-            // 자식 오브젝트의 위치와 player의 위치 사이의 거리를 계산
-            float distance = Vector3.Distance(child.transform.position, player.transform.position);
 
-            // 만약 거리가 deactivationDistance 이상이면 비활성화
+            float distance = Vector2.Distance(child.transform.position, player.transform.position);
+
             if (distance >= chunkSize)
             {
                 child.gameObject.SetActive(false);
@@ -158,7 +155,7 @@ public class TerrainGeneration : MonoBehaviour
                 // 플레이어의 시작 위치
                 if (x == worldSize / 2)
                 {
-                    player.spawnPos = new Vector2(x, height + 2);
+                    player.spawnPos = new Vector3(x, height + 2, -1.5f);
                 }
 
                 if (y < height)
@@ -318,14 +315,13 @@ public class TerrainGeneration : MonoBehaviour
             {
                 newTile.AddComponent<BoxCollider2D>();
                 newTile.GetComponent<BoxCollider2D>().size = Vector2.one;
-                newTile.tag = "Ground";
+                newTile.tag = "Tree";
                 newTile.GetComponent<BoxCollider2D>().isTrigger = true;
             }
 
 
             int spriteIndex = Random.Range(0, tileSprites.Length);
             newTile.GetComponent<SpriteRenderer>().sprite = tileSprites[spriteIndex];
-
             newTile.name = tileSprites[0].name;
             newTile.transform.position = new Vector2(x + 0.5f, y + 0.5f);
 

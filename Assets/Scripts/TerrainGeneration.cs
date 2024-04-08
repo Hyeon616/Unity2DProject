@@ -23,7 +23,7 @@ public class TerrainGeneration : MonoBehaviour
     public int tallGrassChance = 10;
 
     [Header("Generation Settings")]
-    
+
     public float surfaceValue = 0.3f;
     public float heightMultiplier = 25f;
 
@@ -49,7 +49,6 @@ public class TerrainGeneration : MonoBehaviour
     private GameObject[,] worldChunks;
     private List<Vector2> worldTiles = new List<Vector2>();
 
-
     private void OnValidate()
     {
         DrawTextures();
@@ -67,6 +66,16 @@ public class TerrainGeneration : MonoBehaviour
         CreateChunks();
         GenerateTerrain();
         player.Spawn();
+
+    }
+    private void FixedUpdate()
+    {
+       // RefreshChunk();
+
+    }
+
+    private void Update()
+    {
     }
 
     public void DrawTextures()
@@ -106,6 +115,32 @@ public class TerrainGeneration : MonoBehaviour
         }
 
     }
+
+    void RefreshChunk()
+    {
+
+
+
+        foreach (Transform child in transform)
+        {
+            Debug.Log(child.name);
+            // 자식 오브젝트의 위치와 player의 위치 사이의 거리를 계산
+            float distance = Vector3.Distance(child.transform.position, player.transform.position);
+
+            // 만약 거리가 deactivationDistance 이상이면 비활성화
+            if (distance >= chunkSize)
+            {
+                child.gameObject.SetActive(false);
+            }
+            else
+            {
+                child.gameObject.SetActive(true);
+
+            }
+        }
+
+    }
+
 
     public void GenerateTerrain()
     {
@@ -252,6 +287,7 @@ public class TerrainGeneration : MonoBehaviour
         }
     }
 
+
     // 타일 생성
     public void PlaceTile(Sprite[] tileSprites, int x, int y, bool backGroundObject)
     {
@@ -261,8 +297,6 @@ public class TerrainGeneration : MonoBehaviour
 
             int chunkCoordX = Mathf.RoundToInt(x / chunkSize) * chunkSize;
             int chunkCoordY = Mathf.RoundToInt(y / chunkSize) * chunkSize;
-
-            
 
             chunkCoordX /= chunkSize;
             chunkCoordY /= chunkSize;
@@ -280,7 +314,13 @@ public class TerrainGeneration : MonoBehaviour
                 newTile.GetComponent<BoxCollider2D>().size = Vector2.one;
                 newTile.tag = "Ground";
             }
-
+            else
+            {
+                newTile.AddComponent<BoxCollider2D>();
+                newTile.GetComponent<BoxCollider2D>().size = Vector2.one;
+                newTile.tag = "Ground";
+                newTile.GetComponent<BoxCollider2D>().isTrigger = true;
+            }
 
 
             int spriteIndex = Random.Range(0, tileSprites.Length);
@@ -290,6 +330,7 @@ public class TerrainGeneration : MonoBehaviour
             newTile.transform.position = new Vector2(x + 0.5f, y + 0.5f);
 
             worldTiles.Add(newTile.transform.position - (Vector3.one * 0.5f));
+
         }
 
     }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,19 +7,30 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpHeight = 3f;
 
-
     [SerializeField] private bool onGround;
+
+
 
     private Vector2 inputMovement = Vector2.zero;
     Rigidbody2D rb;
     Animator anim;
 
+    public GameObject equippedWeapon;
+
+    [HideInInspector]
     public Vector2 spawnPos;
+    public Vector2 mousePos;
+    public TerrainGeneration terrainGeneration;
+    private List<GameObject> miningObject;
+
+
     public void Spawn()
     {
         GetComponent<Transform>().position = spawnPos;
         rb = GetComponent<Rigidbody2D>();
         anim = transform.GetChild(0).GetComponent<Animator>();
+
+        EquipWeapon(gameObject);
     }
 
     void Update()
@@ -62,6 +74,39 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+
+    private void OnMouse(InputValue inputValue)
+    {
+        mousePos = inputValue.Get<Vector2>();
+
+    }
+
+    private void OnAttack(InputValue inputValue)
+    {
+        anim.SetTrigger("Attack");
+
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(ray);
+        if (hits.Length > 0)
+        {
+            foreach (RaycastHit2D hit in hits)
+            {
+                GameObject obj = hit.collider.gameObject;
+                Debug.Log("Interacted with: " + obj.name);
+
+                
+                if (obj.CompareTag("Ground"))
+                {
+                    miningObject.Add(obj);
+                    obj.SetActive(false);
+                }
+            }
+        }
+        
+
+
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Ground"))
@@ -77,4 +122,28 @@ public class PlayerController : MonoBehaviour
             onGround = false;
         }
     }
+
+    public void EquipWeapon(GameObject player)
+    {
+        if (equippedWeapon == null)
+            return;
+
+        Transform[] AllData = player.GetComponentsInChildren<Transform>();
+
+        foreach (Transform weapon in AllData)
+        {
+            if (weapon.name == "Rig Weapon")
+            {
+
+                GameObject temp = Instantiate(equippedWeapon, transform.position, Quaternion.identity);
+                temp.transform.SetParent(weapon);
+                temp.transform.localPosition = new Vector3(0, 0, 0);
+
+            }
+        }
+    }
+
+
+
+
 }

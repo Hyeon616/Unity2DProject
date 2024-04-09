@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 using Random = UnityEngine.Random;
 
 public class TerrainGeneration : MonoBehaviour
@@ -8,6 +7,7 @@ public class TerrainGeneration : MonoBehaviour
 
     [Header("User")]
     public PlayerController player;
+
 
 
     [Header("Tile Atlas")]
@@ -47,7 +47,8 @@ public class TerrainGeneration : MonoBehaviour
     public OreClass[] ores;
 
     private GameObject[,] worldChunks;
-    private List<Vector2> worldTiles = new List<Vector2>();
+    [HideInInspector] public List<Vector2> worldTiles = new List<Vector2>();
+    [HideInInspector] public List<Vector2> removeTiles = new List<Vector2>();
 
     private void OnValidate()
     {
@@ -58,7 +59,7 @@ public class TerrainGeneration : MonoBehaviour
     {
         seed = Random.Range(-10000, 10000);
         DrawTextures();
-       
+
     }
 
     private void Start()
@@ -94,6 +95,8 @@ public class TerrainGeneration : MonoBehaviour
 
     }
 
+
+
     public void CreateChunks()
     {
         int numChunksX = worldSize / chunkSize;
@@ -108,13 +111,10 @@ public class TerrainGeneration : MonoBehaviour
                 GameObject newChunk = new GameObject();
                 newChunk.name = $"X{i}Y{j}";
                 newChunk.transform.parent = transform;
-                newChunk.transform.position = new Vector2((i * chunkSize) + 10, (j * chunkSize) + 10);
+                newChunk.transform.position = new Vector2((i * chunkSize) + chunkSize / 2, (j * chunkSize) + chunkSize / 2);
                 worldChunks[i, j] = newChunk;
-
             }
-
         }
-
     }
 
     void RefreshChunk()
@@ -141,7 +141,7 @@ public class TerrainGeneration : MonoBehaviour
 
     public void GenerateTerrain()
     {
-        Sprite[] tileSprites;
+        TileClass tileClass;
         for (int x = 0; x < worldSize; x++)
         {
 
@@ -151,7 +151,6 @@ public class TerrainGeneration : MonoBehaviour
             {
                 // PerlinNoise
                 height = Mathf.PerlinNoise((x + seed) * terrainFreq, seed * terrainFreq) * heightMultiplier + heightAddition;
-
                 // 플레이어의 시작 위치
                 if (x == worldSize / 2)
                 {
@@ -163,51 +162,55 @@ public class TerrainGeneration : MonoBehaviour
                     // 계층 별 맵 생성
                     if (y < height - xenLayerHeight)
                     {
-                        tileSprites = tileAtlas.tech.tileSprites;
+                        tileClass = tileAtlas.tech;
                         if (ores[3].spreadTexture.GetPixel(x, y).r > 0.5f && height - y > ores[3].maxSpawnHeight)
                         {
-                            tileSprites = tileAtlas.diamond.tileSprites;
+                            tileClass = tileAtlas.diamond;
                         }
                     }
                     else if (y < height - marsLayerHeight)
                     {
-                        tileSprites = tileAtlas.mars.tileSprites;
+                        tileClass = tileAtlas.mars;
 
                         if (ores[2].spreadTexture.GetPixel(x, y).r > 0.5f && height - y < ores[2].maxSpawnHeight)
                         {
-                            tileSprites = tileAtlas.gold.tileSprites;
+                            tileClass = tileAtlas.gold;
                         }
                     }
                     else if (y < height - dirtLayerHeight)
                     {
 
-                        tileSprites = tileAtlas.stone.tileSprites;
+                        tileClass = tileAtlas.stone;
 
                         if (ores[1].spreadTexture.GetPixel(x, y).r > 0.5f && height - y > ores[1].maxSpawnHeight)
                         {
-                            tileSprites = tileAtlas.iron.tileSprites;
+                            tileClass = tileAtlas.iron;
                         }
 
                     }
                     else if (y < height - 1)
                     {
-                        tileSprites = tileAtlas.dirt.tileSprites;
+                        tileClass = tileAtlas.dirt;
 
 
                         if (ores[0].spreadTexture.GetPixel(x, y).r > 0.5f && height - y < ores[0].maxSpawnHeight)
                         {
-                            tileSprites = tileAtlas.coal.tileSprites;
+                            tileClass = tileAtlas.coal;
                         }
                     }
                     else
                     {
                         // 지상
-                        tileSprites = tileAtlas.grass.tileSprites;
+                        tileClass = tileAtlas.grass;
+                    }
 
+                    if (tileClass.wallVariant != null)
+                    {
+                        //PlaceTile(tileClass.wallVariant, x, y);
 
                     }
 
-                    PlaceTile(tileSprites, x, y, false);
+                    PlaceTile(tileClass, x, y);
 
                     if (y >= height - 1)
                     {
@@ -231,7 +234,7 @@ public class TerrainGeneration : MonoBehaviour
                                 if (worldTiles.Contains(new Vector2(x, y)))
                                 {
                                     if (tileAtlas.tallGrass != null)
-                                        PlaceTile(tileAtlas.tallGrass.tileSprites, x, y, true);
+                                        PlaceTile(tileAtlas.tallGrass, x, y);
 
                                 }
                             }
@@ -270,7 +273,7 @@ public class TerrainGeneration : MonoBehaviour
         // 나무 기둥 생성
         for (int i = 0; i < treeHeight; i++)
         {
-            PlaceTile(tileAtlas.log.tileSprites, x, y + i, true);
+            PlaceTile(tileAtlas.log, x, y + i);
         }
 
         // 잎 생성
@@ -278,7 +281,7 @@ public class TerrainGeneration : MonoBehaviour
         {
             for (int j = 0; j < 3; j++)
             {
-                PlaceTile(tileAtlas.leaf.tileSprites, x + j - 1, y + treeHeight + i, true);
+                PlaceTile(tileAtlas.leaf, x + j - 1, y + treeHeight + i);
 
             }
         }
@@ -286,48 +289,67 @@ public class TerrainGeneration : MonoBehaviour
 
 
     // 타일 생성
-    public void PlaceTile(Sprite[] tileSprites, int x, int y, bool backGroundObject)
+    public void PlaceTile(TileClass tile, int x, int y)
     {
-        if (!worldTiles.Contains(new Vector2Int(x, y)) && InWorld(x, y))
+        bool backGroundObject = tile.inBackground;
+
+        if (InWorld(x, y))
         {
-            GameObject newTile = new GameObject();
-
-            int chunkCoordX = Mathf.RoundToInt(x / chunkSize) * chunkSize;
-            int chunkCoordY = Mathf.RoundToInt(y / chunkSize) * chunkSize;
-
-            chunkCoordX /= chunkSize;
-            chunkCoordY /= chunkSize;
-
-            chunkCoordX = Mathf.Clamp(chunkCoordX, 0, worldChunks.GetLength(0) - 1);
-            chunkCoordY = Mathf.Clamp(chunkCoordY, 0, worldChunks.GetLength(1) - 1);
-
-            newTile.transform.parent = worldChunks[chunkCoordX, chunkCoordY].transform;
-
-            newTile.AddComponent<SpriteRenderer>();
-
-            if (!backGroundObject)
+            if (!worldTiles.Contains(new Vector2Int(x, y)))
             {
-                newTile.AddComponent<BoxCollider2D>();
-                newTile.GetComponent<BoxCollider2D>().size = Vector2.one;
-                newTile.tag = "Ground";
+                GameObject newTile = new GameObject();
+
+                int chunkCoordX = Mathf.RoundToInt(x / chunkSize) * chunkSize;
+                int chunkCoordY = Mathf.RoundToInt(y / chunkSize) * chunkSize;
+
+                chunkCoordX /= chunkSize;
+                chunkCoordY /= chunkSize;
+
+                chunkCoordX = Mathf.Clamp(chunkCoordX, 0, worldChunks.GetLength(0) - 1);
+                chunkCoordY = Mathf.Clamp(chunkCoordY, 0, worldChunks.GetLength(1) - 1);
+
+                newTile.transform.parent = worldChunks[chunkCoordX, chunkCoordY].transform;
+
+                newTile.AddComponent<SpriteRenderer>();
+
+                if (!backGroundObject)
+                {
+                    newTile.AddComponent<BoxCollider2D>();
+                    newTile.GetComponent<BoxCollider2D>().size = Vector2.one;
+                    newTile.tag = "Ground";
+                }
+                //else
+                //{
+                //    newTile.AddComponent<BoxCollider2D>();
+                //    newTile.GetComponent<BoxCollider2D>().size = Vector2.one;
+                //    newTile.tag = "Tree";
+                //    newTile.GetComponent<BoxCollider2D>().isTrigger = true;
+                //}
+
+
+                int spriteIndex = Random.Range(0, tile.tileSprites.Length);
+                newTile.GetComponent<SpriteRenderer>().sprite = tile.tileSprites[spriteIndex];
+                if (tile.inBackground)
+                {
+                    newTile.GetComponent<SpriteRenderer>().sortingOrder = -10;
+                    newTile.GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f);
+                }
+                else
+                {
+                    newTile.GetComponent<SpriteRenderer>().sortingOrder = -5;
+
+                }
+
+                newTile.name = tile.tileSprites[0].name;
+                newTile.transform.position = new Vector2(x, y);
+
+                worldTiles.Add(newTile.transform.position);
+
             }
-            else
-            {
-                newTile.AddComponent<BoxCollider2D>();
-                newTile.GetComponent<BoxCollider2D>().size = Vector2.one;
-                newTile.tag = "Tree";
-                newTile.GetComponent<BoxCollider2D>().isTrigger = true;
-            }
-
-
-            int spriteIndex = Random.Range(0, tileSprites.Length);
-            newTile.GetComponent<SpriteRenderer>().sprite = tileSprites[spriteIndex];
-            newTile.name = tileSprites[0].name;
-            newTile.transform.position = new Vector2(x + 0.5f, y + 0.5f);
-
-            worldTiles.Add(newTile.transform.position - (Vector3.one * 0.5f));
-
         }
+
+
+
 
     }
     private bool InWorld(int x, int y)

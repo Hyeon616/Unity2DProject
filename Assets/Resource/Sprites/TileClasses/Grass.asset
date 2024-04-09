@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: Grass
   m_EditorClassIdentifier: 
   tileName: Grass
+  wallVariant: {fileID: 11400000, guid: 77b3ed3ffaf9fd044a232d83a58821e3, type: 2}
   tileSprites:
   - {fileID: 21300000, guid: 78b4ba8a8c817014a9e945e9a359d312, type: 3}
+  inBackground: 0
+  isDropItem: 1

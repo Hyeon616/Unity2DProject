@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TileAtlas
   m_EditorClassIdentifier: 
   grass: {fileID: 11400000, guid: 67503db06bbd9314fa744686ceb8a0d3, type: 2}
-  dirt: {fileID: 11400000, guid: 6641514b7b016b448b1ec624ecbd738e, type: 2}
+  dirt: {fileID: 11400000, guid: 4e3141a3df2ac2d4b8db64dadb917efe, type: 2}
   stone: {fileID: 11400000, guid: 441b7a6785f98ad4b9e538671a9df39a, type: 2}
   log: {fileID: 11400000, guid: 9dbf6c7afc560a24485ebd48372f9deb, type: 2}
   leaf: {fileID: 11400000, guid: 72c8c6016a1d598488ab0fcc55a52fe6, type: 2}

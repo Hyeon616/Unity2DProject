@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Coal
   m_EditorClassIdentifier: 
   tileName: Coal
+  wallVariant: {fileID: 11400000, guid: 6641514b7b016b448b1ec624ecbd738e, type: 2}
   tileSprites:
   - {fileID: 21300000, guid: ff0c48b2424b7440f8e04e71b57425e7, type: 3}
   - {fileID: 21300000, guid: 1e1dd1bf940e945559dc9e1e74de440c, type: 3}
@@ -20,3 +21,4 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 193106d31d9e441fab9dd18bd198b8c6, type: 3}
   - {fileID: 21300000, guid: e071aa22fdcd84e19beaa106103ebaf4, type: 3}
   inBackground: 0
+  isDropItem: 1

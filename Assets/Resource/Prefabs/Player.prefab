@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 2176940527481652978}
   - component: {fileID: 7041606045737982685}
   - component: {fileID: 7041606045737982686}
-  - component: {fileID: 1813396582}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -52,7 +51,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.1, y: 0.75}
-  m_Size: {x: 0.375, y: 1.9}
+  m_Size: {x: 0.5, y: 1.9}
   m_Direction: 0
 --- !u!50 &6230303044175570719
 Rigidbody2D:
@@ -146,21 +145,10 @@ MonoBehaviour:
   moveSpeed: 5
   jumpHeight: 2.5
   onGround: 0
-  equippedWeapon: {fileID: 0}
-  spawnPos: {x: 50, y: 39.759808}
+  equippedWeapon: {fileID: 6805170423116255223, guid: b77dafe2600b4074fa4c01a5301fc6ec, type: 3}
+  spawnPos: {x: 50, y: 39.759808, z: 0}
   mousePos: {x: 0, y: 0}
   terrainGeneration: {fileID: 0}
---- !u!210 &1813396582
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2476963587185052455}
-  m_Enabled: 1
-  m_SortingLayerID: -900868071
-  m_SortingLayer: 1
-  m_SortingOrder: 0
 --- !u!1001 &5285426820371427703
 PrefabInstance:
   m_ObjectHideFlags: 0

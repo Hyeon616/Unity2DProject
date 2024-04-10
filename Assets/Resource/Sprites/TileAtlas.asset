@@ -22,6 +22,11 @@ MonoBehaviour:
   mars: {fileID: 11400000, guid: e75bac01bd6b5b943806472cb33cfd79, type: 2}
   snow: {fileID: 11400000, guid: 1497d3b1b44fd1c4f8ef17da8e76d0a0, type: 2}
   sand: {fileID: 11400000, guid: f8aae5836eb98184bbc3214faea1f15e, type: 2}
+  grassWall: {fileID: 11400000, guid: 9df889b7a6b0b7c479fc2dec6b527aa1, type: 2}
+  dirtWall: {fileID: 11400000, guid: 01907fcf4ada43a4eb5fd5baac85b870, type: 2}
+  stoneWall: {fileID: 11400000, guid: 17de1e4cb7574494f92286a1eb6d2e22, type: 2}
+  marsWall: {fileID: 11400000, guid: a51229661b4ba024389af1309763249d, type: 2}
+  techWall: {fileID: 11400000, guid: 5b844a3928d95dd4a8f74aa159a67ace, type: 2}
   coal: {fileID: 11400000, guid: 906e31fbc528a8847a463bf2ad7d0534, type: 2}
   iron: {fileID: 11400000, guid: 329ff6543ccd27e45aac7bb20ea7295e, type: 2}
   gold: {fileID: 11400000, guid: 212b694b70aafdc4f898b12a3680ec38, type: 2}

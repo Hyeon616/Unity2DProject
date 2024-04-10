@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private bool onGround;
 
-    
     private Vector2 inputMovement;
     Rigidbody2D rb;
     Animator anim;
@@ -22,16 +21,19 @@ public class PlayerController : MonoBehaviour
     public Vector3 spawnPos;
     public Vector2 mousePos;
     public TerrainGeneration terrainGeneration;
-    public GameObject dropItem;
-    public TileClass selectTile;
+
+    public void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        anim = transform.GetChild(0).GetComponent<Animator>();
+    }
 
     public void Spawn()
     {
         GetComponent<Transform>().position = spawnPos;
-        rb = GetComponent<Rigidbody2D>();
-        anim = transform.GetChild(0).GetComponent<Animator>();
         
-        EquipWeapon(gameObject);
+        
+        //EquipWeapon(gameObject);
     }
 
     void Update()
@@ -88,8 +90,12 @@ public class PlayerController : MonoBehaviour
         anim.SetTrigger("Attack");
 
         mousePos = Mouse.current.position.ReadValue();
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(mousePos);
+        int mousePosX = Mathf.RoundToInt(mousePosition.x);
+        int mousePosY = Mathf.RoundToInt(mousePosition.y);
 
-        PlayerTileControll();
+
+        terrainGeneration.RemoveTile(mousePosX, mousePosY);
 
 
     }
@@ -129,55 +135,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void PlayerTileControll()
-    {
-        terrainGeneration.removeTiles.Clear();
-
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(mousePos);
-        int mousePosX = Mathf.RoundToInt(mousePosition.x);
-        int mousePosY = Mathf.RoundToInt(mousePosition.y);
-
-
-        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(ray);
-
-        if (hits.Length > 0)
-        {
-            foreach (RaycastHit2D hit in hits)
-            {
-                GameObject obj = hit.collider.gameObject;
-                Vector2 objPos = obj.transform.position;
-                if (obj.CompareTag("Ground") || obj.CompareTag("Tree"))
-                {
-
-                    terrainGeneration.removeTiles.Add(objPos);
-                    Destroy(obj);
-
-                    // 추후에 드랍되는아이템, 드랍되지않는아이템 구분 
-                    GameObject dropTile = Instantiate(dropItem, new Vector2(objPos.x, objPos.y + 0.5f), Quaternion.identity);
-                    dropTile.GetComponent<SpriteRenderer>().sprite = obj.GetComponent<SpriteRenderer>().sprite;
-
-                }
-                else
-                {
-
-                    if (obj.CompareTag("Player"))
-                        return;
-                    if (Vector2.Distance(mousePosition, gameObject.transform.position) > 1f)
-                    {
-
-                        terrainGeneration.PlaceTile(selectTile, mousePosX, mousePosY);
-                    }
-                }
-            }
-
-            foreach (var obj in terrainGeneration.removeTiles)
-            {
-                terrainGeneration.worldTiles.Remove(obj);
-
-            }
-        }
-    }
+    
 
 
 

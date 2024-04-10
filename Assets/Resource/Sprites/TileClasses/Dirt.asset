@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Dirt
   m_EditorClassIdentifier: 
   tileName: Dirt
-  wallVariant: {fileID: 11400000, guid: 6641514b7b016b448b1ec624ecbd738e, type: 2}
+  wallVariant: {fileID: 11400000, guid: 358449643451ded498ed19ea44dd10b4, type: 2}
   tileSprites:
   - {fileID: 21300000, guid: d33fc4ca3ea63400ab243153d038037f, type: 3}
   - {fileID: 21300000, guid: 34905f635396c4a668ed091f027c0d78, type: 3}
@@ -23,4 +23,5 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 42ce57855682240f9b9844875a531006, type: 3}
   - {fileID: 21300000, guid: 9d79130f29029495c9983fefe8d88a20, type: 3}
   inBackground: 0
-  isDropItem: 1
+  tileDrop: {fileID: 21300000, guid: d33fc4ca3ea63400ab243153d038037f, type: 3}
+  naturallyPlaced: 1

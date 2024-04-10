@@ -13,19 +13,9 @@ MonoBehaviour:
   m_Name: Tech_Wall
   m_EditorClassIdentifier: 
   tileName: Tech_Wall
-  wallVariant: {fileID: 0}
+  wallVariant: {fileID: 11400000, guid: 7e57d607dd02d2e49a407bf97b17562d, type: 2}
   tileSprites:
   - {fileID: 21300000, guid: b6d7f707af9004a48b62320f621ea74b, type: 3}
-  - {fileID: 21300000, guid: 1928d62d4b1304faeab87a003eeadfad, type: 3}
-  - {fileID: 21300000, guid: 648a8ce8f41c84c4d89ab9718c5b55bc, type: 3}
-  - {fileID: 21300000, guid: 5d6561e389b90475c93ecdbb7fa65e20, type: 3}
-  - {fileID: 21300000, guid: 4f6c258d4d1dd4472ab3b389b78bf09d, type: 3}
-  - {fileID: 21300000, guid: d8adde2ffbd044af3962be2adfd520ef, type: 3}
-  - {fileID: 21300000, guid: af000340dc9684ff5981d44701598ca6, type: 3}
-  - {fileID: 21300000, guid: 419bbd891cd4846409183b3fdbc7a0c2, type: 3}
-  - {fileID: 21300000, guid: 3f97fddabdd0142caaa191483bc68bff, type: 3}
-  - {fileID: 21300000, guid: 457cf72d126f54651acb9147904319a5, type: 3}
-  - {fileID: 21300000, guid: 3d4eba604e9ae4c7bb3b64ba0a32b246, type: 3}
-  - {fileID: 21300000, guid: 48d555809fd184b0bbd4a45d61865313, type: 3}
   inBackground: 1
-  isDropItem: 1
+  isDropItem: {fileID: 0}
+  naturallyPlaced: 0

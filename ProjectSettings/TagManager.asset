@@ -6,11 +6,21 @@ TagManager:
   tags:
   - Ground
   - Tree
+  - Dirt
+  - Grass
+  - Stone
+  - Iron
+  - Mars
+  - Tech
+  - Diamond
+  - Coal
+  - Log
+  - Leaves
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
   - Item

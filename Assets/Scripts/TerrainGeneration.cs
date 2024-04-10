@@ -4,11 +4,18 @@ using Random = UnityEngine.Random;
 
 public class TerrainGeneration : MonoBehaviour
 {
+    [Header("Lighting")]
+    public Texture2D worldTilesMap;
+    public Material lightShader;
+    public float groundLightThreshold = 0.7f;
+    public float airLightThreshold = 0.85f;
+    public float lightRadius = 7f;
+    List<Vector2Int> unlitBlocks = new List<Vector2Int>();
+
 
     [Header("User")]
     public PlayerController player;
-
-
+    public GameObject tileDrop;
 
     [Header("Tile Atlas")]
     public TileAtlas tileAtlas;
@@ -47,8 +54,14 @@ public class TerrainGeneration : MonoBehaviour
     public OreClass[] ores;
 
     private GameObject[,] worldChunks;
-    [HideInInspector] public List<Vector2> worldTiles = new List<Vector2>();
-    [HideInInspector] public List<Vector2> removeTiles = new List<Vector2>();
+
+    //private List<Vector2> worldTiles = new List<Vector2>();
+    //private List<Vector2> worldTileObjects = new List<Vector2>();
+
+    private GameObject[,] world_ForegroundObjects;
+    private GameObject[,] world_BackgroundObjects;
+    private TileClass[,] world_BackgroundTiles;
+    private TileClass[,] world_ForegroundTiles;
 
     private void OnValidate()
     {
@@ -57,6 +70,12 @@ public class TerrainGeneration : MonoBehaviour
 
     private void Awake()
     {
+        world_ForegroundTiles = new TileClass[worldSize, worldSize];
+        world_BackgroundTiles = new TileClass[worldSize, worldSize];
+        world_ForegroundObjects = new GameObject[worldSize, worldSize];
+        world_BackgroundObjects = new GameObject[worldSize, worldSize];
+
+
         seed = Random.Range(-10000, 10000);
         DrawTextures();
 
@@ -64,11 +83,40 @@ public class TerrainGeneration : MonoBehaviour
 
     private void Start()
     {
+        
+        // light 초기화
+        worldTilesMap = new Texture2D(worldSize, worldSize);
+        worldTilesMap.filterMode = FilterMode.Point;
+        lightShader.SetTexture("_ShadowTex", worldTilesMap);
+
+        for (int x = 0; x < worldSize; x++)
+        {
+            for (int y = 0; y < worldSize; y++)
+            {
+                worldTilesMap.SetPixel(x, y, Color.white);
+            }
+        }
+        worldTilesMap.Apply();
+
+        // Map 초기화
         CreateChunks();
         GenerateTerrain();
         player.Spawn();
 
-        RefreshChunk();
+        for (int x = 0; x < worldSize; x++)
+        {
+            for (int y = 0; y < worldSize; y++)
+            {
+                if (worldTilesMap.GetPixel(x, y) == Color.white)
+                {
+                    // x , y, 강도, 반복횟수
+                    LightBlock(x, y, 1f, 0);
+                }
+            }
+
+        }
+
+
     }
     private void FixedUpdate()
     {
@@ -125,7 +173,7 @@ public class TerrainGeneration : MonoBehaviour
 
             float distance = Vector2.Distance(child.transform.position, player.transform.position);
 
-            if (distance >= chunkSize)
+            if (distance >= chunkSize + 10)
             {
                 child.gameObject.SetActive(false);
             }
@@ -142,7 +190,8 @@ public class TerrainGeneration : MonoBehaviour
     public void GenerateTerrain()
     {
         TileClass tileClass;
-        for (int x = 0; x < worldSize; x++)
+
+        for (int x = 0; x < worldSize - 1; x++)
         {
 
             float height;
@@ -163,10 +212,12 @@ public class TerrainGeneration : MonoBehaviour
                     if (y < height - xenLayerHeight)
                     {
                         tileClass = tileAtlas.tech;
+
                         if (ores[3].spreadTexture.GetPixel(x, y).r > 0.5f && height - y > ores[3].maxSpawnHeight)
                         {
                             tileClass = tileAtlas.diamond;
                         }
+
                     }
                     else if (y < height - marsLayerHeight)
                     {
@@ -176,6 +227,7 @@ public class TerrainGeneration : MonoBehaviour
                         {
                             tileClass = tileAtlas.gold;
                         }
+
                     }
                     else if (y < height - dirtLayerHeight)
                     {
@@ -197,20 +249,18 @@ public class TerrainGeneration : MonoBehaviour
                         {
                             tileClass = tileAtlas.coal;
                         }
+
                     }
                     else
                     {
                         // 지상
                         tileClass = tileAtlas.grass;
-                    }
-
-                    if (tileClass.wallVariant != null)
-                    {
-                        //PlaceTile(tileClass.wallVariant, x, y);
 
                     }
 
-                    PlaceTile(tileClass, x, y);
+
+                    PlaceTile(tileClass, x, y, true);
+                    // PlaceBackGround(tileBase, x, y);
 
                     if (y >= height - 1)
                     {
@@ -219,7 +269,7 @@ public class TerrainGeneration : MonoBehaviour
                         if (tree == 1)
                         {
                             // 나무 생성
-                            if (worldTiles.Contains(new Vector2(x, y)))
+                            if (GetTileFromWorld(x, y))
                             {
                                 GenerateTree(Random.Range(minTreeHeight, maxTreeHeight), x, y + 1);
 
@@ -227,14 +277,14 @@ public class TerrainGeneration : MonoBehaviour
                         }
                         else
                         {
-                            int i = Random.Range(0, tallGrassChance);
+                            int i = Random.Range(0, tallGrassChance+1);
                             // 식물 생성
                             if (i == 1)
                             {
-                                if (worldTiles.Contains(new Vector2(x, y)))
+                                if ((GetTileFromWorld(x, y)))
                                 {
                                     if (tileAtlas.tallGrass != null)
-                                        PlaceTile(tileAtlas.tallGrass, x, y);
+                                        PlaceTile(tileAtlas.tallGrass, x, y, true);
 
                                 }
                             }
@@ -245,6 +295,9 @@ public class TerrainGeneration : MonoBehaviour
 
             }
         }
+
+        worldTilesMap.Apply();
+
     }
 
     public void GenerateNoiseTexture(float frequeny, float limit, Texture2D noiseTexture)
@@ -273,7 +326,7 @@ public class TerrainGeneration : MonoBehaviour
         // 나무 기둥 생성
         for (int i = 0; i < treeHeight; i++)
         {
-            PlaceTile(tileAtlas.log, x, y + i);
+            PlaceTile(tileAtlas.log, x, y + i, true);
         }
 
         // 잎 생성
@@ -281,7 +334,7 @@ public class TerrainGeneration : MonoBehaviour
         {
             for (int j = 0; j < 3; j++)
             {
-                PlaceTile(tileAtlas.leaf, x + j - 1, y + treeHeight + i);
+                PlaceTile(tileAtlas.leaf, x + j - 1, y + treeHeight + i, true);
 
             }
         }
@@ -289,73 +342,414 @@ public class TerrainGeneration : MonoBehaviour
 
 
     // 타일 생성
-    public void PlaceTile(TileClass tile, int x, int y)
+    public void PlaceTile(TileClass tile, int x, int y, bool isNaturallyPlaced)
     {
-        bool backGroundObject = tile.inBackground;
+
 
         if (InWorld(x, y))
         {
-            if (!worldTiles.Contains(new Vector2Int(x, y)))
+
+            GameObject newTile = new GameObject();
+
+            int chunkCoordX = Mathf.RoundToInt(x / chunkSize) * chunkSize;
+            int chunkCoordY = Mathf.RoundToInt(y / chunkSize) * chunkSize;
+
+            chunkCoordX /= chunkSize;
+            chunkCoordY /= chunkSize;
+
+            chunkCoordX = Mathf.Clamp(chunkCoordX, 0, worldChunks.GetLength(0) - 1);
+            chunkCoordY = Mathf.Clamp(chunkCoordY, 0, worldChunks.GetLength(1) - 1);
+
+            newTile.transform.parent = worldChunks[chunkCoordX, chunkCoordY].transform;
+
+            newTile.AddComponent<SpriteRenderer>();
+            int spriteIndex = Random.Range(0, tile.tileSprites.Length);
+            newTile.GetComponent<SpriteRenderer>().sprite = tile.tileSprites[spriteIndex];
+
+            worldTilesMap.SetPixel(x, y, Color.black);
+
+            if (tile.inBackground)
             {
-                GameObject newTile = new GameObject();
+                newTile.GetComponent<SpriteRenderer>().sortingOrder = -10;
 
-                int chunkCoordX = Mathf.RoundToInt(x / chunkSize) * chunkSize;
-                int chunkCoordY = Mathf.RoundToInt(y / chunkSize) * chunkSize;
-
-                chunkCoordX /= chunkSize;
-                chunkCoordY /= chunkSize;
-
-                chunkCoordX = Mathf.Clamp(chunkCoordX, 0, worldChunks.GetLength(0) - 1);
-                chunkCoordY = Mathf.Clamp(chunkCoordY, 0, worldChunks.GetLength(1) - 1);
-
-                newTile.transform.parent = worldChunks[chunkCoordX, chunkCoordY].transform;
-
-                newTile.AddComponent<SpriteRenderer>();
-
-                if (!backGroundObject)
+                if (tile.name.ToLower().Contains("wall"))
                 {
-                    newTile.AddComponent<BoxCollider2D>();
-                    newTile.GetComponent<BoxCollider2D>().size = Vector2.one;
-                    newTile.tag = "Ground";
-                }
-                //else
-                //{
-                //    newTile.AddComponent<BoxCollider2D>();
-                //    newTile.GetComponent<BoxCollider2D>().size = Vector2.one;
-                //    newTile.tag = "Tree";
-                //    newTile.GetComponent<BoxCollider2D>().isTrigger = true;
-                //}
-
-
-                int spriteIndex = Random.Range(0, tile.tileSprites.Length);
-                newTile.GetComponent<SpriteRenderer>().sprite = tile.tileSprites[spriteIndex];
-                if (tile.inBackground)
-                {
-                    newTile.GetComponent<SpriteRenderer>().sortingOrder = -10;
                     newTile.GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f);
                 }
                 else
                 {
-                    newTile.GetComponent<SpriteRenderer>().sortingOrder = -5;
+                    worldTilesMap.SetPixel(x, y, Color.white);
+                }
+            }
+            else
+            {
+                newTile.GetComponent<SpriteRenderer>().sortingOrder = -5;
+                newTile.AddComponent<BoxCollider2D>();
+                newTile.GetComponent<BoxCollider2D>().size = Vector2.one;
+                newTile.tag = "Ground";
+            }
+
+            newTile.name = tile.tileSprites[0].name;
+            newTile.transform.position = new Vector2(x, y );
+
+            TileClass newTileClass = TileClass.CreateInstance(tile, isNaturallyPlaced);
+
+            AddObjectToWorld(x, y, newTile, newTileClass);
+            AddTileToWorld(x, y, newTileClass);
+
+
+        }
+    }
+
+    public void RemoveTile(int x, int y)
+    {
+        /*
+        worldTileObjects.Clear();
+
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(player.mousePos);
+        int mousePosX = Mathf.RoundToInt(mousePosition.x);
+        int mousePosY = Mathf.RoundToInt(mousePosition.y);
+
+        //TileClass selectTile;
+
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(ray);
+
+
+        if (hits.Length > 0)
+        {
+            foreach (RaycastHit2D hit in hits)
+            {
+                GameObject obj = hit.collider.gameObject;
+                Vector2 objPos = obj.transform.position;
+
+
+
+                if (obj.layer == 3)
+                {
+                    worldTileObjects.Add(objPos);
+                    Destroy(obj);
+
+                    foreach (var tile in worldTileObjects)
+                    {
+                        worldTiles.Remove(tile);
+                    }
+
+                    worldTilesMap.SetPixel(mousePosX, mousePosY, Color.white);
+                    LightBlock(mousePosX, mousePosY, 1f, 0);
+
+                    // 추후에 드랍되는아이템, 드랍되지않는아이템 구분 
+                    GameObject dropTile = Instantiate(dropItem, new Vector2(objPos.x, objPos.y + 0.5f), Quaternion.identity);
+                    dropTile.GetComponent<SpriteRenderer>().sprite = obj.GetComponent<SpriteRenderer>().sprite;
 
                 }
+                else
+                {
 
-                newTile.name = tile.tileSprites[0].name;
-                newTile.transform.position = new Vector2(x, y);
+                    if (obj.CompareTag("Player"))
+                        return;
+                    if (Vector2.Distance(mousePosition, gameObject.transform.position) > 1f)
+                    {
 
-                worldTiles.Add(newTile.transform.position);
+                        //PlaceTile(selectTile, mousePosX, mousePosY);
+                    }
+                }
+
 
             }
         }
 
+        worldTilesMap.Apply();*/
+        if (GetTileFromWorld(x, y) && InWorld(x,y))
+        {
+            TileClass tile = GetTileFromWorld(x, y);
+            RemoveTileFromWorld(x, y);
 
+            if (tile.wallVariant != null)
+            {
+                
+                if (tile.naturallyPlaced)
+                {
+                    PlaceTile(tile.wallVariant, x, y, true);
+                }
+            }
+            else
+            {
+                worldTilesMap.SetPixel(x, y, Color.white);
+                worldTilesMap.Apply();
+                LightBlock(x, y, 1f, 0);
+            }
 
+            //drop tile
+            if (tile.tileDrop)
+            {
+                GameObject newtileDrop = Instantiate(tileDrop, new Vector2(x, y + 0.5f), Quaternion.identity);
+                newtileDrop.GetComponent<SpriteRenderer>().sprite = tile.tileDrop;
+                //ItemClass tileDropItem = new ItemClass(tile.tileDrop);
+                //newtileDrop.GetComponent<DropController>().item = tileDropItem;
+            }
+
+            Destroy(GetObjectFromWorld(x, y));
+            RemoveObjectFromWorld(x, y);
+        }
 
     }
+
+    public bool CheckTile(TileClass tile, int x, int y, bool isNaturallyPlaced)
+    {
+        if (x >= 0 && x <= worldSize && y >= 0 && y <= worldSize)
+        {
+            if (tile.inBackground)
+            {
+                if (GetTileFromWorld(x + 1, y) || GetTileFromWorld(x - 1, y) || GetTileFromWorld(x, y + 1) || GetTileFromWorld(x, y - 1))
+                {
+                    if (!GetTileFromWorld(x, y))
+                    {
+                        RemoveLightSource(x, y);
+                        PlaceTile(tile, x, y, isNaturallyPlaced);
+
+                        return true;
+                    }
+                    else
+                    {
+                        if (!GetTileFromWorld(x, y).inBackground)
+                        {
+                            RemoveLightSource(x, y);
+                            PlaceTile(tile, x, y, isNaturallyPlaced);
+
+                            return true;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (GetTileFromWorld(x + 1, y) || GetTileFromWorld(x - 1, y) || GetTileFromWorld(x, y + 1) || GetTileFromWorld(x, y - 1))
+                {
+                    if (!GetTileFromWorld(x, y))
+                    {
+                        RemoveLightSource(x, y);
+                        PlaceTile(tile, x, y, isNaturallyPlaced);
+
+                        return true;
+                    }
+                    else
+                    {
+                        if (GetTileFromWorld(x, y).inBackground)
+                        {
+                            RemoveLightSource(x, y);
+                            PlaceTile(tile, x, y, isNaturallyPlaced);
+
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    void AddTileToWorld(int x, int y, TileClass tile)
+    {
+        if (tile.inBackground)
+        {
+            world_BackgroundTiles[x, y] = tile;
+        }
+        else
+        {
+            world_ForegroundTiles[x, y] = tile;
+        }
+    }
+
+    void RemoveTileFromWorld(int x, int y)
+    {
+        if (world_ForegroundTiles[x, y] != null)
+        {
+            world_ForegroundTiles[x, y] = null;
+        }
+        else if (world_BackgroundTiles[x, y] != null)
+        {
+            world_BackgroundTiles[x, y] = null;
+        }
+    }
+
+    TileClass GetTileFromWorld(int x, int y)
+    {
+        if (world_ForegroundTiles[x, y] != null)
+        {
+            return world_ForegroundTiles[x, y];
+        }
+        else if (world_BackgroundTiles[x, y] != null)
+        {
+            return world_BackgroundTiles[x, y];
+        }
+        return null;
+    }
+
+    void AddObjectToWorld(int x, int y, GameObject tileObject, TileClass tile)
+    {
+        if (tile.inBackground)
+        {
+            world_BackgroundObjects[x, y] = tileObject;
+        }
+        else
+        {
+            world_ForegroundObjects[x, y] = tileObject;
+        }
+    }
+
+    void RemoveObjectFromWorld(int x, int y)
+    {
+        if (world_ForegroundObjects[x, y] != null)
+        {
+            world_ForegroundObjects[x, y] = null;
+        }
+        else if (world_BackgroundObjects[x, y] != null)
+        {
+            world_BackgroundObjects[x, y] = null;
+        }
+    }
+
+    GameObject GetObjectFromWorld(int x, int y)
+    {
+        if (world_ForegroundObjects[x, y] != null)
+        {
+            return world_ForegroundObjects[x, y];
+        }
+        else if (world_BackgroundObjects[x, y] != null)
+        {
+            return world_BackgroundObjects[x, y];
+        }
+
+        return null;
+    }
+
     private bool InWorld(int x, int y)
     {
-        return x >= 0 && x <= worldSize && y >= 0 && y <= worldSize;
+        return x >= 0 && x < worldSize && y >= 0 && y < worldSize;
     }
+
+
+    #region Light
+
+    void LightBlock(int x, int y, float intensity, int iteration)
+    {
+        if (iteration < lightRadius)
+        {
+            worldTilesMap.SetPixel(x, y, Color.white * intensity);
+
+
+            float thresh = airLightThreshold;
+            if (InWorld(x, y))
+            {
+                if (world_ForegroundTiles[x, y])
+                    thresh = groundLightThreshold;
+                else
+                    thresh = airLightThreshold;
+            }
+
+
+            for (int nx = x - 1; nx < x + 2; nx++)
+            {
+                for (int ny = y - 1; ny < y + 2; ny++)
+                {
+                    if (nx != x || ny != y)
+                    {
+                        if (worldTilesMap.GetPixel(nx, ny) != null)
+                        {
+                            float distance = Vector2.Distance(new Vector2(x, y), new Vector2(nx, ny));
+                            float targetIntensity = Mathf.Pow(thresh, distance) * intensity;
+
+                            if (worldTilesMap.GetPixel(nx, ny).r < targetIntensity)
+                            {
+                                LightBlock(nx, ny, targetIntensity, iteration + 1);
+                            }
+                        }
+                    }
+                }
+            }
+
+            worldTilesMap.Apply();
+
+        }
+    }
+
+    void RemoveLightSource(int x, int y)
+    {
+        unlitBlocks.Clear();
+
+        UnLightBlock(x, y, x, y);
+
+        List<Vector2Int> toRelight = new List<Vector2Int>();
+
+        foreach (Vector2Int block in unlitBlocks)
+        {
+            for (int nx = block.x - 1; nx < block.x + 2; nx++)
+            {
+                for (int ny = block.y; ny < block.y + 2; ny++)
+                {
+                    if (worldTilesMap.GetPixel(nx, ny) != null)
+                    {
+                        if (worldTilesMap.GetPixel(nx, ny).r > worldTilesMap.GetPixel(block.x, block.y).r)
+                        {
+                            if (!toRelight.Contains(new Vector2Int(nx, ny)))
+                            {
+                                toRelight.Add(new Vector2Int(nx, ny));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach (Vector2Int source in toRelight)
+        {
+            LightBlock(source.x, source.y, worldTilesMap.GetPixel(source.x, source.y).r, 0);
+        }
+
+        worldTilesMap.Apply();
+
+    }
+
+
+    void UnLightBlock(int x, int y, int ix, int iy)
+    {
+
+        if (Mathf.Abs(x - ix) >= lightRadius || Mathf.Abs(y - iy) >= lightRadius || unlitBlocks.Contains(new Vector2Int(x, y)))
+            return;
+
+        for (int nx = x - 1; nx < x + 2; nx++)
+        {
+            for (int ny = y - 1; ny < y + 2; ny++)
+            {
+
+                if (nx != x || ny != y)
+                {
+                    if (worldTilesMap.GetPixel(nx, ny) != null)
+                    {
+                        if (worldTilesMap.GetPixel(nx, ny).r < worldTilesMap.GetPixel(nx, ny).r)
+                        {
+                            UnLightBlock(nx, ny, ix, iy);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        worldTilesMap.SetPixel(x, y, Color.black);
+        unlitBlocks.Add(new Vector2Int(x, y));
+    }
+
+
+
+    #endregion
+
+
+
+
+
 
 
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Diamond
   m_EditorClassIdentifier: 
   tileName: Diamond
-  wallVariant: {fileID: 11400000, guid: 7e57d607dd02d2e49a407bf97b17562d, type: 2}
+  wallVariant: {fileID: 0}
   tileSprites:
   - {fileID: 21300000, guid: 11c99b56ee46646c5bb87c923c842bf5, type: 3}
   - {fileID: 21300000, guid: 28752e6363ef647849a08a8f60fcb88f, type: 3}
@@ -26,4 +26,5 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 21bf922d595064d038998785adf80d99, type: 3}
   - {fileID: 21300000, guid: e0c437744954a49f2b39d1dbd87fa337, type: 3}
   inBackground: 0
-  isDropItem: 1
+  tileDrop: {fileID: 21300000, guid: 11c99b56ee46646c5bb87c923c842bf5, type: 3}
+  naturallyPlaced: 0

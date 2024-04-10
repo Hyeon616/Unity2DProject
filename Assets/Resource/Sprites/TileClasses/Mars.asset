@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Mars
   m_EditorClassIdentifier: 
   tileName: Mars
-  wallVariant: {fileID: 11400000, guid: 14aa008df4819e544b83254d7b9d73b8, type: 2}
+  wallVariant: {fileID: 11400000, guid: 5c38879fb89053a409a800db89540975, type: 2}
   tileSprites:
   - {fileID: 21300000, guid: 28e97f6404739464fa893f5222b580fa, type: 3}
   - {fileID: 21300000, guid: 7246ff19e4f094a2fa80868bdfb0fe98, type: 3}
@@ -26,4 +26,5 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 754b8d4bfac244609b10e4679a0501f0, type: 3}
   - {fileID: 21300000, guid: c867977fa63e34239ab091f391df7a19, type: 3}
   inBackground: 0
-  isDropItem: 1
+  tileDrop: {fileID: 21300000, guid: 28e97f6404739464fa893f5222b580fa, type: 3}
+  naturallyPlaced: 1

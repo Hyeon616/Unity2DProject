@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(fileName = "TileAtlas", menuName = "Tile Atlas")]
 public class TileAtlas : ScriptableObject
@@ -16,6 +17,7 @@ public class TileAtlas : ScriptableObject
     public TileClass snow;
     public TileClass sand;
 
+   
 
     [Header("Ores")]
     public TileClass coal;

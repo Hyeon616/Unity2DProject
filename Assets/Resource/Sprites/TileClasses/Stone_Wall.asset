@@ -13,18 +13,9 @@ MonoBehaviour:
   m_Name: Stone_Wall
   m_EditorClassIdentifier: 
   tileName: Stone_Wall
-  wallVariant: {fileID: 0}
+  wallVariant: {fileID: 11400000, guid: 2c6e52b2ce314c44c9bc192786ae34d8, type: 2}
   tileSprites:
   - {fileID: 21300000, guid: b57723094d7ac4a76b4ec6f2a0ed5278, type: 3}
-  - {fileID: 21300000, guid: 4688c3b9c0a3a422098bf0407b8e07e3, type: 3}
-  - {fileID: 21300000, guid: d80b283b1e3ab4c4091d990070156469, type: 3}
-  - {fileID: 21300000, guid: b3d3e455137fd4b99b8477dd23e2ed5a, type: 3}
-  - {fileID: 21300000, guid: 85cbe5e9428c94650a51a06bf132d6e0, type: 3}
-  - {fileID: 21300000, guid: 7056438f877e64d339a7128a58d68f3b, type: 3}
-  - {fileID: 21300000, guid: a866c0f326f154f2a98ce705967804e9, type: 3}
-  - {fileID: 21300000, guid: f4aeb8a9be3f24366b19c3cd6224cd78, type: 3}
-  - {fileID: 21300000, guid: cc6c4b21159af413d99ec62ca2e64572, type: 3}
-  - {fileID: 21300000, guid: b4f5922fe16224c48a2a6d636b90dfe9, type: 3}
-  - {fileID: 21300000, guid: a4c9c3a90a46e43e3ab9366343f3ed8f, type: 3}
   inBackground: 1
-  isDropItem: 1
+  isDropItem: {fileID: 0}
+  naturallyPlaced: 0

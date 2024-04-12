@@ -55,9 +55,6 @@ public class TerrainGeneration : MonoBehaviour
 
     private GameObject[,] worldChunks;
 
-    //private List<Vector2> worldTiles = new List<Vector2>();
-    //private List<Vector2> worldTileObjects = new List<Vector2>();
-
     private GameObject[,] world_ForegroundObjects;
     private GameObject[,] world_BackgroundObjects;
     private TileClass[,] world_BackgroundTiles;
@@ -83,7 +80,7 @@ public class TerrainGeneration : MonoBehaviour
 
     private void Start()
     {
-        
+
         // light 초기화
         worldTilesMap = new Texture2D(worldSize, worldSize);
         worldTilesMap.filterMode = FilterMode.Point;
@@ -173,7 +170,7 @@ public class TerrainGeneration : MonoBehaviour
 
             float distance = Vector2.Distance(child.transform.position, player.transform.position);
 
-            if (distance >= chunkSize + 10)
+            if (distance >= chunkSize + 5)
             {
                 child.gameObject.SetActive(false);
             }
@@ -203,7 +200,7 @@ public class TerrainGeneration : MonoBehaviour
                 // 플레이어의 시작 위치
                 if (x == worldSize / 2)
                 {
-                    player.spawnPos = new Vector3(x, height + 2, -1.5f);
+                    player.spawnPos = new Vector2(x, height + 2);
                 }
 
                 if (y < height)
@@ -277,14 +274,14 @@ public class TerrainGeneration : MonoBehaviour
                         }
                         else
                         {
-                            int i = Random.Range(0, tallGrassChance+1);
+                            int i = Random.Range(0, tallGrassChance + 1);
                             // 식물 생성
                             if (i == 1)
                             {
                                 if ((GetTileFromWorld(x, y)))
                                 {
                                     if (tileAtlas.tallGrass != null)
-                                        PlaceTile(tileAtlas.tallGrass, x, y, true);
+                                        PlaceTile(tileAtlas.tallGrass, x, y + 1, true);
 
                                 }
                             }
@@ -390,7 +387,7 @@ public class TerrainGeneration : MonoBehaviour
             }
 
             newTile.name = tile.tileSprites[0].name;
-            newTile.transform.position = new Vector2(x, y );
+            newTile.transform.position = new Vector2(x, y);
 
             TileClass newTileClass = TileClass.CreateInstance(tile, isNaturallyPlaced);
 
@@ -403,71 +400,18 @@ public class TerrainGeneration : MonoBehaviour
 
     public void RemoveTile(int x, int y)
     {
-        /*
-        worldTileObjects.Clear();
 
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(player.mousePos);
-        int mousePosX = Mathf.RoundToInt(mousePosition.x);
-        int mousePosY = Mathf.RoundToInt(mousePosition.y);
-
-        //TileClass selectTile;
-
-        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-        RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(ray);
-
-
-        if (hits.Length > 0)
-        {
-            foreach (RaycastHit2D hit in hits)
-            {
-                GameObject obj = hit.collider.gameObject;
-                Vector2 objPos = obj.transform.position;
-
-
-
-                if (obj.layer == 3)
-                {
-                    worldTileObjects.Add(objPos);
-                    Destroy(obj);
-
-                    foreach (var tile in worldTileObjects)
-                    {
-                        worldTiles.Remove(tile);
-                    }
-
-                    worldTilesMap.SetPixel(mousePosX, mousePosY, Color.white);
-                    LightBlock(mousePosX, mousePosY, 1f, 0);
-
-                    // 추후에 드랍되는아이템, 드랍되지않는아이템 구분 
-                    GameObject dropTile = Instantiate(dropItem, new Vector2(objPos.x, objPos.y + 0.5f), Quaternion.identity);
-                    dropTile.GetComponent<SpriteRenderer>().sprite = obj.GetComponent<SpriteRenderer>().sprite;
-
-                }
-                else
-                {
-
-                    if (obj.CompareTag("Player"))
-                        return;
-                    if (Vector2.Distance(mousePosition, gameObject.transform.position) > 1f)
-                    {
-
-                        //PlaceTile(selectTile, mousePosX, mousePosY);
-                    }
-                }
-
-
-            }
-        }
-
-        worldTilesMap.Apply();*/
-        if (GetTileFromWorld(x, y) && InWorld(x,y))
+        if (GetTileFromWorld(x, y) && InWorld(x, y))
         {
             TileClass tile = GetTileFromWorld(x, y);
-            RemoveTileFromWorld(x, y);
+            if (tile.tileHp <=0)
+            {
+                RemoveTileFromWorld(x, y);
+            }
 
             if (tile.wallVariant != null)
             {
-                
+
                 if (tile.naturallyPlaced)
                 {
                     PlaceTile(tile.wallVariant, x, y, true);
@@ -485,14 +429,28 @@ public class TerrainGeneration : MonoBehaviour
             {
                 GameObject newtileDrop = Instantiate(tileDrop, new Vector2(x, y + 0.5f), Quaternion.identity);
                 newtileDrop.GetComponent<SpriteRenderer>().sprite = tile.tileDrop;
-                //ItemClass tileDropItem = new ItemClass(tile.tileDrop);
-                //newtileDrop.GetComponent<DropController>().item = tileDropItem;
+                ItemClass tileDropItem = new ItemClass(tile);
+                newtileDrop.GetComponent<DropController>().item = tileDropItem;
             }
 
             Destroy(GetObjectFromWorld(x, y));
             RemoveObjectFromWorld(x, y);
         }
 
+    }
+
+    public void MiningTile(int x, int y)
+    {
+        if (GetTileFromWorld(x, y) && InWorld(x, y))
+        {
+            TileClass tile = GetTileFromWorld(x, y);
+            tile.tileHp -= 1;
+
+            if(tile.tileHp <= 0)
+            {
+                RemoveTile(x, y);
+            }
+        }
     }
 
     public bool CheckTile(TileClass tile, int x, int y, bool isNaturallyPlaced)

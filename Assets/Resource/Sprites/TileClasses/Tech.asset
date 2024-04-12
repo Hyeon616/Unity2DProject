@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c519ac0a58ec38641ac09ed9d982173c, type: 3}
   m_Name: Tech
   m_EditorClassIdentifier: 
-  tileName: Tech
   wallVariant: {fileID: 11400000, guid: 1258fd9ad7e801c408c94dc1d888a00c, type: 2}
   tileSprites:
   - {fileID: 21300000, guid: b6d7f707af9004a48b62320f621ea74b, type: 3}
@@ -27,6 +26,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 457cf72d126f54651acb9147904319a5, type: 3}
   - {fileID: 21300000, guid: 3d4eba604e9ae4c7bb3b64ba0a32b246, type: 3}
   - {fileID: 21300000, guid: 48d555809fd184b0bbd4a45d61865313, type: 3}
-  inBackground: 0
   tileDrop: {fileID: 21300000, guid: b6d7f707af9004a48b62320f621ea74b, type: 3}
+  tileName: Tech
+  tileHp: 10
+  inBackground: 0
   naturallyPlaced: 1
+  isStackable: 1

@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c519ac0a58ec38641ac09ed9d982173c, type: 3}
   m_Name: Tech_Wall
   m_EditorClassIdentifier: 
-  tileName: Tech_Wall
-  wallVariant: {fileID: 11400000, guid: 7e57d607dd02d2e49a407bf97b17562d, type: 2}
+  wallVariant: {fileID: 0}
   tileSprites:
   - {fileID: 21300000, guid: b6d7f707af9004a48b62320f621ea74b, type: 3}
+  tileDrop: {fileID: 0}
+  tileName: Tech_Wall
+  tileHp: 1
   inBackground: 1
-  isDropItem: {fileID: 0}
   naturallyPlaced: 0
+  isStackable: 1

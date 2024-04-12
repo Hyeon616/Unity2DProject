@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
@@ -8,24 +9,31 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpHeight = 3f;
+    private int playerRange = 3;
 
-    [SerializeField] private bool onGround;
+    public bool onGround;
+    public ItemClass selectedItem;
 
     private Vector2 inputMovement;
     Rigidbody2D rb;
     Animator anim;
 
+    public bool inventoryActive;
     public GameObject equippedWeapon;
-
     [HideInInspector]
     public Vector3 spawnPos;
     public Vector2 mousePos;
     public TerrainGeneration terrainGeneration;
 
+    public Inventory inventory;
+    public GameObject hotBarSelectItem;
+    public int selectedSlotIndex = 0;
+
     public void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = transform.GetChild(0).GetComponent<Animator>();
+        inventory = GetComponent<Inventory>();
     }
 
     public void Spawn()
@@ -38,11 +46,14 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
-
+        inventory.inventoryUI.SetActive(inventoryActive);
 
     }
-
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, playerRange);
+    }
 
     private void FixedUpdate()
     {
@@ -70,7 +81,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnJump(InputValue inputValue)
     {
-        if (onGround)
+        float pressed = inputValue.Get<float>();
+        if (onGround && pressed == 1f)
         {
             float jumpForce = Mathf.Sqrt(jumpHeight * (Physics2D.gravity.y * rb.gravityScale) * -2) * rb.mass;
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
@@ -87,32 +99,58 @@ public class PlayerController : MonoBehaviour
 
     private void OnAttack(InputValue inputValue)
     {
-        anim.SetTrigger("Attack");
-
+        float pressed = inputValue.Get<float>();
         mousePos = Mouse.current.position.ReadValue();
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(mousePos);
         int mousePosX = Mathf.RoundToInt(mousePosition.x);
         int mousePosY = Mathf.RoundToInt(mousePosition.y);
 
+        if (pressed == 1f)
+        {
+            anim.SetTrigger("Attack");
+           
+            if (Vector2.Distance(transform.position, mousePosition) <= playerRange && Vector2.Distance(transform.position, mousePos) > 1f)
+            {
+                terrainGeneration.MiningTile(mousePosX, mousePosY);
 
-        terrainGeneration.RemoveTile(mousePosX, mousePosY);
+                if(selectedItem != null)
+                {
+                    if (selectedItem.itemType == ItemClass.ItemType.block)
+                    {
+                        terrainGeneration.CheckTile(selectedItem.tile, mousePosX, mousePosY, false);
+                    }
+                }
+                
+            }
+        }
 
+        
+
+        
+            
 
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    private void OnInventory(InputValue inputValue)
     {
-        if (collision.CompareTag("Ground"))
+        float pressed = inputValue.Get<float>();
+        if (pressed ==1f)
         {
-            onGround = true;
+            inventoryActive = !inventoryActive;
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnHotbar(InputValue inputValue)
     {
-        if (collision.CompareTag("Ground"))
-        {
-            onGround = false;
-        }
+
+        Vector2 scrollDelta = inputValue.Get<Vector2>();
+        
+        Debug.Log(scrollDelta.normalized.y);
+
+        if (scrollDelta.normalized.y > 0)
+            selectedSlotIndex++;
+        else
+            selectedSlotIndex--;
     }
 
     public void EquipWeapon(GameObject player)

@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c519ac0a58ec38641ac09ed9d982173c, type: 3}
   m_Name: Leaf
   m_EditorClassIdentifier: 
-  tileName: Leaf
   wallVariant: {fileID: 0}
   tileSprites:
   - {fileID: 21300000, guid: 577e97710f1a3814e8abe5a3ec64a8f3, type: 3}
-  inBackground: 1
   tileDrop: {fileID: 21300000, guid: 577e97710f1a3814e8abe5a3ec64a8f3, type: 3}
+  tileName: Leaf
+  tileHp: 1
+  inBackground: 1
   naturallyPlaced: 0
+  isStackable: 1

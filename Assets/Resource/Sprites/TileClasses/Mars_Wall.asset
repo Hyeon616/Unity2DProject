@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c519ac0a58ec38641ac09ed9d982173c, type: 3}
   m_Name: Mars_Wall
   m_EditorClassIdentifier: 
-  tileName: Mars_Wall
-  wallVariant: {fileID: 11400000, guid: 14aa008df4819e544b83254d7b9d73b8, type: 2}
+  wallVariant: {fileID: 0}
   tileSprites:
   - {fileID: 21300000, guid: 28e97f6404739464fa893f5222b580fa, type: 3}
+  tileDrop: {fileID: 0}
+  tileName: Mars_Wall
+  tileHp: 1
   inBackground: 1
-  isDropItem: {fileID: 0}
   naturallyPlaced: 0
+  isStackable: 1

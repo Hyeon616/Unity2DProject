@@ -1,5 +1,77 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1552202636
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1552202637}
+  - component: {fileID: 1552202638}
+  - component: {fileID: 1552202639}
+  m_Layer: 8
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1552202637
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552202636}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9205273873539189360}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1552202638
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552202636}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.11942771, y: -0.24019623}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.3772908, y: 0.28971863}
+  m_EdgeRadius: 0
+--- !u!114 &1552202639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1552202636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f4efdceb8a7ec4429b2e646327757a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onGround: 0
 --- !u!1 &2476963587185052455
 GameObject:
   m_ObjectHideFlags: 0
@@ -11,9 +83,9 @@ GameObject:
   - component: {fileID: 9205273873539189360}
   - component: {fileID: 4021350495539439880}
   - component: {fileID: 6230303044175570719}
-  - component: {fileID: 2176940527481652978}
   - component: {fileID: 7041606045737982685}
   - component: {fileID: 7041606045737982686}
+  - component: {fileID: 2029999684679191423}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -34,6 +106,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5285426820371033073}
+  - {fileID: 1552202637}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -74,32 +147,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!61 &2176940527481652978
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2476963587185052455}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.10307312, y: -0.19766843}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.41, y: 0.20466304}
-  m_EdgeRadius: 0
 --- !u!114 &7041606045737982685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,10 +192,35 @@ MonoBehaviour:
   moveSpeed: 5
   jumpHeight: 2.5
   onGround: 0
+  inventoryActive: 0
   equippedWeapon: {fileID: 6805170423116255223, guid: b77dafe2600b4074fa4c01a5301fc6ec, type: 3}
   spawnPos: {x: 50, y: 39.759808, z: 0}
   mousePos: {x: 0, y: 0}
   terrainGeneration: {fileID: 0}
+  inventory: {fileID: 0}
+--- !u!114 &2029999684679191423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2476963587185052455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4acc1cfe586570f4db4b26565a235547, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stackLimit: 10
+  tool: {fileID: 11400000, guid: 08f42bb083ecdcb4591469ea2da378bd, type: 2}
+  inventoryOffset: {x: -200, y: -60}
+  hotbarOffset: {x: -200, y: 25}
+  multiplier: {x: 50, y: 50}
+  inventoryUI: {fileID: 0}
+  hotbarUI: {fileID: 0}
+  inventorySlotPrefab: {fileID: 8081212141529086511, guid: 921790ac9b2e14442aefd313ea09117c, type: 3}
+  inventoryWidth: 9
+  inventoryHeight: 5
+  hotbarUISlots: []
 --- !u!1001 &5285426820371427703
 PrefabInstance:
   m_ObjectHideFlags: 0

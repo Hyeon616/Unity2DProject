@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c519ac0a58ec38641ac09ed9d982173c, type: 3}
   m_Name: Mars
   m_EditorClassIdentifier: 
-  tileName: Mars
   wallVariant: {fileID: 11400000, guid: 5c38879fb89053a409a800db89540975, type: 2}
   tileSprites:
   - {fileID: 21300000, guid: 28e97f6404739464fa893f5222b580fa, type: 3}
@@ -25,6 +24,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: faa5575699005421d86513b726a73e9b, type: 3}
   - {fileID: 21300000, guid: 754b8d4bfac244609b10e4679a0501f0, type: 3}
   - {fileID: 21300000, guid: c867977fa63e34239ab091f391df7a19, type: 3}
-  inBackground: 0
   tileDrop: {fileID: 21300000, guid: 28e97f6404739464fa893f5222b580fa, type: 3}
+  tileName: Mars
+  tileHp: 5
+  inBackground: 0
   naturallyPlaced: 1
+  isStackable: 1

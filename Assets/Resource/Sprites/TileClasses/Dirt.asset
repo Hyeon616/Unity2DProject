@@ -21,7 +21,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: cb54e8d0c3b3a43d882a39acd4d795c1, type: 3}
   - {fileID: 21300000, guid: 42ce57855682240f9b9844875a531006, type: 3}
   - {fileID: 21300000, guid: 9d79130f29029495c9983fefe8d88a20, type: 3}
-  tileDrop: {fileID: 21300000, guid: d33fc4ca3ea63400ab243153d038037f, type: 3}
+  tileDrop: {fileID: 11400000}
   tileName: Dirt
   tileHp: 3
   inBackground: 0

@@ -25,7 +25,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: cc6c4b21159af413d99ec62ca2e64572, type: 3}
   - {fileID: 21300000, guid: b4f5922fe16224c48a2a6d636b90dfe9, type: 3}
   - {fileID: 21300000, guid: a4c9c3a90a46e43e3ab9366343f3ed8f, type: 3}
-  tileDrop: {fileID: 21300000, guid: b57723094d7ac4a76b4ec6f2a0ed5278, type: 3}
+  tileDrop: {fileID: 11400000}
   tileName: Stone
   tileHp: 10
   inBackground: 0

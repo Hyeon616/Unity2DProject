@@ -2,20 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[System.Serializable]
 public class ItemClass
 {
     public enum ItemType
     {
-        block,
-        tool
+        NULL,
+        BLOCK,
+        TOOL
     
     }
 
     public enum ToolType
     {
-        axe,
-        pickaxe,
-        hammer
+        NULL,
+        AXE,
+        PICKAXE,
+        HAMMER,
+        
 
     }
 
@@ -27,25 +32,28 @@ public class ItemClass
     public TileClass tile;
     public ToolClass tool;
 
-    public string name;
+    public string itemName;
     public Sprite sprite;
     public bool isStackable;
 
     public ItemClass(TileClass _tile)
     {
-        name = _tile.name;
-        sprite = _tile.tileSprites[0];
+        itemName = _tile.tileName;
+        sprite = _tile.tileDrop.tileSprites[0];
         isStackable = _tile.isStackable;
-        itemType = ItemType.block;
+        itemType = ItemType.BLOCK;
+        toolType = ToolType.NULL;
+        tile = _tile;
     }
 
     public ItemClass(ToolClass _tool)
     {
-        name= _tool.name;
+        itemName= _tool.name;
         sprite = _tool.sprite;
         isStackable = false;
-        itemType = ItemType.tool;
+        itemType = ItemType.TOOL;
         toolType = _tool.toolType;
+        tool = _tool;
     }
 
 }

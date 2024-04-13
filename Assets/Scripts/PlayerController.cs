@@ -1,9 +1,5 @@
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -39,8 +35,8 @@ public class PlayerController : MonoBehaviour
     public void Spawn()
     {
         GetComponent<Transform>().position = spawnPos;
-        
-        
+
+
         //EquipWeapon(gameObject);
     }
 
@@ -108,49 +104,82 @@ public class PlayerController : MonoBehaviour
         if (pressed == 1f)
         {
             anim.SetTrigger("Attack");
-           
+
             if (Vector2.Distance(transform.position, mousePosition) <= playerRange && Vector2.Distance(transform.position, mousePos) > 1f)
             {
                 terrainGeneration.MiningTile(mousePosX, mousePosY);
 
-                if(selectedItem != null)
+                if (selectedItem != null)
                 {
-                    if (selectedItem.itemType == ItemClass.ItemType.block)
+                    if (selectedItem.itemType == ItemClass.ItemType.BLOCK)
                     {
-                        terrainGeneration.CheckTile(selectedItem.tile, mousePosX, mousePosY, false);
+                        if(terrainGeneration.CheckTile(selectedItem.tile, mousePosX, mousePosY, false))
+                            inventory.RemoveItem(selectedItem);
                     }
                 }
-                
+
             }
         }
-
-        
-
-        
-            
-
     }
 
+    // 인벤토리
     private void OnInventory(InputValue inputValue)
     {
         float pressed = inputValue.Get<float>();
-        if (pressed ==1f)
+        if (pressed == 1f)
         {
             inventoryActive = !inventoryActive;
         }
     }
 
+    // 핫키
     private void OnHotbar(InputValue inputValue)
     {
 
         Vector2 scrollDelta = inputValue.Get<Vector2>();
-        
-        Debug.Log(scrollDelta.normalized.y);
 
         if (scrollDelta.normalized.y > 0)
-            selectedSlotIndex++;
+        {
+            if (selectedSlotIndex < inventory.inventoryWidth)
+            {
+                selectedSlotIndex++;
+                if (selectedSlotIndex >= inventory.inventoryWidth)
+                {
+                    selectedSlotIndex = 0;
+                }
+            }
+        }
+        else if (scrollDelta.normalized.y < 0)
+        {
+            if (selectedSlotIndex >= 0)
+            {
+                selectedSlotIndex--;
+
+                if (selectedSlotIndex < 0)
+                {
+                    selectedSlotIndex = inventory.inventoryWidth - 1;
+                }
+            }
+        }
+
+        float hotBarPosX = inventory.hotbarUISlots[selectedSlotIndex].transform.position.x;
+        float hotBarPosY = inventory.hotbarUISlots[selectedSlotIndex].transform.position.y;
+
+        
+        // select slot UI
+        hotBarSelectItem.transform.position = new Vector2(hotBarPosX - 20, hotBarPosY - 20);
+
+        if (inventory.inventorySlots[selectedSlotIndex, inventory.inventoryHeight - 1] != null)
+        {
+            selectedItem = inventory.inventorySlots[selectedSlotIndex, inventory.inventoryHeight - 1].item;
+           
+        }
         else
-            selectedSlotIndex--;
+        {
+            selectedItem = null;
+
+        }
+        //select item
     }
 
     public void EquipWeapon(GameObject player)
@@ -173,7 +202,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    
+
 
 
 

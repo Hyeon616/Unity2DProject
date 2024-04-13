@@ -428,8 +428,8 @@ public class TerrainGeneration : MonoBehaviour
             if (tile.tileDrop)
             {
                 GameObject newtileDrop = Instantiate(tileDrop, new Vector2(x, y + 0.5f), Quaternion.identity);
-                newtileDrop.GetComponent<SpriteRenderer>().sprite = tile.tileDrop;
-                ItemClass tileDropItem = new ItemClass(tile);
+                newtileDrop.GetComponent<SpriteRenderer>().sprite = tile.tileDrop.tileSprites[0];
+                ItemClass tileDropItem = new ItemClass(tile.tileDrop);
                 newtileDrop.GetComponent<DropController>().item = tileDropItem;
             }
 
@@ -507,6 +507,9 @@ public class TerrainGeneration : MonoBehaviour
 
         return false;
     }
+
+
+
 
     void AddTileToWorld(int x, int y, TileClass tile)
     {

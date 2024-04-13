@@ -26,7 +26,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 457cf72d126f54651acb9147904319a5, type: 3}
   - {fileID: 21300000, guid: 3d4eba604e9ae4c7bb3b64ba0a32b246, type: 3}
   - {fileID: 21300000, guid: 48d555809fd184b0bbd4a45d61865313, type: 3}
-  tileDrop: {fileID: 21300000, guid: b6d7f707af9004a48b62320f621ea74b, type: 3}
+  tileDrop: {fileID: 11400000}
   tileName: Tech
   tileHp: 10
   inBackground: 0

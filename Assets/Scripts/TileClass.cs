@@ -5,7 +5,7 @@ public class TileClass : ScriptableObject
 {
     public TileClass wallVariant;
     public Sprite[] tileSprites;
-    public Sprite tileDrop;
+    public TileClass tileDrop;
     public string tileName;
     public int tileHp;
     public bool inBackground = false;

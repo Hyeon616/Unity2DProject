@@ -14,7 +14,7 @@ public class TileClass : ScriptableObject
 
     public static TileClass CreateInstance(TileClass tile, bool isNaturallyPlaced)
     {
-        var thisTile = ScriptableObject.CreateInstance<TileClass>();
+        var thisTile = CreateInstance<TileClass>();
 
         thisTile.Init(tile, isNaturallyPlaced);
         

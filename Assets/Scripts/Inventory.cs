@@ -40,6 +40,11 @@ public class Inventory : MonoBehaviour
         AddItem(new ItemClass(tool));
     }
 
+    private void FixedUpdate()
+    {
+        UpdateInventoryUI();
+    }
+
     void SetUpUI()
     {
         // setup Inventory

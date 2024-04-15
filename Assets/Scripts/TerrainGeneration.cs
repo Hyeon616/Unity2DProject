@@ -429,8 +429,10 @@ public class TerrainGeneration : MonoBehaviour
             {
                 GameObject newtileDrop = Instantiate(tileDrop, new Vector2(x, y + 0.5f), Quaternion.identity);
                 newtileDrop.GetComponent<SpriteRenderer>().sprite = tile.tileDrop.tileSprites[0];
-                ItemClass tileDropItem = new ItemClass(tile.tileDrop);
-                newtileDrop.GetComponent<DropController>().item = tileDropItem;
+
+
+                //ItemClass tileDropItem = new ItemClass(tile.tileDrop);
+                //newtileDrop.GetComponent<DropController>().item = tileDropItem;
             }
 
             Destroy(GetObjectFromWorld(x, y));

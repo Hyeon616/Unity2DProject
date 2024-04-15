@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     private int playerRange = 3;
 
     public bool onGround;
-    public ItemClass selectedItem;
+    
 
     private Vector2 inputMovement;
     Rigidbody2D rb;
@@ -21,15 +21,40 @@ public class PlayerController : MonoBehaviour
     public Vector2 mousePos;
     public TerrainGeneration terrainGeneration;
 
-    public Inventory inventory;
-    public GameObject hotBarSelectItem;
-    public int selectedSlotIndex = 0;
+    private Inventory inventory;
+    [SerializeField] private UI_Inventory uiInventory;
 
-    public void Awake()
+    public GameObject ui;
+
+    //public GameObject hotBarSelectItem;
+    //public int selectedSlotIndex = 0;
+
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = transform.GetChild(0).GetComponent<Animator>();
-        inventory = GetComponent<Inventory>();
+        
+
+    }
+
+    private void Start()
+    {
+        inventory = new Inventory(UseItem);
+        uiInventory.SetPlayer(this);
+        uiInventory.SetInventory(inventory);
+    }
+
+    private void UseItem(Item item)
+    {
+        // 아이템 사용 시 효과
+        switch (item.itemType)
+        {
+            case Item.ItemType.HealthPotion:
+
+                inventory.RemoveItem(new Item { itemType = Item.ItemType.HealthPotion, amount =1 });
+                break;
+
+        }
     }
 
     public void Spawn()
@@ -42,7 +67,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        inventory.inventoryUI.SetActive(inventoryActive);
+        
+        ui.SetActive(inventoryActive);
 
     }
     private void OnDrawGizmos()
@@ -109,14 +135,14 @@ public class PlayerController : MonoBehaviour
             {
                 terrainGeneration.MiningTile(mousePosX, mousePosY);
 
-                if (selectedItem != null)
-                {
-                    if (selectedItem.itemType == ItemClass.ItemType.BLOCK)
-                    {
-                        if(terrainGeneration.CheckTile(selectedItem.tile, mousePosX, mousePosY, false))
-                            inventory.RemoveItem(selectedItem);
-                    }
-                }
+                //if (selectedItem != null)
+                //{
+                //    if (selectedItem.itemType == ItemClass.ItemType.BLOCK)
+                //    {
+                //        if(terrainGeneration.CheckTile(selectedItem.tile, mousePosX, mousePosY, false))
+                //            inventory.RemoveItem(selectedItem);
+                //    }
+                //}
 
             }
         }
@@ -138,47 +164,47 @@ public class PlayerController : MonoBehaviour
 
         Vector2 scrollDelta = inputValue.Get<Vector2>();
 
-        if (scrollDelta.normalized.y > 0)
-        {
-            if (selectedSlotIndex < inventory.inventoryWidth)
-            {
-                selectedSlotIndex++;
-                if (selectedSlotIndex >= inventory.inventoryWidth)
-                {
-                    selectedSlotIndex = 0;
-                }
-            }
-        }
-        else if (scrollDelta.normalized.y < 0)
-        {
-            if (selectedSlotIndex >= 0)
-            {
-                selectedSlotIndex--;
+        //if (scrollDelta.normalized.y > 0)
+        //{
+        //    if (selectedSlotIndex < inventory.inventoryWidth)
+        //    {
+        //        selectedSlotIndex++;
+        //        if (selectedSlotIndex >= inventory.inventoryWidth)
+        //        {
+        //            selectedSlotIndex = 0;
+        //        }
+        //    }
+        //}
+        //else if (scrollDelta.normalized.y < 0)
+        //{
+        //    if (selectedSlotIndex >= 0)
+        //    {
+        //        selectedSlotIndex--;
 
-                if (selectedSlotIndex < 0)
-                {
-                    selectedSlotIndex = inventory.inventoryWidth - 1;
-                }
-            }
-        }
+        //        if (selectedSlotIndex < 0)
+        //        {
+        //            selectedSlotIndex = inventory.inventoryWidth - 1;
+        //        }
+        //    }
+        //}
 
-        float hotBarPosX = inventory.hotbarUISlots[selectedSlotIndex].transform.position.x;
-        float hotBarPosY = inventory.hotbarUISlots[selectedSlotIndex].transform.position.y;
+        //float hotBarPosX = inventory.hotbarUISlots[selectedSlotIndex].transform.position.x;
+        //float hotBarPosY = inventory.hotbarUISlots[selectedSlotIndex].transform.position.y;
 
         
-        // select slot UI
-        hotBarSelectItem.transform.position = new Vector2(hotBarPosX - 20, hotBarPosY - 20);
+        //// select slot UI
+        //hotBarSelectItem.transform.position = new Vector2(hotBarPosX - 20, hotBarPosY - 20);
 
-        if (inventory.inventorySlots[selectedSlotIndex, inventory.inventoryHeight - 1] != null)
-        {
-            selectedItem = inventory.inventorySlots[selectedSlotIndex, inventory.inventoryHeight - 1].item;
+        //if (inventory.inventorySlots[selectedSlotIndex, inventory.inventoryHeight - 1] != null)
+        //{
+        //    selectedItem = inventory.inventorySlots[selectedSlotIndex, inventory.inventoryHeight - 1].item;
            
-        }
-        else
-        {
-            selectedItem = null;
+        //}
+        //else
+        //{
+        //    selectedItem = null;
 
-        }
+        //}
         //select item
     }
 
@@ -202,8 +228,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public Vector3 GetPosition()
+    {
+        return transform.position;
+    }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        ItemWorld itemWorld = collision.GetComponent<ItemWorld>();
 
+        if(itemWorld != null)
+        {
+            inventory.AddItem(itemWorld.GetItem());
+            itemWorld.DestroySelf();
+        }
+
+    }
 
 
 

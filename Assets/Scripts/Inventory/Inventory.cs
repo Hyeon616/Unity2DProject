@@ -1,88 +1,47 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class Inventory
+public class Inventory : MonoBehaviour
 {
-    public event EventHandler OnItemListChanged;
 
-    private List<Item> itemList;
-    private Action<Item> useItemAction;
 
-    public Inventory(Action<Item> useItemAction)
+    [SerializeField] private GameObject go_SlotsParent;
+
+    // ½½·Ô
+    private Slot[] slots;
+
+    void Start()
     {
-        itemList = new List<Item>();
+        slots = go_SlotsParent.GetComponentsInChildren<Slot>();
 
-        AddItem(new Item { itemType = Item.ItemType.Sword, amount = 1 });
-        AddItem(new Item { itemType = Item.ItemType.HealthPotion, amount = 1 });
-        AddItem(new Item { itemType = Item.ItemType.ManaPotion, amount = 1 });
-        this.useItemAction = useItemAction;
     }
 
-    public void AddItem(Item item)
+    public void AcquireItem(Item _item, int _count = 1)
     {
-        if(item.IsStackable())
+        if (Item.ItemType.Equipment != _item.itemType)
         {
-            bool itemAlreadyInInventory = false;
-            foreach (Item inventoryITem in itemList)
+            for (int i = 0; i < slots.Length; i++)
             {
-                if(inventoryITem.itemType == item.itemType)
+                if (slots[i].item != null)
                 {
-                    inventoryITem.amount += item.amount;
+                    if (slots[i].item.itemName == _item.itemName)
+                    {
+                        slots[i].SetSlotCount(_count);
+                        return;
+                    }
                 }
             }
-            if(!itemAlreadyInInventory)
+        }
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].item == null)
             {
-                itemList.Add(item);
+                slots[i].AddItem(_item, _count);
+                return;
             }
         }
-        else
-        {
-            itemList.Add(item);
-
-        }
-
-        OnItemListChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public void RemoveItem(Item item)
-    {
-        if (item.IsStackable())
-        {
-            Item itemInInventory = null;
-            foreach (Item inventoryITem in itemList)
-            {
-                if (inventoryITem.itemType == item.itemType)
-                {
-                    inventoryITem.amount -= item.amount;
-                    itemInInventory = inventoryITem;
-                }
-            }
-            if (itemInInventory != null && itemInInventory.amount <= 0)
-            {
-                itemList.Remove(item);
-            }
-        }
-        else
-        {
-            itemList.Remove(item);
-
-        }
-
-        OnItemListChanged?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void UseItem(Item item)
-    {
-        useItemAction(item);
-    }
-
-    public List<Item> GetItemList() 
-    {
-        return itemList;
-    }
 
 
 }

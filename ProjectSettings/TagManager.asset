@@ -16,6 +16,7 @@ TagManager:
   - Coal
   - Log
   - Leaves
+  - Mushroom
   layers:
   - Default
   - TransparentFX

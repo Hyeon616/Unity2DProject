@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Singleton<PlayerController>
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpHeight = 3f;
@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     Animator anim;
 
     public bool inventoryActive;
-    public GameObject equippedWeapon;
+    
     [HideInInspector]
     public Vector3 spawnPos;
     public Vector2 mousePos;
@@ -25,6 +25,12 @@ public class PlayerController : MonoBehaviour
     public GameObject ui;
 
     private Inventory inventory;
+
+    public Slot equippedWeapon;
+
+   // private bool _playerInputIsDisabled = false;
+
+    //public bool PlayerInputIsDisabled { get => _playerInputIsDisabled; set => _playerInputIsDisabled = value; }
 
     //public GameObject hotBarSelectItem;
     //public int selectedSlotIndex = 0;
@@ -48,7 +54,7 @@ public class PlayerController : MonoBehaviour
         GetComponent<Transform>().position = spawnPos;
 
 
-        //EquipWeapon(gameObject);
+        EquipWeapon(gameObject);
     }
 
     void Update()
@@ -113,7 +119,7 @@ public class PlayerController : MonoBehaviour
         int mousePosX = Mathf.RoundToInt(mousePosition.x);
         int mousePosY = Mathf.RoundToInt(mousePosition.y);
 
-        if (pressed == 1f && !inventoryActive)
+        if (pressed == 1f)
         {
             anim.SetTrigger("Attack");
 
@@ -134,7 +140,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // ¿Œ∫•≈‰∏Æ
+    // Ïù∏Î≤§ÌÜ†Î¶¨
     private void OnInventory(InputValue inputValue)
     {
         float pressed = inputValue.Get<float>();
@@ -144,7 +150,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // «÷≈∞
+    // Ìï´ÌÇ§
     private void OnHotbar(InputValue inputValue)
     {
 
@@ -194,6 +200,22 @@ public class PlayerController : MonoBehaviour
         //select item
     }
 
+    //public void DisablePlayerInputAndResetMovement()
+    //{
+    //    DisablePlayerInput();
+    //}
+
+    //public void DisablePlayerInput()
+    //{
+    //    PlayerInputIsDisabled = true;
+
+    //}
+
+    //public void EnablePlayerInput()
+    //{
+    //    PlayerInputIsDisabled = false;
+
+    //}
 
     public void EquipWeapon(GameObject player)
     {
@@ -204,12 +226,12 @@ public class PlayerController : MonoBehaviour
 
         foreach (Transform weapon in AllData)
         {
-            if (weapon.name == "Rig Weapon")
+            if (weapon.name == "Weapon")
             {
-
-                GameObject temp = Instantiate(equippedWeapon, transform.position, Quaternion.identity);
-                temp.transform.SetParent(weapon);
-                temp.transform.localPosition = new Vector3(0, 0, 0);
+                weapon.GetComponent<SpriteRenderer>().sprite = equippedWeapon.GetComponent<SpriteRenderer>().sprite;
+                //weaponEquipment = Instantiate(equippedWeapon, transform.position, Quaternion.identity);
+                //weaponEquipment.transform.SetParent(weapon);
+                //weaponEquipment.transform.localPosition = new Vector3(0, 0, 0);
 
             }
         }
@@ -222,18 +244,31 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.layer ==6)
-        {
-            
-            inventory.AcquireItem(collision.gameObject.GetComponent<ItemPickUp>().Item, 1);
-            Destroy(collision.gameObject);
+        Items items = collision.collider.GetComponent<Items>();
 
+        if (items != null)
+        {
+            ItemDetails itemDetails = InventoryManager.Instance.GetItemDetails(items.ItemCode);
+
+            if(itemDetails.canBePickedUp == true)
+            {
+                InventoryManager.Instance.AddItem(InventoryLocation.player, items, collision.gameObject);
+            }
 
         }
 
+        //if (collision.gameObject.layer ==6)
+        //{
+            
+        //    inventory.AcquireItem(collision.gameObject.GetComponent<ItemPickUp>().Item, 1);
+        //    Destroy(collision.gameObject);
 
+
+        //}
 
     }
+
+
 
 
 }

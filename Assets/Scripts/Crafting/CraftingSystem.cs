@@ -26,10 +26,10 @@ public class CraftingSystem
         itemArray[x, y] = item;
     }
 
-    private void InCreaseItemAmount(int x, int y)
-    {
-        GetItem(x, y).amount++;
-    }
+    //private void InCreaseItemAmount(int x, int y)
+    //{
+    //    GetItem(x, y).amount++;
+    //}
 
     private void RemoveItem(int x, int y)
     {
@@ -47,7 +47,7 @@ public class CraftingSystem
         {
             if(item.itemType == GetItem(x,y).itemType)
             {
-                InCreaseItemAmount(x,y);
+                //InCreaseItemAmount(x,y);
                 return true;
             }
             else

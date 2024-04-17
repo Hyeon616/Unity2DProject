@@ -12,7 +12,7 @@ public class Item : ScriptableObject
 
     public string weaponType;
     public ItemType itemType;
-    public int amount;
+    
 
     public enum ItemType
     {

@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 public class Slot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
-    
+
     public Item item;
+    public int itemCount;
     public Image itemImage;
 
     [SerializeField] private TextMeshProUGUI text_Count;
@@ -24,17 +25,17 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDra
     public void AddItem(Item _item, int _count = 1)
     {
         item = _item;
-        item.amount = _count;
+        itemCount = _count;
         itemImage.sprite = item.itemImage;
 
         if (item.itemType != Item.ItemType.Equipment)
         {
             go_CountImage.SetActive(true);
-            text_Count.text = item.amount.ToString();
+            text_Count.text = itemCount.ToString();
         }
         else
         {
-            text_Count.text = "0";
+            text_Count.text = " ";
             go_CountImage.SetActive(false);
         }
 
@@ -45,10 +46,10 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDra
     // 아이템 갯수 조정
     public void SetSlotCount(int _count)
     {
-        item.amount += _count;
-        text_Count.text = item.amount.ToString();
+        itemCount += _count;
+        text_Count.text = itemCount.ToString();
 
-        if (item.amount <= 0)
+        if (itemCount <= 0)
         {
             ClearSlot();
         }
@@ -59,12 +60,29 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDra
     private void ClearSlot()
     {
         SetColor(0);
-        item.amount = 0;
+        itemCount = 0;
         item = null;
         itemImage.sprite = null;
 
-        text_Count.text = "0";
+        text_Count.text = " ";
         go_CountImage.SetActive(false);
+
+    }
+
+    private void MoveSlot()
+    {
+        if(itemCount<=0)
+        {
+            SetColor(0);
+            item = null;
+            itemImage.sprite = null;
+            go_CountImage.SetActive(false);
+            return;
+        }
+
+        itemCount -= 1;
+        text_Count.text = itemCount.ToString();
+        
 
     }
 
@@ -82,6 +100,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDra
                 }
                 else
                 {
+                    //사용
                     SetSlotCount(-1);
                 }
             }
@@ -90,13 +109,13 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDra
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if(item != null)
+        if (item != null)
         {
             DragSlot.instance.dragSlot = this;
             DragSlot.instance.DragSetImage(itemImage);
 
             DragSlot.instance.transform.position = eventData.position;
-            Debug.Log(DragSlot.instance.name);
+
         }
     }
 
@@ -104,6 +123,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDra
     {
         if (item != null)
         {
+
             DragSlot.instance.transform.position = eventData.position;
         }
     }
@@ -116,34 +136,38 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDra
 
     public void OnDrop(PointerEventData eventData)
     {
-        if(DragSlot.instance.dragSlot!=null)
+        if (DragSlot.instance.dragSlot != null)
         {
-            ChangeSlot();
+
+            if(DragSlot.instance.dragSlot.item != item)
+                ChangeSlot();
+
             // DragSlot.instance 랑 비교해서 같으면 갯수올리기
+            
         }
     }
 
     private void ChangeSlot()
     {
+
         Item _tempItem = item;
-        //int _tempItemCount = item.amount;
-        int _tempItemCount = 1;
 
-        AddItem(DragSlot.instance.dragSlot.item, 1);
+        int _tempItemCount = itemCount;
 
-        if(_tempItem != null)
+
+        AddItem(DragSlot.instance.dragSlot.item, DragSlot.instance.dragSlot.itemCount);
+
+
+        if (_tempItem != null)
         {
-            
             DragSlot.instance.dragSlot.AddItem(_tempItem, _tempItemCount);
-            item.amount -= 1;
+
         }
         else
         {
-            if(item.amount <= 0)
-            {
+            if(itemCount < 0)
                 DragSlot.instance.dragSlot.ClearSlot();
-
-            }
+            
         }
 
     }

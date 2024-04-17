@@ -7,7 +7,7 @@ public class Inventory : MonoBehaviour
     [SerializeField] private GameObject go_SlotsParent;
 
     // ½½·Ô
-    private Slot[] slots;
+    public Slot[] slots;
 
     void Start()
     {
@@ -42,6 +42,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
+   
 
 
 }

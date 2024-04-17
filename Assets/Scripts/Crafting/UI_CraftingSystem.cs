@@ -9,9 +9,6 @@ public class UI_CraftingSystem : MonoBehaviour
     [SerializeField] private GameObject go_SlotsParent;
     private Slot[] slots;
 
-    private Transform outputSlotTransform;
-    private Transform itemContainer;
-
     private void Awake()
     {
         slots = go_SlotsParent.GetComponentsInChildren<Slot>();

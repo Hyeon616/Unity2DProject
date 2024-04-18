@@ -51,13 +51,22 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Hotbar",
-                    "type": "Value",
-                    "id": "21f13d41-7ea8-429b-be28-794fcc937660",
-                    "expectedControlType": "Vector2",
+                    "name": "AdvanceTime",
+                    "type": "Button",
+                    "id": "69bd6951-1c39-4ab8-840e-e306bde91800",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "AdvanceDay",
+                    "type": "Button",
+                    "id": "794bba41-ada4-4597-8467-becf2cfa84a8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -140,12 +149,23 @@
                 },
                 {
                     "name": "",
-                    "id": "a11db27d-2544-41c5-b649-403ba82dc17e",
-                    "path": "<Mouse>/scroll",
+                    "id": "0b17741d-3c00-4772-9e59-7c2b0650350d",
+                    "path": "<Keyboard>/t",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Hotbar",
+                    "action": "AdvanceTime",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "24a51c9b-ad6a-4420-a726-78586dab0e82",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AdvanceDay",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

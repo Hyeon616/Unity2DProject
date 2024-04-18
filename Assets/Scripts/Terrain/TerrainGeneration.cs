@@ -15,7 +15,8 @@ public class TerrainGeneration : MonoBehaviour
 
     [Header("User")]
     public PlayerController player;
-    public GameObject tileDrop;
+    //public GameObject tileDrop;
+    
 
     [Header("Tile Atlas")]
     public TileAtlas tileAtlas;
@@ -50,8 +51,8 @@ public class TerrainGeneration : MonoBehaviour
     [Header("Ore Settings")]
     public OreClass[] ores;
 
-    
-    private DropManager dropManager;
+
+    //private DropManager dropManager;
 
     private GameObject[,] worldChunks;
 
@@ -72,7 +73,7 @@ public class TerrainGeneration : MonoBehaviour
         world_ForegroundObjects = new GameObject[worldSize, worldSize];
         world_BackgroundObjects = new GameObject[worldSize, worldSize];
 
-        
+
         seed = Random.Range(-10000, 10000);
         DrawTextures();
 
@@ -187,16 +188,15 @@ public class TerrainGeneration : MonoBehaviour
     public void GenerateTerrain()
     {
         TileClass tileClass;
+        float height;
 
         for (int x = 0; x < worldSize - 1; x++)
         {
-
-            float height;
-
             for (int y = 0; y < worldSize; y++)
             {
                 // PerlinNoise
                 height = Mathf.PerlinNoise((x + seed) * terrainFreq, seed * terrainFreq) * heightMultiplier + heightAddition;
+
                 // 플레이어의 시작 위치
                 if (x == worldSize / 2)
                 {
@@ -371,6 +371,7 @@ public class TerrainGeneration : MonoBehaviour
                 if (tile.name.ToLower().Contains("wall"))
                 {
                     newTile.GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f);
+                    
                 }
                 else
                 {
@@ -382,7 +383,7 @@ public class TerrainGeneration : MonoBehaviour
                 newTile.GetComponent<SpriteRenderer>().sortingOrder = -5;
                 newTile.AddComponent<BoxCollider2D>();
                 newTile.GetComponent<BoxCollider2D>().size = Vector2.one;
-                newTile.layer = 3;
+                newTile.layer = 6;
             }
 
             newTile.tag = $"{newTile.name}";
@@ -429,7 +430,6 @@ public class TerrainGeneration : MonoBehaviour
             Destroy(GetObjectFromWorld(x, y));
             RemoveObjectFromWorld(x, y);
         }
-
     }
 
     public void MiningTile(int x, int y)

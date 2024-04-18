@@ -13,30 +13,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6342130102052159324, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
       propertyPath: m_Name
-      value: Mushroom
-      objectReference: {fileID: 0}
-    - target: {fileID: 6342130102052159324, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
-      propertyPath: m_Layer
-      value: 7
+      value: Diamond
       objectReference: {fileID: 0}
     - target: {fileID: 6342130102052159326, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
       propertyPath: _itemCode
-      value: 10011
+      value: 10009
       objectReference: {fileID: 0}
     - target: {fileID: 6342130102052159327, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
       propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6342130102052159327, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6342130102052159327, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6342130102052159327, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
-      propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6342130102052159327, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
@@ -82,7 +66,7 @@ PrefabInstance:
     - target: {fileID: 7501998646736139737, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 966ff550585ec504896a28b55fd7281c, type: 3}
+      objectReference: {fileID: 21300000, guid: 3faa68d4e2f05f04786133598667ac36, type: 3}
     - target: {fileID: 7501998646736139737, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1

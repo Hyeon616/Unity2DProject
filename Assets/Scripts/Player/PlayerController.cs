@@ -1,11 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : Singleton<PlayerController>
 {
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float jumpHeight = 3f;
-    private int playerRange = 3;
+    
 
     public bool onGround;
 
@@ -21,32 +20,23 @@ public class PlayerController : Singleton<PlayerController>
     public Vector2 mousePos;
     public TerrainGeneration terrainGeneration;
 
+    // public GameObject ui;
 
-    public GameObject ui;
+    private Transform[] characterAttribute;
+    [SerializeField] private SpriteRenderer equippedItemSpriteRenderer = null;
 
-    private Inventory inventory;
-
-    public Slot equippedWeapon;
-
-   // private bool _playerInputIsDisabled = false;
-
-    //public bool PlayerInputIsDisabled { get => _playerInputIsDisabled; set => _playerInputIsDisabled = value; }
-
-    //public GameObject hotBarSelectItem;
-    //public int selectedSlotIndex = 0;
-
-    private void Awake()
+    protected override void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = transform.GetChild(0).GetComponent<Animator>();
-        inventory = FindObjectOfType<Inventory>();
 
+        characterAttribute = GetComponentsInChildren<Transform>();
+
+       // characterAttributeCustomisationList = new List<CharacterAttribute>();
+
+        
     }
 
-    private void Start()
-    {
-       
-    }
 
 
     public void Spawn()
@@ -54,24 +44,24 @@ public class PlayerController : Singleton<PlayerController>
         GetComponent<Transform>().position = spawnPos;
 
 
-        EquipWeapon(gameObject);
+        //EquipWeapon();
     }
 
     void Update()
     {
 
-        ui.SetActive(inventoryActive);
+        //ui.SetActive(inventoryActive);
 
     }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, playerRange);
+        Gizmos.DrawWireSphere(transform.position, Settings.playerRange);
     }
 
     private void FixedUpdate()
     {
-        Vector2 moveMovement = inputMovement * moveSpeed;
+        Vector2 moveMovement = inputMovement * Settings.moveSpeed;
 
         rb.velocity = new Vector2(moveMovement.x, rb.velocity.y);
     }
@@ -98,7 +88,7 @@ public class PlayerController : Singleton<PlayerController>
         float pressed = inputValue.Get<float>();
         if (onGround && pressed == 1f)
         {
-            float jumpForce = Mathf.Sqrt(jumpHeight * (Physics2D.gravity.y * rb.gravityScale) * -2) * rb.mass;
+            float jumpForce = Mathf.Sqrt(Settings.jumpHeight * (Physics2D.gravity.y * rb.gravityScale) * -2) * rb.mass;
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
     }
@@ -123,7 +113,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             anim.SetTrigger("Attack");
 
-            if (Vector2.Distance(transform.position, mousePosition) <= playerRange && Vector2.Distance(transform.position, mousePos) > 1f)
+            if (Vector2.Distance(transform.position, mousePosition) <= Settings.playerRange && Vector2.Distance(transform.position, mousePos) > 1f)
             {
                 terrainGeneration.MiningTile(mousePosX, mousePosY);
 
@@ -146,58 +136,27 @@ public class PlayerController : Singleton<PlayerController>
         float pressed = inputValue.Get<float>();
         if (pressed == 1f)
         {
-            inventoryActive = !inventoryActive;
+            //inventoryActive = !inventoryActive;
         }
     }
 
-    // 핫키
-    private void OnHotbar(InputValue inputValue)
+    private void OnAdvanceTime(InputValue inputValue)
     {
+        float pressed = inputValue.Get<float>();
+        if (pressed == 1f)
+        {
+            TimeManager.Instance.TestAdvanceGameMinute();
+        }
+    }
 
-        Vector2 scrollDelta = inputValue.Get<Vector2>();
+    private void OnAdvanceDay(InputValue inputValue)
+    {
+        float pressed = inputValue.Get<float>();
+        if (pressed == 1f)
+        {
+            TimeManager.Instance.TestAdvanceGameDay();
 
-        //if (scrollDelta.normalized.y > 0)
-        //{
-        //    if (selectedSlotIndex < inventory.inventoryWidth)
-        //    {
-        //        selectedSlotIndex++;
-        //        if (selectedSlotIndex >= inventory.inventoryWidth)
-        //        {
-        //            selectedSlotIndex = 0;
-        //        }
-        //    }
-        //}
-        //else if (scrollDelta.normalized.y < 0)
-        //{
-        //    if (selectedSlotIndex >= 0)
-        //    {
-        //        selectedSlotIndex--;
-
-        //        if (selectedSlotIndex < 0)
-        //        {
-        //            selectedSlotIndex = inventory.inventoryWidth - 1;
-        //        }
-        //    }
-        //}
-
-        //float hotBarPosX = inventory.hotbarUISlots[selectedSlotIndex].transform.position.x;
-        //float hotBarPosY = inventory.hotbarUISlots[selectedSlotIndex].transform.position.y;
-
-
-        //// select slot UI
-        //hotBarSelectItem.transform.position = new Vector2(hotBarPosX - 20, hotBarPosY - 20);
-
-        //if (inventory.inventorySlots[selectedSlotIndex, inventory.inventoryHeight - 1] != null)
-        //{
-        //    selectedItem = inventory.inventorySlots[selectedSlotIndex, inventory.inventoryHeight - 1].item;
-
-        //}
-        //else
-        //{
-        //    selectedItem = null;
-
-        //}
-        //select item
+        }
     }
 
     //public void DisablePlayerInputAndResetMovement()
@@ -217,25 +176,25 @@ public class PlayerController : Singleton<PlayerController>
 
     //}
 
-    public void EquipWeapon(GameObject player)
-    {
-        if (equippedWeapon == null)
-            return;
 
-        Transform[] AllData = player.GetComponentsInChildren<Transform>();
 
-        foreach (Transform weapon in AllData)
-        {
-            if (weapon.name == "Weapon")
-            {
-                weapon.GetComponent<SpriteRenderer>().sprite = equippedWeapon.GetComponent<SpriteRenderer>().sprite;
-                //weaponEquipment = Instantiate(equippedWeapon, transform.position, Quaternion.identity);
-                //weaponEquipment.transform.SetParent(weapon);
-                //weaponEquipment.transform.localPosition = new Vector3(0, 0, 0);
+    //public void EquipWeapon()
+    //{
+    //    if (equippedWeapon == null)
+    //        return;
 
-            }
-        }
-    }
+    //    foreach (Transform weapon in characterAttribute)
+    //    {
+    //        if (weapon.name == "Weapon")
+    //        {
+    //            weapon.GetComponent<SpriteRenderer>().sprite = equippedWeapon.GetComponent<SpriteRenderer>().sprite;
+    //            //weaponEquipment = Instantiate(equippedWeapon, transform.position, Quaternion.identity);
+    //            //weaponEquipment.transform.SetParent(weapon);
+    //            //weaponEquipment.transform.localPosition = new Vector3(0, 0, 0);
+
+    //        }
+    //    }
+    //}
 
     public Vector3 GetPosition()
     {

@@ -252,7 +252,6 @@ public class InventoryManager : Singleton<InventoryManager>
 
         }
 
-
     }
 
     public void ClearSelectedInventoryItem(InventoryLocation inventoryLocation)

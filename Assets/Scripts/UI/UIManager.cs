@@ -6,6 +6,9 @@ public class UIManager : Singleton<UIManager>
 {
 
     private bool _pauseMenuOn = false;
+    [SerializeField] private UIInventoryBar uiInventoryBar = null;
+    [SerializeField] private PauseMenuInventoryManagement pauseMenuInventoryManagement = null;
+
     [SerializeField] private GameObject pauseMenu = null;
     [SerializeField] private GameObject[] menuTabs = null;
     [SerializeField] private Button[] menuButtons = null;
@@ -46,6 +49,8 @@ public class UIManager : Singleton<UIManager>
 
     private void DisablePauseMenu()
     {
+        pauseMenuInventoryManagement.DestoryCurrentlyDraggedItems();
+
         PauseMenuOn = false;
         Time.timeScale = 1;
         pauseMenu.SetActive(false);
@@ -54,6 +59,11 @@ public class UIManager : Singleton<UIManager>
 
     private void EnablePauseMenu()
     {
+        uiInventoryBar.DestroyCurrentlyDraggedItems();
+
+        uiInventoryBar.ClearCurrentlySelectedItems();
+
+
         PauseMenuOn = true;
         Time.timeScale = 0;
         pauseMenu.SetActive(true);

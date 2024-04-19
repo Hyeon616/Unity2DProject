@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class TimeManager : Singleton<TimeManager>
@@ -8,12 +9,13 @@ public class TimeManager : Singleton<TimeManager>
     private int gameHour = 1;
     private int gameMinute = 30;
     private int gameSecond = 0;
-    private string gameDayOfWeek = "Mon";
+    private string gameDayOfWeek = "월";
 
     private bool gameClockPaused = false;
 
     private float gameTick = 0f;
 
+    
 
     private void Start()
     {
@@ -26,6 +28,7 @@ public class TimeManager : Singleton<TimeManager>
         {
             GameTick();
         }
+        
     }
 
     private void GameTick()
@@ -94,8 +97,6 @@ public class TimeManager : Singleton<TimeManager>
             }
             EventHandler.CallAdvanceGameMinuteEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
             
-           // Debug.Log($"Game Year : {gameYear}   Game Season : {gameSeason}   Game Day : {gameDay}   Game Day Of Week : {gameDayOfWeek}   Game Hour : {gameHour}   Game Minute : {gameMinute}   Game Second : {gameSecond}   ");
-
         }
 
 
@@ -109,34 +110,46 @@ public class TimeManager : Singleton<TimeManager>
         switch (dayOfWeek)
         {
             case 1:
-                return "Mon";
+                return "월";
 
             case 2:
-                return "Tue";
+                return "화";
 
             case 3:
-                return "Wed";
+                return "수";
 
             case 4:
-                return "Thu";
+                return "목";
 
             case 5:
-                return "Fri";
+                return "금";
 
             case 6:
-                return "Sat";
+                return "토";
 
             case 0:
-                return "Sun";
+                return "일";
 
             default:
                 return "";
         }
     }
 
+    public TimeSpan GetGameTime()
+    {
+        TimeSpan gameTime = new TimeSpan(gameHour, gameMinute, gameSecond);
+
+        return gameTime;
+    }
+
+    public Season GetGameSeason()
+    {
+        return gameSeason;
+    }
+
     public void TestAdvanceGameMinute()
     {
-        for (int i = 0; i < 60; i++)
+        for (int i = 0; i < 600; i++)
         {
             UpdateGameSecond();
         }

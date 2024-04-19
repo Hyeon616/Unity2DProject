@@ -1,10 +1,10 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "newtileclass", menuName = "Tile Class")]
+[CreateAssetMenu(fileName = "newtileclass", menuName = "Scriptable Objects/Tile/Tile Class")]
 public class TileClass : ScriptableObject
 {
     public TileClass wallVariant;
-    public Sprite[] tileSprites;
+    public Sprite tileSprites;
     public TileClass tileDrop;
     public string tileName;
     public int tileHp;

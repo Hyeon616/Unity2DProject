@@ -127,4 +127,10 @@ public class UIManager : Singleton<UIManager>
 
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+
 }

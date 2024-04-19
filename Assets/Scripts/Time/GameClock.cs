@@ -30,11 +30,11 @@ public class GameClock : MonoBehaviour
 
         if(gameHour >=12)
         {
-            ampm = " pm";
+            ampm = " PM";
         }
         else
         {
-            ampm = " am";
+            ampm = " AM";
         }
 
         if(gameHour >= 13)
@@ -56,6 +56,6 @@ public class GameClock : MonoBehaviour
         timeText.SetText(time);
         dateText.SetText(gameDayOfWeek + ". " + gameDay.ToString());
         seasonText.SetText(gameSeason.ToString());
-        yearText.SetText("Year" + gameYear);
+        yearText.SetText("Year " + gameYear);
     }
 }

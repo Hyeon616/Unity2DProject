@@ -64,7 +64,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Inventory"",
+                    ""name"": ""LoadScene"",
                     ""type"": ""Button"",
                     ""id"": ""2e47bb80-50e4-498d-a34c-bbd167547c50"",
                     ""expectedControlType"": ""Button"",
@@ -161,11 +161,11 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""6a3d4cc6-2b37-4198-8881-a1e364649db5"",
-                    ""path"": ""<Keyboard>/i"",
+                    ""path"": ""<Keyboard>/l"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Inventory"",
+                    ""action"": ""LoadScene"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -202,7 +202,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Mouse = m_Player.FindAction("Mouse", throwIfNotFound: true);
-        m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
+        m_Player_LoadScene = m_Player.FindAction("LoadScene", throwIfNotFound: true);
         m_Player_AdvanceTime = m_Player.FindAction("AdvanceTime", throwIfNotFound: true);
         m_Player_AdvanceDay = m_Player.FindAction("AdvanceDay", throwIfNotFound: true);
     }
@@ -270,7 +270,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Mouse;
-    private readonly InputAction m_Player_Inventory;
+    private readonly InputAction m_Player_LoadScene;
     private readonly InputAction m_Player_AdvanceTime;
     private readonly InputAction m_Player_AdvanceDay;
     public struct PlayerActions
@@ -281,7 +281,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @Mouse => m_Wrapper.m_Player_Mouse;
-        public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
+        public InputAction @LoadScene => m_Wrapper.m_Player_LoadScene;
         public InputAction @AdvanceTime => m_Wrapper.m_Player_AdvanceTime;
         public InputAction @AdvanceDay => m_Wrapper.m_Player_AdvanceDay;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -305,9 +305,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @Mouse.started += instance.OnMouse;
             @Mouse.performed += instance.OnMouse;
             @Mouse.canceled += instance.OnMouse;
-            @Inventory.started += instance.OnInventory;
-            @Inventory.performed += instance.OnInventory;
-            @Inventory.canceled += instance.OnInventory;
+            @LoadScene.started += instance.OnLoadScene;
+            @LoadScene.performed += instance.OnLoadScene;
+            @LoadScene.canceled += instance.OnLoadScene;
             @AdvanceTime.started += instance.OnAdvanceTime;
             @AdvanceTime.performed += instance.OnAdvanceTime;
             @AdvanceTime.canceled += instance.OnAdvanceTime;
@@ -330,9 +330,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @Mouse.started -= instance.OnMouse;
             @Mouse.performed -= instance.OnMouse;
             @Mouse.canceled -= instance.OnMouse;
-            @Inventory.started -= instance.OnInventory;
-            @Inventory.performed -= instance.OnInventory;
-            @Inventory.canceled -= instance.OnInventory;
+            @LoadScene.started -= instance.OnLoadScene;
+            @LoadScene.performed -= instance.OnLoadScene;
+            @LoadScene.canceled -= instance.OnLoadScene;
             @AdvanceTime.started -= instance.OnAdvanceTime;
             @AdvanceTime.performed -= instance.OnAdvanceTime;
             @AdvanceTime.canceled -= instance.OnAdvanceTime;
@@ -362,7 +362,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnMouse(InputAction.CallbackContext context);
-        void OnInventory(InputAction.CallbackContext context);
+        void OnLoadScene(InputAction.CallbackContext context);
         void OnAdvanceTime(InputAction.CallbackContext context);
         void OnAdvanceDay(InputAction.CallbackContext context);
     }

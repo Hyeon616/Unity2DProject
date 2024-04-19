@@ -7,7 +7,7 @@ public class InventoryManager : Singleton<InventoryManager>
     private Dictionary<int, ItemDetails> itemDetailsDictionary;
     public int[] selectedInventoryItem;
 
-    public List<InventoryItem>[] inventoryLists;
+    public Dictionary<int, InventoryItem>[] inventoryDictionaries;
     // 0 플레이어
     // 1 창고
 
@@ -35,16 +35,25 @@ public class InventoryManager : Singleton<InventoryManager>
 
     private void CreateInventoryLists()
     {
-        inventoryLists = new List<InventoryItem>[(int)InventoryLocation.Count];
-
-        for (int i = 0; i < (int)InventoryLocation.Count; i++)
-        {
-            inventoryLists[i] = new List<InventoryItem>();
-
-        }
 
         inventoryListCapacityIntArray = new int[(int)InventoryLocation.Count];
+        // 플레이어 인벤토리 용량
         inventoryListCapacityIntArray[(int)InventoryLocation.player] = Settings.playerInitalInventoryCapacity;
+
+        inventoryDictionaries = new Dictionary<int, InventoryItem>[(int)InventoryLocation.Count];
+        // 플레이어 인벤토리 딕셔너리 생성
+        Dictionary<int, InventoryItem> playerDict = new Dictionary<int, InventoryItem>();
+
+        for (int i = 0; i < inventoryListCapacityIntArray[(int)InventoryLocation.player]; i++)
+        {
+            InventoryItem invItem;
+            invItem.itemCode = 0;
+            invItem.itemQuantity = 0;
+            playerDict.Add(i, invItem);
+        }
+
+        inventoryDictionaries[(int)InventoryLocation.player] = playerDict;
+        //----
 
     }
 
@@ -68,68 +77,87 @@ public class InventoryManager : Singleton<InventoryManager>
     public void AddItem(InventoryLocation inventoryLocation, Items item)
     {
         int itemCode = item.ItemCode;
-        List<InventoryItem> inventoryList = inventoryLists[(int)inventoryLocation];
-
+        Dictionary<int, InventoryItem> inventoryDict = inventoryDictionaries[(int)inventoryLocation];
         // 아이템이 없으면 -1반환
         int itemPosition = FindItemInInventory(inventoryLocation, itemCode);
 
         if (itemPosition != -1)
         {
             // 기존 아이템
-            AddItemAtPosition(inventoryList, itemCode, itemPosition);
+            AddItemAtPosition(inventoryDict, itemCode, itemPosition);
 
         }
         else
         {
             // 새로운 아이템
-            AddItemAtPosition(inventoryList, itemCode);
+            AddItemAtPosition(inventoryDict, itemCode);
         }
 
-        EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryLists[(int)inventoryLocation]);
-
+        EventHandler.CallInventoryUpdatedDictEvent(inventoryLocation, inventoryDictionaries[(int)inventoryLocation]);
 
     }
 
+    private int GetFirstEmptyItemSlot(Dictionary<int, InventoryItem> inventoryDict)
 
+    {
+
+        foreach (KeyValuePair<int, InventoryItem> item in inventoryDict)
+
+        {
+
+            if (item.Value.itemCode == 0)
+                return item.Key;
+
+        }
+
+        return -1;
+
+    }
 
 
     public int FindItemInInventory(InventoryLocation inventoryLocation, int itemCode)
     {
-        List<InventoryItem> inventoryList = inventoryLists[(int)inventoryLocation];
+        Dictionary<int, InventoryItem> inventoryDict = inventoryDictionaries[(int)inventoryLocation];
 
-        for (int i = 0; i < inventoryList.Count; i++)
+        foreach (KeyValuePair<int, InventoryItem> item in inventoryDict)
         {
-            if (inventoryList[i].itemCode == itemCode)
-            {
-                return i;
-
-            }
+            if (item.Value.itemCode == itemCode) return item.Key;
         }
+
         return -1;
     }
-    private void AddItemAtPosition(List<InventoryItem> inventoryList, int itemCode)
+
+
+    private void AddItemAtPosition(Dictionary<int, InventoryItem> inventoryDict, int itemCode)
     {
+
         InventoryItem inventoryItem = new InventoryItem();
 
-        inventoryItem.itemCode = itemCode;
-        inventoryItem.itemQuantity = 1;
-        inventoryList.Add(inventoryItem);
+        int itemSlot = GetFirstEmptyItemSlot(inventoryDict);
 
+        if (itemSlot != -1)
+        {
+
+            inventoryItem.itemCode = itemCode;
+
+            inventoryItem.itemQuantity = 1;
+
+            inventoryDict[itemSlot] = inventoryItem;
+
+        }
     }
 
-
-
-    private void AddItemAtPosition(List<InventoryItem> inventoryList, int itemCode, int position)
+    private void AddItemAtPosition(Dictionary<int, InventoryItem> inventoryDict, int itemCode, int itemPosition)
     {
+
         InventoryItem inventoryItem = new InventoryItem();
-        int quantity = inventoryList[position].itemQuantity + 1;
+
+        int quantity = inventoryDict[itemPosition].itemQuantity + 1;
         inventoryItem.itemQuantity = quantity;
         inventoryItem.itemCode = itemCode;
-        inventoryList[position] = inventoryItem;
+        inventoryDict[itemPosition] = inventoryItem;
 
-     
     }
-
 
 
     // 아이템 코드에 맞는 아이템이 없으면 null
@@ -147,11 +175,11 @@ public class InventoryManager : Singleton<InventoryManager>
         }
     }
 
-    private ItemDetails GetSelectedInventoryItemDetails(InventoryLocation inventoryLocation)
+    public ItemDetails GetSelectedInventoryItemDetails(InventoryLocation inventoryLocation)
     {
         int itemCode = GetSelectedInventoryItem(inventoryLocation);
 
-        if(itemCode == -1)
+        if (itemCode == -1)
         {
             return null;
 
@@ -164,7 +192,7 @@ public class InventoryManager : Singleton<InventoryManager>
     }
 
 
-    private int GetSelectedInventoryItem(InventoryLocation inventoryLocation)
+    public int GetSelectedInventoryItem(InventoryLocation inventoryLocation)
     {
         return selectedInventoryItem[(int)inventoryLocation];
     }
@@ -207,51 +235,60 @@ public class InventoryManager : Singleton<InventoryManager>
 
     public void RemoveItem(InventoryLocation inventoryLocation, int itemCode)
     {
-        List<InventoryItem> inventoryList = inventoryLists[(int)inventoryLocation];
+
+        Dictionary<int, InventoryItem> inventoryDict = inventoryDictionaries[(int)inventoryLocation];
 
         int itemPosition = FindItemInInventory(inventoryLocation, itemCode);
 
         if (itemPosition != -1)
         {
-            RemoveItemAtPosition(inventoryList, itemCode, itemPosition);
+            RemoveItemAtPosition(inventoryDict, itemCode, itemPosition);
         }
 
-        EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryLists[(int)inventoryLocation]);
+        EventHandler.CallInventoryUpdatedDictEvent(inventoryLocation, inventoryDictionaries[(int)inventoryLocation]);
 
     }
 
-    private void RemoveItemAtPosition(List<InventoryItem> inventoryList, int itemCode, int position)
+    private void RemoveItemAtPosition(Dictionary<int, InventoryItem> inventoryDict, int itemCode, int itemPosition)
     {
+
         InventoryItem inventoryItem = new InventoryItem();
 
-        int quantity = inventoryList[position].itemQuantity - 1;
+        int quantity = inventoryDict[itemPosition].itemQuantity - 1;
 
         if (quantity > 0)
         {
             inventoryItem.itemQuantity = quantity;
+
             inventoryItem.itemCode = itemCode;
-            inventoryList[position] = inventoryItem;
         }
         else
         {
-            inventoryList.RemoveAt(position);
+            inventoryItem.itemQuantity = 0;
+
+            inventoryItem.itemCode = 0;
         }
+
+        inventoryDict[itemPosition] = inventoryItem;
+
     }
 
     public void SwapInventoryItems(InventoryLocation inventoryLocation, int fromItem, int toItem)
     {
-        if (fromItem < inventoryLists[(int)inventoryLocation].Count && toItem < inventoryLists[(int)inventoryLocation].Count && fromItem != toItem && fromItem >= 0 && toItem >= 0)
+
+        if (fromItem != toItem && fromItem >= 0)
         {
-            InventoryItem fromInventoryItem = inventoryLists[(int)inventoryLocation][fromItem];
-            InventoryItem toInventoryItem = inventoryLists[(int)inventoryLocation][toItem];
+            if (inventoryDictionaries[(int)inventoryLocation].ContainsKey(toItem))
+            {
+                InventoryItem fromInventoryItem = inventoryDictionaries[(int)inventoryLocation][fromItem];
+                InventoryItem toInventoryItem = inventoryDictionaries[(int)inventoryLocation][toItem];
 
-            inventoryLists[(int)inventoryLocation][toItem] = fromInventoryItem;
-            inventoryLists[(int)inventoryLocation][fromItem] = toInventoryItem;
+                inventoryDictionaries[(int)inventoryLocation][toItem] = fromInventoryItem;
+                inventoryDictionaries[(int)inventoryLocation][fromItem] = toInventoryItem;
 
-            EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryLists[(int)inventoryLocation]);
-
+                EventHandler.CallInventoryUpdatedDictEvent(inventoryLocation, inventoryDictionaries[(int)inventoryLocation]);
+            }
         }
-
     }
 
     public void ClearSelectedInventoryItem(InventoryLocation inventoryLocation)

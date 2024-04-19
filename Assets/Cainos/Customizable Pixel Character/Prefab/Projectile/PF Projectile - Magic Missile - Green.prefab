@@ -4877,10 +4877,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 5
-  launchFxPrefab: {fileID: 5003562569677301800, guid: 8f1080cbe3c86b842b8cac78ca0e5970,
-    type: 3}
-  hitFxPrefab: {fileID: 5003562569677301800, guid: 91ca46780655ded4588107faf2de32c5,
-    type: 3}
+  setZPosOnLaunch: 0
+  zPosLaunch: 0
+  setZPosOnHit: 0
+  zPosHit: 0
+  launchFxPrefab: {fileID: 5003562569677301800, guid: 8f1080cbe3c86b842b8cac78ca0e5970, type: 3}
+  hitFxPrefab: {fileID: 5003562569677301800, guid: 91ca46780655ded4588107faf2de32c5, type: 3}
 --- !u!198 &3698540896123418753
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -9901,7 +9903,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

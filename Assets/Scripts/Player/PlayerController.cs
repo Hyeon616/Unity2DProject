@@ -1,43 +1,48 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : Singleton<PlayerController>
 {
-    
 
     public bool onGround;
-
 
     private Vector2 inputMovement;
     Rigidbody2D rb;
     Animator anim;
 
     public bool inventoryActive;
-    
+
     [HideInInspector]
     public Vector3 spawnPos;
     public Vector2 mousePos;
     public TerrainGeneration terrainGeneration;
 
-    // public GameObject ui;
 
-    private Transform[] characterAttribute;
+    //private Transform[] characterAttribute;
     [SerializeField] private SpriteRenderer equippedItemSpriteRenderer = null;
+    //[SerializeField] private GameObject selectedItemPrefab = null;
+    [SerializeField] private TileClass selectedItem = null;
+
+    private UIInventorySlot inventorySlot;
 
     protected override void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = transform.GetChild(0).GetComponent<Animator>();
 
-        characterAttribute = GetComponentsInChildren<Transform>();
+        inventorySlot = GetComponent<UIInventorySlot>();
 
-       // characterAttributeCustomisationList = new List<CharacterAttribute>();
+        //characterAttribute = GetComponentsInChildren<Transform>();
 
-        
+        // characterAttributeCustomisationList = new List<CharacterAttribute>();
+
+
     }
 
-
+    private void Update()
+    {
+        //Debug.Log(InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemType);
+    }
 
     public void Spawn()
     {
@@ -47,12 +52,7 @@ public class PlayerController : Singleton<PlayerController>
         //EquipWeapon();
     }
 
-    void Update()
-    {
 
-        //ui.SetActive(inventoryActive);
-
-    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -117,26 +117,52 @@ public class PlayerController : Singleton<PlayerController>
             {
                 terrainGeneration.MiningTile(mousePosX, mousePosY);
 
-                //if (selectedItem != null)
-                //{
-                //    if (selectedItem.itemType == ItemClass.ItemType.BLOCK)
-                //    {
-                //        if(terrainGeneration.CheckTile(selectedItem.tile, mousePosX, mousePosY, false))
-                //            inventory.RemoveItem(selectedItem);
-                //    }
-                //}
+
+                if (InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player) != null)
+                {
+                    if (InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemType == ItemType.Block)
+                    {
+                        
+                        if (selectedItem != null)
+                        {
+                            TileClass newTileClass = TileClass.CreateInstance(selectedItem, false);
+
+                            newTileClass.tileSprites = InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemSprite;
+                            newTileClass.tileHp = InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).blockHp;
+                            newTileClass.tileName = InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemDescription;
+
+
+                            if (terrainGeneration.CheckTile(newTileClass, mousePosX, mousePosY, false))
+                            {
+                                InventoryManager.Instance.RemoveItem(InventoryLocation.player, InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemCode);
+
+                                if (InventoryManager.Instance.FindItemInInventory(InventoryLocation.player, InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemCode) == -1)
+                                {
+                                    //selectedItem = null;
+                                }
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        //selectedItem = null;
+                    }
+                }
+
 
             }
         }
     }
 
     // 인벤토리
-    private void OnInventory(InputValue inputValue)
+    private void OnLoadScene(InputValue inputValue)
     {
         float pressed = inputValue.Get<float>();
         if (pressed == 1f)
         {
             //inventoryActive = !inventoryActive;
+            //SceneControllerManager.Instance.FadeAndLoadScene(SceneName.Scene2_Mining.ToString(), GetPosition());
         }
     }
 
@@ -158,24 +184,6 @@ public class PlayerController : Singleton<PlayerController>
 
         }
     }
-
-    //public void DisablePlayerInputAndResetMovement()
-    //{
-    //    DisablePlayerInput();
-    //}
-
-    //public void DisablePlayerInput()
-    //{
-    //    PlayerInputIsDisabled = true;
-
-    //}
-
-    //public void EnablePlayerInput()
-    //{
-    //    PlayerInputIsDisabled = false;
-
-    //}
-
 
 
     //public void EquipWeapon()
@@ -209,21 +217,12 @@ public class PlayerController : Singleton<PlayerController>
         {
             ItemDetails itemDetails = InventoryManager.Instance.GetItemDetails(items.ItemCode);
 
-            if(itemDetails.canBePickedUp == true)
+            if (itemDetails.canBePickedUp == true)
             {
                 InventoryManager.Instance.AddItem(InventoryLocation.player, items, collision.gameObject);
             }
 
         }
-
-        //if (collision.gameObject.layer ==6)
-        //{
-            
-        //    inventory.AcquireItem(collision.gameObject.GetComponent<ItemPickUp>().Item, 1);
-        //    Destroy(collision.gameObject);
-
-
-        //}
 
     }
 

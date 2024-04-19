@@ -16,7 +16,6 @@ public enum Season
 
 }
 
-
 public enum ItemType
 {
     Block,
@@ -28,7 +27,15 @@ public enum ItemType
     food,
     Furniture,
     Reapable_scenary,
+    Ingredient,
     None,
     Count,
+}
+
+public enum SceneName
+{
+    Scene1_MainMenu,
+    Scene2_Mining,
+    Scene3_Dungeon,
 
 }

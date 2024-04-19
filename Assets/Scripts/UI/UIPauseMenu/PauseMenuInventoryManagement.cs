@@ -14,18 +14,18 @@ public class PauseMenuInventoryManagement : MonoBehaviour
 
     private void OnEnable()
     {
-        EventHandler.InventoryUpdatedEvent += PopulatePlayerInventory;
+        
+        EventHandler.InventoryUpdatedDictEvent += PopulatePlayerInventory;
 
         if (InventoryManager.Instance != null)
         {
-            PopulatePlayerInventory(InventoryLocation.player, InventoryManager.Instance.inventoryLists[(int)InventoryLocation.player]);
+            PopulatePlayerInventory(InventoryLocation.player, InventoryManager.Instance.inventoryDictionaries[(int)InventoryLocation.player]);
         }
-
     }
 
     private void OnDisable()
     {
-        EventHandler.InventoryUpdatedEvent -= PopulatePlayerInventory;
+        EventHandler.InventoryUpdatedDictEvent -= PopulatePlayerInventory;
 
         DestroyInventoryTextBoxGameobject();
     }
@@ -41,7 +41,8 @@ public class PauseMenuInventoryManagement : MonoBehaviour
 
     public void DestoryCurrentlyDraggedItems()
     {
-        for (int i = 0; i < InventoryManager.Instance.inventoryLists[(int)InventoryLocation.player].Count; i++)
+        
+        for (int i = 0; i < InventoryManager.Instance.inventoryDictionaries[(int)InventoryLocation.player].Count; i++)
         {
             if (inventoryManagementSlot[i].draggedItem != null)
             {
@@ -50,7 +51,7 @@ public class PauseMenuInventoryManagement : MonoBehaviour
         }
     }
 
-    private void PopulatePlayerInventory(InventoryLocation inventoryLocation, List<InventoryItem> playerInventoryList)
+    private void PopulatePlayerInventory(InventoryLocation inventoryLocation, Dictionary<int, InventoryItem> playerInventoryDict)
     {
         
         if(inventoryLocation == InventoryLocation.player)
@@ -58,10 +59,10 @@ public class PauseMenuInventoryManagement : MonoBehaviour
             InitializeInventoryManagementSlots();
 
             // 아이템 전부 순회
-            for (int i = 0; i < InventoryManager.Instance.inventoryLists[(int)InventoryLocation.player].Count; i++)
+            for (int i = 0; i < InventoryManager.Instance.inventoryDictionaries[(int)InventoryLocation.player].Count; i++)
             {
-                inventoryManagementSlot[i].itemDetails = InventoryManager.Instance.GetItemDetails(playerInventoryList[i].itemCode);
-                inventoryManagementSlot[i].itemQuantity = playerInventoryList[i].itemQuantity;
+                inventoryManagementSlot[i].itemDetails = InventoryManager.Instance.GetItemDetails(playerInventoryDict[i].itemCode);
+                inventoryManagementSlot[i].itemQuantity = playerInventoryDict[i].itemQuantity;
 
                 if (inventoryManagementSlot[i].itemDetails != null)
                 {
@@ -71,8 +72,6 @@ public class PauseMenuInventoryManagement : MonoBehaviour
 
             }
         }
-
-
     }
 
     private void InitializeInventoryManagementSlots()

@@ -50,7 +50,7 @@ public class ItemCodeDescriptionDrawer : PropertyDrawer
     {
         SO_ItemList so_ItemList;
 
-        so_ItemList = AssetDatabase.LoadAssetAtPath("Assets/Resource/Item/so_ItemList.asset", typeof(SO_ItemList)) as SO_ItemList;
+        so_ItemList = AssetDatabase.LoadAssetAtPath("Assets/Resource/Scriptable Object/Item/so_ItemList.asset", typeof(SO_ItemList)) as SO_ItemList;
 
         List<ItemDetails> itemDetailsList = so_ItemList.itemDetails;
 

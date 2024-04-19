@@ -2,7 +2,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CreateAssetMenu(fileName = "TileAtlas", menuName = "Tile Atlas")]
+[CreateAssetMenu(fileName = "TileAtlas", menuName = "Scriptable Objects/Tile/Tile Atlas")]
 public class TileAtlas : ScriptableObject
 {
     [Header("Environment")]

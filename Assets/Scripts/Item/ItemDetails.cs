@@ -14,6 +14,7 @@ public class ItemDetails
     public ItemType itemType;
     public string itemDescription; // 설명
     public Sprite itemSprite;
+    public int blockHp;
     public string itemLongDescription; // 긴설명
     public short itemUseGridRadius; // 아이템을 놓을 수 있는 사거리
     public float itemUseRadius;

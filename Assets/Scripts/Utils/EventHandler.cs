@@ -4,20 +4,17 @@ using System.Collections.Generic;
 public static class EventHandler
 {
     // 인벤토리 이벤트
-
     // 인벤토리 업데이트
-    public static event Action<InventoryLocation, List<InventoryItem>> InventoryUpdatedEvent;
+    public static event Action<InventoryLocation, Dictionary<int, InventoryItem>> InventoryUpdatedDictEvent;
 
-    public static void CallInventoryUpdatedEvent(InventoryLocation inventoryLocation, List<InventoryItem> inventoryList)
+    public static void CallInventoryUpdatedDictEvent(InventoryLocation inventoryLocation, Dictionary<int, InventoryItem> inventoryDict)
     {
-        if (InventoryUpdatedEvent != null)
-            InventoryUpdatedEvent(inventoryLocation, inventoryList);
+        if (InventoryUpdatedDictEvent != null)
+            InventoryUpdatedDictEvent(inventoryLocation, inventoryDict);
 
     }
 
-
     // 시간 이벤트
-
     // 게임 분
     public static event Action<int, Season, int, string, int, int, int> AdvanceGameMinuteEvent;
 
@@ -65,6 +62,53 @@ public static class EventHandler
     {
         if (AdvanceGameYearEvent != null)
             AdvanceGameYearEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
+
+    }
+
+
+    // Scene 로드 이벤트
+    // scene unload fade out
+    public static event Action BeforeSceneUnloadFadeOutEvent;
+
+    public static void CallBeforeSceneUnloadFadeOutEvent()
+    {
+        if(BeforeSceneUnloadFadeOutEvent != null)
+        {
+            BeforeSceneUnloadFadeOutEvent();
+        }
+    }
+
+    // scene unload
+    public static event Action BeforeSceneUnloadEvent;
+
+    public static void CallBeforeSceneUnloadEvent()
+    {
+        if (BeforeSceneUnloadEvent != null)
+        {
+            BeforeSceneUnloadEvent();
+        }
+    }
+    // scene load
+    public static event Action AfterSceneLoadEvent;
+
+    public static void CallAfterSceneLoadEvent()
+    {
+        if (AfterSceneLoadEvent != null)
+        {
+            AfterSceneLoadEvent();
+        }
+
+    }
+
+    // scene load fade in
+    public static event Action AfterSceneLoadFadeInEvent;
+
+    public static void CallAfterSceneLoadFadeInEvent()
+    {
+        if (AfterSceneLoadFadeInEvent != null)
+        {
+            AfterSceneLoadFadeInEvent();
+        }
 
     }
 

@@ -49,7 +49,7 @@ public class SceneControllerManager : Singleton<SceneControllerManager>
         // Scene 로딩중 화면 까맣게 (알파값)
         yield return StartCoroutine(Fade(1f));
 
-        PlayerController.Instance.gameObject.transform.position = spawnPosition;
+        //PlayerController.Instance.gameObject.transform.position = spawnPosition;
 
         // Scene이 로딩중
         EventHandler.CallBeforeSceneUnloadEvent();
@@ -66,9 +66,10 @@ public class SceneControllerManager : Singleton<SceneControllerManager>
         yield return StartCoroutine(Fade(0f));
 
         EventHandler.CallAfterSceneLoadFadeInEvent();
-
-
     }
+
+
+
 
     private IEnumerator LoadSceneAndSetActive(string sceneName)
     {
@@ -103,5 +104,6 @@ public class SceneControllerManager : Singleton<SceneControllerManager>
 
     }
 
+   
 
 }

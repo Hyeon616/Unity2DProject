@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class TerrainGeneration : Singleton<TerrainGeneration>
@@ -43,7 +41,6 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
     [Header("Ore Settings")]
     public OreClass[] ores;
 
-
     #endregion
 
     private GameObject[,] worldChunks;
@@ -53,14 +50,7 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
     private TileClass[,] world_BackgroundTiles;
     private TileClass[,] world_ForegroundTiles;
 
-    public string ISaveableUniqueID { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-    public GameObjectSave GameObjectSave { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-
-    private void OnValidate()
-    {
-        DrawTextures();
-    }
-
+    
     protected override void Awake()
     {
 
@@ -79,12 +69,9 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
 
     private void Start()
     {
-
         // Map 초기화
         CreateChunks();
         GenerateTerrain();
-        player.Spawn();
-
     }
 
     private void FixedUpdate()
@@ -158,113 +145,123 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
 
     public void GenerateTerrain()
     {
-        TileClass tileClass;
-        float height;
 
         for (int x = 0; x < worldSize - 1; x++)
         {
             for (int y = 0; y < worldSize; y++)
             {
-                // PerlinNoise
-                height = Mathf.PerlinNoise((x + seed) * terrainFreq, seed * terrainFreq) * heightMultiplier + heightAddition;
 
-                // 플레이어의 시작 위치
-                if (x == worldSize / 2)
+                if (x < (worldSize / 2) - 10)
                 {
-                    player.spawnPos = new Vector2(x, height + 2);
+                    GenerateTerrainTileClass(x, y, terrainFreq);
                 }
-
-                if (y < height)
+                else if (x >= (worldSize / 2) - 10 && x <= (worldSize / 2) + 10)
                 {
-                    // 계층 별 맵 생성
-                    if (y < height - xenLayerHeight)
-                    {
-                        tileClass = tileAtlas.tech;
-
-                        if (ores[3].spreadTexture.GetPixel(x, y).r > 0.5f && height - y > ores[3].maxSpawnHeight)
-                        {
-                            tileClass = tileAtlas.diamond;
-                        }
-
-                    }
-                    else if (y < height - marsLayerHeight)
-                    {
-                        tileClass = tileAtlas.mars;
-
-                        if (ores[2].spreadTexture.GetPixel(x, y).r > 0.5f && height - y < ores[2].maxSpawnHeight)
-                        {
-                            tileClass = tileAtlas.gold;
-                        }
-
-                    }
-                    else if (y < height - dirtLayerHeight)
-                    {
-
-                        tileClass = tileAtlas.stone;
-
-                        if (ores[1].spreadTexture.GetPixel(x, y).r > 0.5f && height - y > ores[1].maxSpawnHeight)
-                        {
-                            tileClass = tileAtlas.iron;
-                        }
-
-                    }
-                    else if (y < height - 1)
-                    {
-                        tileClass = tileAtlas.dirt;
-
-
-                        if (ores[0].spreadTexture.GetPixel(x, y).r > 0.5f && height - y < ores[0].maxSpawnHeight)
-                        {
-                            tileClass = tileAtlas.coal;
-                        }
-
-                    }
-                    else
-                    {
-                        // 지상
-                        tileClass = tileAtlas.grass;
-
-                    }
-
-
-                    PlaceTile(tileClass, x, y, true);
-
-                    if (y >= height - 1)
-                    {
-                        int tree = Random.Range(0, treeChance);
-                        // 나무가 생성 될 확률 1/treeChance
-                        if (tree == 1)
-                        {
-                            // 나무 생성
-                            if (GetTileFromWorld(x, y))
-                            {
-                                GenerateTree(Random.Range(minTreeHeight, maxTreeHeight), x, y + 1);
-
-                            }
-                        }
-                        else
-                        {
-                            int i = Random.Range(0, tallGrassChance + 1);
-                            // 식물 생성
-                            if (i == 1)
-                            {
-                                if ((GetTileFromWorld(x, y)))
-                                {
-                                    if (tileAtlas.tallGrass != null)
-                                        PlaceTile(tileAtlas.tallGrass, x, y + 1, true);
-
-                                }
-                            }
-
-                        }
-                    }
+                    GenerateTerrainTileClass(x, y, 0);
+                }
+                else if (x > (worldSize / 2) + 10)
+                {
+                    GenerateTerrainTileClass(x, y, terrainFreq);
                 }
 
             }
         }
-
-
     }
+
+    public void GenerateTerrainTileClass(int x, int y, float Freq)
+    {
+        TileClass tileClass;
+        float height;
+
+        // PerlinNoise
+        height = Mathf.PerlinNoise((x + seed) * Freq, seed * Freq) * heightMultiplier + heightAddition;
+
+        if (y < height)
+        {
+            // 계층 별 맵 생성
+            if (y < height - xenLayerHeight)
+            {
+                tileClass = tileAtlas.tech;
+
+                if (ores[3].spreadTexture.GetPixel(x, y).r > 0.5f && height - y > ores[3].maxSpawnHeight)
+                {
+                    tileClass = tileAtlas.diamond;
+                }
+
+            }
+            else if (y < height - marsLayerHeight)
+            {
+                tileClass = tileAtlas.mars;
+
+                if (ores[2].spreadTexture.GetPixel(x, y).r > 0.5f && height - y < ores[2].maxSpawnHeight)
+                {
+                    tileClass = tileAtlas.gold;
+                }
+
+            }
+            else if (y < height - dirtLayerHeight)
+            {
+
+                tileClass = tileAtlas.stone;
+
+                if (ores[1].spreadTexture.GetPixel(x, y).r > 0.5f && height - y > ores[1].maxSpawnHeight)
+                {
+                    tileClass = tileAtlas.iron;
+                }
+
+            }
+            else if (y < height - 1)
+            {
+                tileClass = tileAtlas.dirt;
+
+
+                if (ores[0].spreadTexture.GetPixel(x, y).r > 0.5f && height - y < ores[0].maxSpawnHeight)
+                {
+                    tileClass = tileAtlas.coal;
+                }
+
+            }
+            else
+            {
+                // 지상
+                tileClass = tileAtlas.grass;
+            }
+
+
+            PlaceTile(tileClass, x, y, true);
+
+            if (y >= height - 1)
+            {
+                int tree = Random.Range(0, treeChance);
+                // 나무가 생성 될 확률 1/treeChance
+                if (tree == 1)
+                {
+                    // 나무 생성
+                    if (GetTileFromWorld(x, y))
+                    {
+                        GenerateTree(Random.Range(minTreeHeight, maxTreeHeight), x, y + 1);
+
+                    }
+                }
+                else
+                {
+                    int i = Random.Range(0, tallGrassChance + 1);
+                    // 식물 생성
+                    if (i == 1)
+                    {
+                        if ((GetTileFromWorld(x, y)))
+                        {
+                            if (tileAtlas.tallGrass != null)
+                                PlaceTile(tileAtlas.tallGrass, x, y + 1, true);
+
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
 
     public void GenerateNoiseTexture(float frequeny, float limit, Texture2D noiseTexture)
     {
@@ -337,7 +334,7 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
                 if (tile.name.ToLower().Contains("wall"))
                 {
                     newTile.GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f);
-                    
+
                 }
             }
             else
@@ -482,7 +479,7 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
         }
     }
 
-    TileClass GetTileFromWorld(int x, int y)
+    public TileClass GetTileFromWorld(int x, int y)
     {
         if (world_ForegroundTiles[x, y] != null)
         {

@@ -8,7 +8,7 @@ public class GameManager : Singleton<GameManager>
 
         base.Awake();
 
-        Screen.SetResolution(1920, 1080, FullScreenMode.FullScreenWindow, 0);
+        Screen.SetResolution(1280, 720, false);
     }
 
 

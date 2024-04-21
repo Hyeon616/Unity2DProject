@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using UnityEngine;
 
 
@@ -9,9 +6,9 @@ using UnityEngine;
 public class ItemDetails
 {
 
-
     public int itemCode;
     public ItemType itemType;
+    public string itemName; // 설명
     public string itemDescription; // 설명
     public Sprite itemSprite;
     public int blockHp;
@@ -22,8 +19,6 @@ public class ItemDetails
     public bool canBePickedUp;
     public bool canBeDropped;
     public bool canBeEaten;
-
-
 
 
 }

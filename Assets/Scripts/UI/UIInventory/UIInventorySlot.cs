@@ -156,6 +156,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         if (itemQuantity != 0)
         {
+
             inventoryBar.inventoryTextBoxGameObject = Instantiate(inventoryTextBoxPrefab, transform.position, Quaternion.identity);
             inventoryBar.inventoryTextBoxGameObject.transform.SetParent(parentCanvas.transform, false);
 
@@ -186,6 +187,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        
         if (eventData.button == PointerEventData.InputButton.Left)
         {
             if (isSelected == true)
@@ -196,6 +198,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 if (itemQuantity > 0)
                 {
+
                     SetSelectedItem();
                 }
             }

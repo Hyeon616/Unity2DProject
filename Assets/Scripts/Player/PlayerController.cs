@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,43 +14,27 @@ public class PlayerController : Singleton<PlayerController>
     public bool inventoryActive;
 
     [HideInInspector]
-    public Vector3 spawnPos;
     public Vector2 mousePos;
     public TerrainGeneration terrainGeneration;
 
 
-    //private Transform[] characterAttribute;
-    [SerializeField] private SpriteRenderer equippedItemSpriteRenderer = null;
-    //[SerializeField] private GameObject selectedItemPrefab = null;
-    [SerializeField] private TileClass selectedItem = null;
+    private SpriteRenderer backGroundColor;
 
-    private UIInventorySlot inventorySlot;
+    private float backgroundAlphaAt22to3 = 0.9f;
+    private float backgroundAlphaAt3to5And20to22 = 0.8f;
+    private float backgroundAlphaAt5to7And18to20 = 0.6f;
+    private float backgroundAlphaAt7to9And16to18 = 0.4f;
+    private float backgroundAlphaAt9to11And14to16 = 0.2f;
+    private float backgroundAlphaAt11to14 = 0f;
+
+    
 
     protected override void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = transform.GetChild(0).GetComponent<Animator>();
+        backGroundColor = transform.GetChild(2).GetComponent<SpriteRenderer>();
 
-        inventorySlot = GetComponent<UIInventorySlot>();
-
-        //characterAttribute = GetComponentsInChildren<Transform>();
-
-        // characterAttributeCustomisationList = new List<CharacterAttribute>();
-
-
-    }
-
-    private void Update()
-    {
-        //Debug.Log(InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemType);
-    }
-
-    public void Spawn()
-    {
-        GetComponent<Transform>().position = spawnPos;
-
-
-        //EquipWeapon();
     }
 
 
@@ -64,8 +49,41 @@ public class PlayerController : Singleton<PlayerController>
         Vector2 moveMovement = inputMovement * Settings.moveSpeed;
 
         rb.velocity = new Vector2(moveMovement.x, rb.velocity.y);
+
+       backGroundColor.color = new Color(0f, 0f, 0f, GetCurrentTimeAlpha());
+        
     }
 
+    private float GetCurrentTimeAlpha()
+    {
+        float currentTime = TimeManager.Instance.GetGameHour();
+
+        if (currentTime < 3 || currentTime >= 22)
+        {
+            return backgroundAlphaAt22to3;
+        }
+        else if ((currentTime >= 3 && currentTime < 5)  || (currentTime >= 20 && currentTime < 22))
+        {
+            return backgroundAlphaAt3to5And20to22;
+        }
+        else if ((currentTime >= 5 && currentTime < 7) || (currentTime >= 18 && currentTime < 20))
+        {
+            return backgroundAlphaAt5to7And18to20;
+        }
+        else if ((currentTime >= 7 && currentTime < 9) || (currentTime >= 16 && currentTime < 18))
+        {
+            return backgroundAlphaAt7to9And16to18;
+        }
+        else if ((currentTime >= 9 && currentTime < 11) || (currentTime >= 14 && currentTime < 16)  )
+        {
+            return backgroundAlphaAt9to11And14to16;
+        }
+        else if (currentTime >= 11 && currentTime < 14)
+        {
+            return backgroundAlphaAt11to14;
+        }
+        return 0;
+    }
 
     private void OnMove(InputValue inputValue)
     {
@@ -111,60 +129,31 @@ public class PlayerController : Singleton<PlayerController>
 
         if (pressed == 1f)
         {
-            anim.SetTrigger("Attack");
-
             if (Vector2.Distance(transform.position, mousePosition) <= Settings.playerRange && Vector2.Distance(transform.position, mousePos) > 1f)
             {
+                anim.SetTrigger("Attack");
                 terrainGeneration.MiningTile(mousePosX, mousePosY);
-
 
                 if (InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player) != null)
                 {
                     if (InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemType == ItemType.Block)
                     {
                         
-                        if (selectedItem != null)
+                        if (TerrainGeneration.Instance.GetTileFromWorld(mousePosX, mousePosY) == null)
                         {
-                            TileClass newTileClass = TileClass.CreateInstance(selectedItem, false);
-
-                            newTileClass.tileSprites = InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemSprite;
-                            newTileClass.tileHp = InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).blockHp;
-                            newTileClass.tileName = InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemDescription;
-
-
-                            if (terrainGeneration.CheckTile(newTileClass, mousePosX, mousePosY, false))
-                            {
-                                InventoryManager.Instance.RemoveItem(InventoryLocation.player, InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemCode);
-
-                                if (InventoryManager.Instance.FindItemInInventory(InventoryLocation.player, InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemCode) == -1)
-                                {
-                                    //selectedItem = null;
-                                }
-                            }
+                            DropManager.instance.PlaceBlock(mousePosX, mousePosY, InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemName);
+                            
                         }
 
                     }
-                    else
-                    {
-                        //selectedItem = null;
-                    }
+
                 }
-
-
             }
+
+
         }
     }
 
-    // 인벤토리
-    private void OnLoadScene(InputValue inputValue)
-    {
-        float pressed = inputValue.Get<float>();
-        if (pressed == 1f)
-        {
-            //inventoryActive = !inventoryActive;
-            //SceneControllerManager.Instance.FadeAndLoadScene(SceneName.Scene2_Mining.ToString(), GetPosition());
-        }
-    }
 
     private void OnAdvanceTime(InputValue inputValue)
     {
@@ -203,6 +192,8 @@ public class PlayerController : Singleton<PlayerController>
     //        }
     //    }
     //}
+
+
 
     public Vector3 GetPosition()
     {

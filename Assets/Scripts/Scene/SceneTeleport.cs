@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class SceneTeleport : MonoBehaviour
 {
-    [SerializeField] private SceneName sceneNameGoto = SceneName.Scene1_MainMenu;
+    //[SerializeField] private SceneName sceneNameGoto = SceneName.Scene1_MainMenu;
     [SerializeField] private Vector3 scenePositionGoto = new Vector3();
 
 
@@ -23,7 +23,7 @@ public class SceneTeleport : MonoBehaviour
             float xPosition = Mathf.Approximately(scenePositionGoto.x, 0f)  ? player.transform.position.x : scenePositionGoto.x; 
             float yPosition = Mathf.Approximately(scenePositionGoto.y, 0f)  ? player.transform.position.y : scenePositionGoto.y;
 
-            float zPosition = 0f;
+           // float zPosition = 0f;
 
             // Scene ¿Ãµø
             //SceneControllerManager.Instance.FadeAndLoadScene(sceneNameGoto.ToString(), new Vector3(xPosition, yPosition, zPosition));

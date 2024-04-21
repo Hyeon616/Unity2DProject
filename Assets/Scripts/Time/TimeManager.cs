@@ -15,7 +15,6 @@ public class TimeManager : Singleton<TimeManager>
 
     private float gameTick = 0f;
 
-    
 
     private void Start()
     {
@@ -56,6 +55,7 @@ public class TimeManager : Singleton<TimeManager>
             {
                 gameMinute = 0;
                 gameHour++;
+
 
                 if (gameHour > 23)
                 {
@@ -142,9 +142,31 @@ public class TimeManager : Singleton<TimeManager>
         return gameTime;
     }
 
+    public int GetGameHour()
+    {
+        return gameHour;
+    }
     public Season GetGameSeason()
     {
+
         return gameSeason;
+    }
+    public string GetGameSeasonString()
+    {
+
+        switch (gameSeason)
+        {
+            case Season.Spring:
+                return "봄";
+            case Season.Summer:
+                return "여름";
+            case Season.Autumn:
+                return "가을";
+            case Season.Winter:
+                return "겨울";
+        }
+
+        return "";
     }
 
     public void TestAdvanceGameMinute()

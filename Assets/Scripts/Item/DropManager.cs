@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +14,7 @@ public class DropManager : Singleton<DropManager>
     [SerializeField] public TileClass[] placeBlockValues;
     public Dictionary<string, TileClass> placeBlocks;
 
-    private TerrainGeneration terrainGeneration;
+
 
     protected override void Awake()
     {
@@ -25,7 +24,6 @@ public class DropManager : Singleton<DropManager>
         dropItems = new Dictionary<string, GameObject>();
         placeBlocks = new Dictionary<string, TileClass>();
 
-        terrainGeneration = GetComponent<TerrainGeneration>();
 
         for (int i = 0; i < dropItemKeys.Length; i++)
         {
@@ -38,15 +36,15 @@ public class DropManager : Singleton<DropManager>
         }
     }
 
-    public void ItemDrop(int x, int y ,string _itemName)
+    public void ItemDrop(int x, int y, string _itemName)
     {
         if (dropItems.ContainsKey(_itemName))
         {
-            
+
             GameObject itemDrop = dropItems[_itemName];
             itemDrop.layer = 10;
             itemDrop.transform.localScale = new Vector2(0.5f, 0.5f);
-            
+
             Instantiate(itemDrop, new Vector2(x, y + 0.5f), Quaternion.identity);
         }
     }
@@ -55,10 +53,18 @@ public class DropManager : Singleton<DropManager>
     {
         if (placeBlocks.ContainsKey(_itemName))
         {
+            
+            if(TerrainGeneration.Instance.CheckTile(placeBlocks[_itemName], x, y, false))
+            {
+                
+                InventoryManager.Instance.RemoveItem(InventoryLocation.player, InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemCode);
 
-            //terrainGeneration.CheckTile(placeBlocks[_itemName].);
+                if (InventoryManager.Instance.FindItemInInventory(InventoryLocation.player, InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemCode) == -1)
+                {
+                    InventoryManager.Instance.ClearSelectedInventoryItem(InventoryLocation.player);
+                }
+            }
 
-            //Instantiate(placeBlock, new Vector2(x, y), Quaternion.identity);
         }
     }
 

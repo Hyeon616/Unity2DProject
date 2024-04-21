@@ -33,6 +33,7 @@ public class UIManager : Singleton<UIManager>
     {
         if(Input.GetKeyDown(KeyCode.I))
         {
+
             if(PauseMenuOn)
             {
                 DisablePauseMenu();

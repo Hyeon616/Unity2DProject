@@ -56,6 +56,6 @@ public class GameClock : MonoBehaviour
         timeText.SetText(time);
         dateText.SetText(gameDayOfWeek + ". " + gameDay.ToString());
         seasonText.SetText(gameSeason.ToString());
-        yearText.SetText("Year " + gameYear);
+        yearText.SetText(gameYear + " ³â");
     }
 }

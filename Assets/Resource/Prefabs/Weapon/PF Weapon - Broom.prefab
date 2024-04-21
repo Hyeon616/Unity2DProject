@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5580242978444663832}
   - component: {fileID: 2727847186558577220}
   - component: {fileID: 4305377097346921154}
-  - component: {fileID: -853532810007854770}
   m_Layer: 9
   m_Name: PF Weapon - Broom
   m_TagString: Untagged
@@ -141,16 +140,3 @@ PolygonCollider2D:
       - {x: 0.700958, y: -0.053304747}
       - {x: 1.0445664, y: -0.14220758}
       - {x: 1.0488049, y: 0.13796936}
---- !u!114 &-853532810007854770
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6805170423116255223}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05d70dc4a0dbb034f8456907f89481d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tip: {fileID: 0}

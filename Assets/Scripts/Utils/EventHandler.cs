@@ -14,6 +14,7 @@ public static class EventHandler
 
     }
 
+
     // 시간 이벤트
     // 게임 분
     public static event Action<int, Season, int, string, int, int, int> AdvanceGameMinuteEvent;

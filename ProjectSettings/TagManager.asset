@@ -31,7 +31,7 @@ TagManager:
   - Player
   - 
   - Item
-  - 
+  - MinimapPlayer
   - 
   - 
   - 
@@ -53,6 +53,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BackGround
+    uniqueID: 4254560141
+    locked: 0
   - name: Ground
     uniqueID: 1881527125
     locked: 0

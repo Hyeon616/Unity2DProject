@@ -4867,7 +4867,6 @@ GameObject:
   - component: {fileID: 5580242978444663832}
   - component: {fileID: 2727847186558577220}
   - component: {fileID: 783554635675026348}
-  - component: {fileID: 8474626589995713999}
   m_Layer: 9
   m_Name: PF Weapon - Magic Staff 02
   m_TagString: Untagged
@@ -4998,16 +4997,3 @@ PolygonCollider2D:
       - {x: 0.9062569, y: -0.032469876}
       - {x: 0.9061846, y: 0.061032638}
       - {x: 0.81033677, y: 0.09690429}
---- !u!114 &8474626589995713999
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6805170423116255223}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05d70dc4a0dbb034f8456907f89481d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tip: {fileID: 2019825873775011125}

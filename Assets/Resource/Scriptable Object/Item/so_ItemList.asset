@@ -15,10 +15,11 @@ MonoBehaviour:
   itemDetails:
   - itemCode: 10000
     itemType: 0
-    itemDescription: Grass
+    itemName: Grass
+    itemDescription: "\uD480"
     itemSprite: {fileID: 21300000, guid: 78b4ba8a8c817014a9e945e9a359d312, type: 3}
     blockHp: 5
-    itemLongDescription: Grass
+    itemLongDescription: "\uD480"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -27,10 +28,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10001
     itemType: 9
-    itemDescription: Stone
+    itemName: Stone
+    itemDescription: "\uB3CC"
     itemSprite: {fileID: 21300000, guid: b9a847102a75c8c429a8f749008df6c2, type: 3}
     blockHp: 8
-    itemLongDescription: Stone
+    itemLongDescription: "\uB3CC"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -39,10 +41,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10002
     itemType: 0
-    itemDescription: Mars
+    itemName: Mars
+    itemDescription: "\uD1F4\uC801\uC554"
     itemSprite: {fileID: 21300000, guid: 28e97f6404739464fa893f5222b580fa, type: 3}
     blockHp: 11
-    itemLongDescription: Mars
+    itemLongDescription: "\uD1F4\uC801\uC554"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -51,10 +54,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10003
     itemType: 0
-    itemDescription: Tech
+    itemName: Tech
+    itemDescription: "\uCCA0\uC11D"
     itemSprite: {fileID: 21300000, guid: b6d7f707af9004a48b62320f621ea74b, type: 3}
     blockHp: 20
-    itemLongDescription: Tech
+    itemLongDescription: "\uCCA0\uC11D"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -62,11 +66,12 @@ MonoBehaviour:
     canBeDropped: 1
     canBeEaten: 0
   - itemCode: 10004
-    itemType: 0
-    itemDescription: Log
+    itemType: 9
+    itemName: Log
+    itemDescription: "\uB098\uBB34"
     itemSprite: {fileID: 21300000, guid: 0e1ccb64303778e4081913a6d9cca677, type: 3}
     blockHp: 5
-    itemLongDescription: Log
+    itemLongDescription: "\uB098\uBB34"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -75,10 +80,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10005
     itemType: 9
-    itemDescription: Leaves
+    itemName: Leaves
+    itemDescription: "\uB098\uBB47\uC78E"
     itemSprite: {fileID: 21300000, guid: 577e97710f1a3814e8abe5a3ec64a8f3, type: 3}
     blockHp: 1
-    itemLongDescription: Leaves
+    itemLongDescription: "\uB098\uBB47\uC78E"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -87,10 +93,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10006
     itemType: 9
-    itemDescription: Coal
+    itemName: Coal
+    itemDescription: "\uAD6C\uB9AC\uAD11\uC11D"
     itemSprite: {fileID: 21300000, guid: 7d58fd33da0c1714e83ed3c55ae05bb9, type: 3}
     blockHp: 13
-    itemLongDescription: Coal
+    itemLongDescription: "\uAD6C\uB9AC\uAD11\uC11D"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -99,10 +106,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10007
     itemType: 9
-    itemDescription: Iron
+    itemName: Iron
+    itemDescription: "\uCCA0\uAD11\uC11D"
     itemSprite: {fileID: 21300000, guid: e504bf3779bda9c40ba6d311e0611951, type: 3}
     blockHp: 20
-    itemLongDescription: Iron
+    itemLongDescription: "\uCCA0\uAD11\uC11D"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -111,10 +119,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10008
     itemType: 9
-    itemDescription: Gold
+    itemName: Gold
+    itemDescription: "\uAE08\uAD11\uC11D"
     itemSprite: {fileID: 21300000, guid: 68f03904aa02ba244a61e03fee3f6293, type: 3}
     blockHp: 15
-    itemLongDescription: Gold
+    itemLongDescription: "\uAE08\uAD11\uC11D"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -123,10 +132,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10009
     itemType: 9
-    itemDescription: Diamond
+    itemName: Diamond
+    itemDescription: "\uB2E4\uC774\uC544\uBAAC\uB4DC"
     itemSprite: {fileID: 21300000, guid: 3faa68d4e2f05f04786133598667ac36, type: 3}
     blockHp: 50
-    itemLongDescription: Diamond
+    itemLongDescription: "\uB2E4\uC774\uC544\uBAAC\uB4DC"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -135,10 +145,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10010
     itemType: 0
-    itemDescription: Dirt
+    itemName: Dirt
+    itemDescription: "\uC810\uD1A0"
     itemSprite: {fileID: 21300000, guid: d33fc4ca3ea63400ab243153d038037f, type: 3}
     blockHp: 5
-    itemLongDescription: Dirt
+    itemLongDescription: "\uC810\uD1A0"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -147,10 +158,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10011
     itemType: 6
-    itemDescription: Mushroom
+    itemName: Mushroom
+    itemDescription: "\uBC84\uC12F"
     itemSprite: {fileID: 21300000, guid: 966ff550585ec504896a28b55fd7281c, type: 3}
     blockHp: 0
-    itemLongDescription: Mushroom
+    itemLongDescription: "\uBC84\uC12F"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 0
@@ -159,10 +171,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10012
     itemType: 3
-    itemDescription: PickAxe
+    itemName: Pickaxe
+    itemDescription: "\uACE1\uAD2D\uC774"
     itemSprite: {fileID: 21300000, guid: 1fb46228a3bcb5042a763829cc07f9e5, type: 3}
     blockHp: 0
-    itemLongDescription: PickAxe
+    itemLongDescription: "\uACE1\uAD2D\uC774"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 1
@@ -171,10 +184,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10013
     itemType: 1
-    itemDescription: Wooden Sword
+    itemName: WoodenSword
+    itemDescription: "\uBAA9\uAC80"
     itemSprite: {fileID: 21300000, guid: 2ddf0348701148a4d8a7c6a0f7f146b3, type: 3}
     blockHp: 0
-    itemLongDescription: Wooden Sword
+    itemLongDescription: "\uBAA9\uAC80"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 1
@@ -183,10 +197,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10014
     itemType: 5
-    itemDescription: Hammer
+    itemName: Hammer
+    itemDescription: "\uB9DD\uCE58"
     itemSprite: {fileID: 21300000, guid: 7b8e0222a006d824e930445c7d435ac3, type: 3}
     blockHp: 0
-    itemLongDescription: Hammer
+    itemLongDescription: "\uB9DD\uCE58"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 1
@@ -195,10 +210,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10015
     itemType: 4
-    itemDescription: Axe
+    itemName: Axe
+    itemDescription: "\uB3C4\uB07C"
     itemSprite: {fileID: 21300000, guid: 6a08ec4b334ea1c46b8171679417a74f, type: 3}
     blockHp: 0
-    itemLongDescription: Axe
+    itemLongDescription: "\uB3C4\uB07C"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 1
@@ -207,10 +223,11 @@ MonoBehaviour:
     canBeEaten: 0
   - itemCode: 10016
     itemType: 2
-    itemDescription: Bow
+    itemName: Bow
+    itemDescription: "\uD65C"
     itemSprite: {fileID: 21300000, guid: bbf8638a8a75d9c42b93639213c92c9b, type: 3}
     blockHp: 0
-    itemLongDescription: Bow
+    itemLongDescription: "\uD65C"
     itemUseGridRadius: 2
     itemUseRadius: 0
     isStartingItem: 1

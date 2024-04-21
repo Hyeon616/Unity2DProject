@@ -64,9 +64,10 @@ public class PauseMenuInventoryManagementSlot : MonoBehaviour, IBeginDragHandler
         if (draggedItem != null)
         {
             Destroy(draggedItem);
-
             if (eventData.pointerCurrentRaycast.gameObject != null && eventData.pointerCurrentRaycast.gameObject.GetComponent<PauseMenuInventoryManagementSlot>() != null)
             {
+
+
                 int toSlotNumber = eventData.pointerCurrentRaycast.gameObject.GetComponent<PauseMenuInventoryManagementSlot>().slotNumber;
 
                 InventoryManager.Instance.SwapInventoryItems(InventoryLocation.player, slotNumber, toSlotNumber);

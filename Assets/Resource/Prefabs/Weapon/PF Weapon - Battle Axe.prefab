@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5580242978444663832}
   - component: {fileID: 2727847186558577220}
   - component: {fileID: 4305377097346921154}
-  - component: {fileID: -8317828022540607416}
   m_Layer: 9
   m_Name: PF Weapon - Battle Axe
   m_TagString: Untagged
@@ -140,16 +139,3 @@ PolygonCollider2D:
       - {x: 0.41710284, y: -0.22900012}
       - {x: 0.6301272, y: -0.23151949}
       - {x: 0.6899586, y: 0.04661125}
---- !u!114 &-8317828022540607416
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6805170423116255223}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05d70dc4a0dbb034f8456907f89481d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tip: {fileID: 0}

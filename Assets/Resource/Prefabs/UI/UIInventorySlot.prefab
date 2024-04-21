@@ -180,15 +180,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 879b1c81bb85dbf4e8b796556736e025, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  draggedItem: {fileID: 0}
   inventorySlotHighlight: {fileID: 1572415178156379198}
   inventorySlotImage: {fileID: 1572415178536165020}
   textMeshProUGUI: {fileID: 1572415179751463592}
   inventoryBar: {fileID: 0}
+  inventoryTextBoxPrefab: {fileID: 0}
+  isSelected: 0
   itemDetails:
     itemCode: 0
     itemType: 0
     itemDescription: 
     itemSprite: {fileID: 0}
+    blockHp: 0
     itemLongDescription: 
     itemUseGridRadius: 0
     itemUseRadius: 0
@@ -198,6 +202,7 @@ MonoBehaviour:
     canBeEaten: 0
   itemPrefab: {fileID: 6342130102052159324, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
   itemQuantity: 0
+  slotNumber: 0
 --- !u!1 &1572415179751463594
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,8 +271,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1ed599acc3bea6043b1c235fc96e0e31, type: 2}
-  m_sharedMaterial: {fileID: 21556483256320494, guid: 1ed599acc3bea6043b1c235fc96e0e31, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d11f12daa9180264f8fee373f6977780, type: 2}
+  m_sharedMaterial: {fileID: 3829679921021627281, guid: d11f12daa9180264f8fee373f6977780, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -291,8 +296,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 8
+  m_fontSizeBase: 8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

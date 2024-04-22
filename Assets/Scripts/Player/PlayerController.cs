@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,7 +26,7 @@ public class PlayerController : Singleton<PlayerController>
     private float backgroundAlphaAt9to11And14to16 = 0.2f;
     private float backgroundAlphaAt11to14 = 0f;
 
-    
+
 
     protected override void Awake()
     {
@@ -50,8 +49,8 @@ public class PlayerController : Singleton<PlayerController>
 
         rb.velocity = new Vector2(moveMovement.x, rb.velocity.y);
 
-       backGroundColor.color = new Color(0f, 0f, 0f, GetCurrentTimeAlpha());
-        
+        backGroundColor.color = new Color(0f, 0f, 0f, GetCurrentTimeAlpha());
+
     }
 
     private float GetCurrentTimeAlpha()
@@ -62,7 +61,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             return backgroundAlphaAt22to3;
         }
-        else if ((currentTime >= 3 && currentTime < 5)  || (currentTime >= 20 && currentTime < 22))
+        else if ((currentTime >= 3 && currentTime < 5) || (currentTime >= 20 && currentTime < 22))
         {
             return backgroundAlphaAt3to5And20to22;
         }
@@ -74,7 +73,7 @@ public class PlayerController : Singleton<PlayerController>
         {
             return backgroundAlphaAt7to9And16to18;
         }
-        else if ((currentTime >= 9 && currentTime < 11) || (currentTime >= 14 && currentTime < 16)  )
+        else if ((currentTime >= 9 && currentTime < 11) || (currentTime >= 14 && currentTime < 16))
         {
             return backgroundAlphaAt9to11And14to16;
         }
@@ -89,7 +88,12 @@ public class PlayerController : Singleton<PlayerController>
     {
 
         inputMovement = inputValue.Get<Vector2>();
-        anim.SetFloat("xVelocity", Mathf.Abs(inputMovement.x));
+        
+        anim.SetFloat("xVelocity", Mathf.Abs(inputMovement.normalized.x / 2));
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            anim.SetFloat("xVelocity", Mathf.Abs(inputMovement.normalized.x));
+        }
 
         if (inputMovement.x < 0)
         {
@@ -138,11 +142,11 @@ public class PlayerController : Singleton<PlayerController>
                 {
                     if (InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemType == ItemType.Block)
                     {
-                        
+
                         if (TerrainGeneration.Instance.GetTileFromWorld(mousePosX, mousePosY) == null)
                         {
                             DropManager.instance.PlaceBlock(mousePosX, mousePosY, InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemName);
-                            
+
                         }
 
                     }

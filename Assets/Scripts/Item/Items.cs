@@ -38,10 +38,10 @@ public class Items : MonoBehaviour
 
             spriteRenderer.sprite = itemDetails.itemSprite;
 
-            if(itemDetails.itemType == ItemType.Reapable_scenary)
-            {
-                gameObject.AddComponent<ItemNudge>();
-            }
+            //if(itemDetails.itemType == ItemType.Reapable_scenary)
+            //{
+            //    gameObject.AddComponent<ItemNudge>();
+            //}
 
         }
     }

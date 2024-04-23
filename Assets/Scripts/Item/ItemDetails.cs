@@ -8,6 +8,8 @@ public class ItemDetails
 
     public int itemCode;
     public ItemType itemType;
+    public EquipmentType equipmentType;
+    public WeaponType weaponType;
     public string itemName; // 설명
     public string itemDescription; // 설명
     public Sprite itemSprite;

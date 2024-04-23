@@ -203,6 +203,10 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 }
             }
         }
+        else if(eventData.button == PointerEventData.InputButton.Right)
+        {
+
+        }
     }
 
 

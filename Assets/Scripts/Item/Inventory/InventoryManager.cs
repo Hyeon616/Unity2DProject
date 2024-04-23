@@ -200,27 +200,27 @@ public class InventoryManager : Singleton<InventoryManager>
     public string GetItemTypeDescription(ItemType itemType)
     {
         string itemTypeDescription;
-
+        
         switch (itemType)
         {
-            case ItemType.BreakingTool:
-                itemTypeDescription = Settings.BreakingTool;
+            case ItemType.Equipment:
+                itemTypeDescription = Settings.Equipment;
                 break;
 
-            case ItemType.ChoppingTool:
-                itemTypeDescription = Settings.ChoppingTool;
+            case ItemType.Ingredient:
+                itemTypeDescription = Settings.Ingredient;
                 break;
 
-            case ItemType.RepairingTool:
-                itemTypeDescription = Settings.RepairingTool;
+            case ItemType.Food:
+                itemTypeDescription = Settings.Food;
                 break;
 
-            case ItemType.Sword:
-                itemTypeDescription = Settings.Sword;
+            case ItemType.Block:
+                itemTypeDescription = Settings.Block;
                 break;
 
-            case ItemType.Bow:
-                itemTypeDescription = Settings.Bow;
+            case ItemType.Furniture:
+                itemTypeDescription = Settings.Furniture;
                 break;
 
             default:

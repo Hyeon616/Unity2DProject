@@ -2,7 +2,7 @@ public enum InventoryLocation
 {
     player,
     chest,
-    Count,
+    Count
 }
 
 public enum Season
@@ -12,24 +12,43 @@ public enum Season
     Autumn,
     Winter,
     None,
-    Count,
+    Count
 
 }
 
 public enum ItemType
 {
     Block,
-    Sword,
-    Bow,
-    BreakingTool,
-    ChoppingTool,
-    RepairingTool,
-    food,
+    Equipment,
+    Food,
     Furniture,
-    Reapable_scenary,
     Ingredient,
     None,
-    Count,
+    Count
+}
+
+public enum EquipmentType
+{
+    Weapon,
+    Helmet,
+    Top,
+    Bottom,
+    Shoes,
+    None,
+    Count
+
+}
+
+public enum WeaponType
+{
+    Sword,
+    Bow,
+    Pickaxe,
+    Axe,
+    Hammer,
+    None,
+    Count
+
 }
 
 public enum SceneName

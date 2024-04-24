@@ -5,14 +5,14 @@ using UnityEngine;
 public static class Settings
 {
     // Player
-    public static float moveSpeed = 5f;
+    public static float moveSpeed = 2.5f;
     public static float jumpHeight = 2.5f;
     public static int playerRange = 3;
 
 
     // Inventory
-    public static int playerInitalInventoryCapacity = 48;
-    public static int playerMaximumInventoryCapacity = 48;
+    public static int playerInitalInventoryCapacity = 53;
+    public static int playerMaximumInventoryCapacity = 53;
 
     // Item
     public const string Equipment = "¿Â∫Ò";

@@ -11,6 +11,7 @@ public class PauseMenuInventoryManagementSlot : MonoBehaviour, IBeginDragHandler
     public GameObject greyedOutImageGO;
     [SerializeField] private PauseMenuInventoryManagement inventoryManagement = null;
     [SerializeField] private GameObject inventoryTextBoxPrefab = null;
+   
 
     [HideInInspector] public ItemDetails itemDetails;
     [HideInInspector] public int itemQuantity;
@@ -22,6 +23,7 @@ public class PauseMenuInventoryManagementSlot : MonoBehaviour, IBeginDragHandler
     private void Awake()
     {
         parentCanvas = GetComponentInParent<Canvas>();
+
     }
 
 
@@ -66,11 +68,39 @@ public class PauseMenuInventoryManagementSlot : MonoBehaviour, IBeginDragHandler
             Destroy(draggedItem);
             if (eventData.pointerCurrentRaycast.gameObject != null && eventData.pointerCurrentRaycast.gameObject.GetComponent<PauseMenuInventoryManagementSlot>() != null)
             {
-
-
                 int toSlotNumber = eventData.pointerCurrentRaycast.gameObject.GetComponent<PauseMenuInventoryManagementSlot>().slotNumber;
+                // 인벤토리
+                if (toSlotNumber <= 47)
+                {
+                    InventoryManager.Instance.SwapInventoryItems(InventoryLocation.player, slotNumber, toSlotNumber);
+                }
+                //장비 헬멧
+                else if (toSlotNumber == 48 && itemDetails.equipmentType == EquipmentType.Helmet)
+                {
+                    InventoryManager.Instance.SwapInventoryItems(InventoryLocation.player, slotNumber, toSlotNumber);
+                }
+                //장비 상의
+                else if (toSlotNumber == 49 && itemDetails.equipmentType == EquipmentType.Top)
+                {
+                    InventoryManager.Instance.SwapInventoryItems(InventoryLocation.player, slotNumber, toSlotNumber);
+                }
+                //장비 하의
+                else if (toSlotNumber == 50 && itemDetails.equipmentType == EquipmentType.Bottom)
+                {
+                    InventoryManager.Instance.SwapInventoryItems(InventoryLocation.player, slotNumber, toSlotNumber);
+                }
+                //장비 신발
+                else if (toSlotNumber == 51 && itemDetails.equipmentType == EquipmentType.Shoes)
+                {
+                    InventoryManager.Instance.SwapInventoryItems(InventoryLocation.player, slotNumber, toSlotNumber);
+                }
+                //장비 무기
+                else if (toSlotNumber == 52 && itemDetails.equipmentType == EquipmentType.Weapon)
+                {
 
-                InventoryManager.Instance.SwapInventoryItems(InventoryLocation.player, slotNumber, toSlotNumber);
+                    InventoryManager.Instance.SwapInventoryItems(InventoryLocation.player, slotNumber, toSlotNumber);
+                }
+
 
                 inventoryManagement.DestroyInventoryTextBoxGameobject();
             }

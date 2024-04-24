@@ -74,7 +74,7 @@ public class PauseMenuInventoryManagement : MonoBehaviour
         }
     }
 
-
+    
 
     private void InitializeInventoryManagementSlots()
     {

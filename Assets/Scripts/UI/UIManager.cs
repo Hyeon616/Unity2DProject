@@ -8,6 +8,7 @@ public class UIManager : Singleton<UIManager>
     private bool _pauseMenuOn = false;
     [SerializeField] private UIInventoryBar uiInventoryBar = null;
     [SerializeField] private PauseMenuInventoryManagement pauseMenuInventoryManagement = null;
+    [SerializeField] private PlayerController player = null;
 
     [SerializeField] private GameObject pauseMenu = null;
     [SerializeField] private GameObject[] menuTabs = null;
@@ -53,7 +54,8 @@ public class UIManager : Singleton<UIManager>
         pauseMenuInventoryManagement.DestoryCurrentlyDraggedItems();
 
         PauseMenuOn = false;
-        Time.timeScale = 1;
+        player.GetComponent<PlayerController>().enabled = true;
+        //Time.timeScale = 1;
         pauseMenu.SetActive(false);
 
     }
@@ -66,7 +68,8 @@ public class UIManager : Singleton<UIManager>
 
 
         PauseMenuOn = true;
-        Time.timeScale = 0;
+        //Time.timeScale = 0;
+        player.GetComponent<PlayerController>().enabled = false;
         pauseMenu.SetActive(true);
 
         GC.Collect();

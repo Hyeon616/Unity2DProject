@@ -7,6 +7,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6342130102052159297, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
+      propertyPath: m_Size.x
+      value: 1.0437627
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342130102052159297, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
+      propertyPath: m_Size.y
+      value: 0.44567364
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342130102052159297, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.25163496
+      objectReference: {fileID: 0}
+    - target: {fileID: 6342130102052159297, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.000000059604645
+      objectReference: {fileID: 0}
     - target: {fileID: 6342130102052159324, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
       propertyPath: m_Name
       value: Hammer
@@ -74,7 +90,7 @@ PrefabInstance:
     - target: {fileID: 7501998646736139737, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 7b8e0222a006d824e930445c7d435ac3, type: 3}
+      objectReference: {fileID: 21300012, guid: b217a154a8231e54bbb50405bdfafbaf, type: 3}
     - target: {fileID: 7501998646736139737, guid: 3ec5d1f6fa3f5f74186e16e1eab50a1f, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1

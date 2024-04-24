@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,7 +16,9 @@ public class PlayerController : Singleton<PlayerController>
     [HideInInspector]
     public Vector2 mousePos;
     public TerrainGeneration terrainGeneration;
+    private Transform[] characterAttribute;
 
+    [SerializeField] private PauseMenuInventoryManagementSlot weaponSlot;
 
     private SpriteRenderer backGroundColor;
 
@@ -33,9 +36,8 @@ public class PlayerController : Singleton<PlayerController>
         rb = GetComponent<Rigidbody2D>();
         anim = transform.GetChild(0).GetComponent<Animator>();
         backGroundColor = transform.GetChild(2).GetComponent<SpriteRenderer>();
-
+        characterAttribute = GetComponentsInChildren<Transform>();
     }
-
 
     private void OnDrawGizmos()
     {
@@ -51,6 +53,7 @@ public class PlayerController : Singleton<PlayerController>
 
         backGroundColor.color = new Color(0f, 0f, 0f, GetCurrentTimeAlpha());
 
+        EquipWeapon();
     }
 
     private float GetCurrentTimeAlpha()
@@ -90,8 +93,10 @@ public class PlayerController : Singleton<PlayerController>
         inputMovement = inputValue.Get<Vector2>();
         
         anim.SetFloat("xVelocity", Mathf.Abs(inputMovement.normalized.x / 2));
+        Settings.moveSpeed = 2.5f;
         if (Input.GetKey(KeyCode.LeftShift))
         {
+            Settings.moveSpeed = 5f;
             anim.SetFloat("xVelocity", Mathf.Abs(inputMovement.normalized.x));
         }
 
@@ -178,24 +183,20 @@ public class PlayerController : Singleton<PlayerController>
         }
     }
 
+    
+    public void EquipWeapon()
+    {
+        
+        foreach (Transform weapon in characterAttribute)
+        {
+            if (weapon.name == "Weapon" && weaponSlot.itemDetails.itemSprite != null)
+            {
+                weapon.GetComponent<SpriteRenderer>().sprite = weaponSlot.itemDetails.itemSprite;
+               
+            }
+        }
 
-    //public void EquipWeapon()
-    //{
-    //    if (equippedWeapon == null)
-    //        return;
-
-    //    foreach (Transform weapon in characterAttribute)
-    //    {
-    //        if (weapon.name == "Weapon")
-    //        {
-    //            weapon.GetComponent<SpriteRenderer>().sprite = equippedWeapon.GetComponent<SpriteRenderer>().sprite;
-    //            //weaponEquipment = Instantiate(equippedWeapon, transform.position, Quaternion.identity);
-    //            //weaponEquipment.transform.SetParent(weapon);
-    //            //weaponEquipment.transform.localPosition = new Vector3(0, 0, 0);
-
-    //        }
-    //    }
-    //}
+    }
 
 
 

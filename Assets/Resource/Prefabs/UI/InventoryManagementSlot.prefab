@@ -99,6 +99,9 @@ MonoBehaviour:
   itemDetails:
     itemCode: 0
     itemType: 0
+    equipmentType: 0
+    weaponType: 0
+    itemName: 
     itemDescription: 
     itemSprite: {fileID: 0}
     blockHp: 0
@@ -181,7 +184,7 @@ MonoBehaviour:
   m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d11f12daa9180264f8fee373f6977780, type: 2}
-  m_sharedMaterial: {fileID: 3829679921021627281, guid: d11f12daa9180264f8fee373f6977780, type: 2}
+  m_sharedMaterial: {fileID: 553301832432829096, guid: d11f12daa9180264f8fee373f6977780, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

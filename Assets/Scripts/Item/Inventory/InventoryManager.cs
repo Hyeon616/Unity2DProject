@@ -175,6 +175,12 @@ public class InventoryManager : Singleton<InventoryManager>
         }
     }
 
+    public Sprite GetInventoryItemSprite(Sprite sprite)
+    {
+        return sprite;
+        
+    }
+
     public ItemDetails GetSelectedInventoryItemDetails(InventoryLocation inventoryLocation)
     {
         int itemCode = GetSelectedInventoryItem(inventoryLocation);
@@ -231,8 +237,7 @@ public class InventoryManager : Singleton<InventoryManager>
         return itemTypeDescription;
     }
 
-
-
+    
     public void RemoveItem(InventoryLocation inventoryLocation, int itemCode)
     {
 

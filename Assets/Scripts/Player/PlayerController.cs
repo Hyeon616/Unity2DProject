@@ -193,6 +193,8 @@ public class PlayerController : Singleton<PlayerController>
             {
                 weapon.GetComponent<SpriteRenderer>().sprite = weaponSlot.itemDetails.itemSprite;
                
+
+
             }
         }
 

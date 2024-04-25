@@ -21,6 +21,9 @@ MonoBehaviour:
     itemDescription: "\uD480"
     itemSprite: {fileID: 21300000, guid: 78b4ba8a8c817014a9e945e9a359d312, type: 3}
     blockHp: 5
+    attackDamage: 0
+    abilityPower: 0
+    miningDamage: 0
     itemLongDescription: "\uD480"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -36,6 +39,9 @@ MonoBehaviour:
     itemDescription: "\uB3CC"
     itemSprite: {fileID: 21300000, guid: b9a847102a75c8c429a8f749008df6c2, type: 3}
     blockHp: 8
+    attackDamage: 1
+    abilityPower: 0
+    miningDamage: 0
     itemLongDescription: "\uB3CC"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -51,6 +57,9 @@ MonoBehaviour:
     itemDescription: "\uD1F4\uC801\uC554"
     itemSprite: {fileID: 21300000, guid: 28e97f6404739464fa893f5222b580fa, type: 3}
     blockHp: 11
+    attackDamage: 1
+    abilityPower: 0
+    miningDamage: 0
     itemLongDescription: "\uD1F4\uC801\uC554"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -66,6 +75,9 @@ MonoBehaviour:
     itemDescription: "\uCCA0\uC11D"
     itemSprite: {fileID: 21300000, guid: b6d7f707af9004a48b62320f621ea74b, type: 3}
     blockHp: 20
+    attackDamage: 1
+    abilityPower: 0
+    miningDamage: 0
     itemLongDescription: "\uCCA0\uC11D"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -81,6 +93,9 @@ MonoBehaviour:
     itemDescription: "\uB098\uBB34"
     itemSprite: {fileID: 21300000, guid: 0e1ccb64303778e4081913a6d9cca677, type: 3}
     blockHp: 5
+    attackDamage: 1
+    abilityPower: 0
+    miningDamage: 0
     itemLongDescription: "\uB098\uBB34"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -96,6 +111,9 @@ MonoBehaviour:
     itemDescription: "\uB098\uBB47\uC78E"
     itemSprite: {fileID: 21300000, guid: 577e97710f1a3814e8abe5a3ec64a8f3, type: 3}
     blockHp: 1
+    attackDamage: 0
+    abilityPower: 0
+    miningDamage: 0
     itemLongDescription: "\uB098\uBB47\uC78E"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -111,6 +129,9 @@ MonoBehaviour:
     itemDescription: "\uAD6C\uB9AC\uAD11\uC11D"
     itemSprite: {fileID: 21300000, guid: 7d58fd33da0c1714e83ed3c55ae05bb9, type: 3}
     blockHp: 13
+    attackDamage: 1
+    abilityPower: 0
+    miningDamage: 0
     itemLongDescription: "\uAD6C\uB9AC\uAD11\uC11D"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -126,6 +147,9 @@ MonoBehaviour:
     itemDescription: "\uCCA0\uAD11\uC11D"
     itemSprite: {fileID: 21300000, guid: e504bf3779bda9c40ba6d311e0611951, type: 3}
     blockHp: 20
+    attackDamage: 1
+    abilityPower: 0
+    miningDamage: 0
     itemLongDescription: "\uCCA0\uAD11\uC11D"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -141,6 +165,9 @@ MonoBehaviour:
     itemDescription: "\uAE08\uAD11\uC11D"
     itemSprite: {fileID: 21300000, guid: 68f03904aa02ba244a61e03fee3f6293, type: 3}
     blockHp: 15
+    attackDamage: 0
+    abilityPower: 0
+    miningDamage: 0
     itemLongDescription: "\uAE08\uAD11\uC11D"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -156,6 +183,9 @@ MonoBehaviour:
     itemDescription: "\uB2E4\uC774\uC544\uBAAC\uB4DC"
     itemSprite: {fileID: 21300000, guid: 3faa68d4e2f05f04786133598667ac36, type: 3}
     blockHp: 50
+    attackDamage: 1
+    abilityPower: 0
+    miningDamage: 0
     itemLongDescription: "\uB2E4\uC774\uC544\uBAAC\uB4DC"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -171,6 +201,9 @@ MonoBehaviour:
     itemDescription: "\uC810\uD1A0"
     itemSprite: {fileID: 21300000, guid: d33fc4ca3ea63400ab243153d038037f, type: 3}
     blockHp: 5
+    attackDamage: 0
+    abilityPower: 0
+    miningDamage: 0
     itemLongDescription: "\uC810\uD1A0"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -186,6 +219,9 @@ MonoBehaviour:
     itemDescription: "\uBC84\uC12F"
     itemSprite: {fileID: 21300000, guid: 966ff550585ec504896a28b55fd7281c, type: 3}
     blockHp: 0
+    attackDamage: 0
+    abilityPower: 0
+    miningDamage: 0
     itemLongDescription: "\uBC84\uC12F"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -201,6 +237,9 @@ MonoBehaviour:
     itemDescription: "\uACE1\uAD2D\uC774"
     itemSprite: {fileID: 21300014, guid: b217a154a8231e54bbb50405bdfafbaf, type: 3}
     blockHp: 0
+    attackDamage: 3
+    abilityPower: 0
+    miningDamage: 5
     itemLongDescription: "\uACE1\uAD2D\uC774"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -216,6 +255,9 @@ MonoBehaviour:
     itemDescription: "\uBAA9\uAC80"
     itemSprite: {fileID: 21300002, guid: b217a154a8231e54bbb50405bdfafbaf, type: 3}
     blockHp: 0
+    attackDamage: 5
+    abilityPower: 0
+    miningDamage: 1
     itemLongDescription: "\uBAA9\uAC80"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -231,6 +273,9 @@ MonoBehaviour:
     itemDescription: "\uB9DD\uCE58"
     itemSprite: {fileID: 21300012, guid: b217a154a8231e54bbb50405bdfafbaf, type: 3}
     blockHp: 0
+    attackDamage: 4
+    abilityPower: 0
+    miningDamage: 2
     itemLongDescription: "\uB9DD\uCE58"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -246,6 +291,9 @@ MonoBehaviour:
     itemDescription: "\uB3C4\uB07C"
     itemSprite: {fileID: 21300010, guid: b217a154a8231e54bbb50405bdfafbaf, type: 3}
     blockHp: 0
+    attackDamage: 7
+    abilityPower: 0
+    miningDamage: 2
     itemLongDescription: "\uB3C4\uB07C"
     itemUseGridRadius: 2
     itemUseRadius: 0
@@ -261,6 +309,9 @@ MonoBehaviour:
     itemDescription: "\uD65C"
     itemSprite: {fileID: 21300000, guid: 21315227343a6d044ba6fff46b370d84, type: 3}
     blockHp: 0
+    attackDamage: 7
+    abilityPower: 0
+    miningDamage: 0
     itemLongDescription: "\uD65C"
     itemUseGridRadius: 2
     itemUseRadius: 0

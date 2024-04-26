@@ -16,7 +16,6 @@ public class PoolManager : Singleton<PoolManager>
         public GameObject prefab;
     }
 
-
     void Start()
     {
         for (int i = 0; i < pool.Length; i++)

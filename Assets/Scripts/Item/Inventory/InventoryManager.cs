@@ -11,7 +11,7 @@ public class InventoryManager : Singleton<InventoryManager>
     // 0 플레이어
     // 1 창고
 
-    [HideInInspector] public int[] inventoryListCapacityIntArray;
+    [HideInInspector] public int[] inventoryCapacityIntArray;
 
     [SerializeField] private SO_ItemList itemList = null;
 
@@ -20,7 +20,7 @@ public class InventoryManager : Singleton<InventoryManager>
     {
         base.Awake();
         // 인벤토리 리스트 생성
-        CreateInventoryLists();
+        CreateInventoryDictionary();
         // 아이템 딕셔너리 생성
         CreateItemDetailsDictionary();
 
@@ -33,22 +33,23 @@ public class InventoryManager : Singleton<InventoryManager>
         }
     }
 
-    private void CreateInventoryLists()
+    private void CreateInventoryDictionary()
     {
 
-        inventoryListCapacityIntArray = new int[(int)InventoryLocation.Count];
+        inventoryCapacityIntArray = new int[(int)InventoryLocation.Count];
         // 플레이어 인벤토리 용량
-        inventoryListCapacityIntArray[(int)InventoryLocation.player] = Settings.playerInitalInventoryCapacity;
+        inventoryCapacityIntArray[(int)InventoryLocation.player] = Settings.playerInitalInventoryCapacity;
 
         inventoryDictionaries = new Dictionary<int, InventoryItem>[(int)InventoryLocation.Count];
         // 플레이어 인벤토리 딕셔너리 생성
         Dictionary<int, InventoryItem> playerDict = new Dictionary<int, InventoryItem>();
 
-        for (int i = 0; i < inventoryListCapacityIntArray[(int)InventoryLocation.player]; i++)
+        for (int i = 0; i < inventoryCapacityIntArray[(int)InventoryLocation.player]; i++)
         {
             InventoryItem invItem;
             invItem.itemCode = 0;
             invItem.itemQuantity = 0;
+            invItem.itemType = ItemType.None;
             playerDict.Add(i, invItem);
         }
 
@@ -104,10 +105,8 @@ public class InventoryManager : Singleton<InventoryManager>
         foreach (KeyValuePair<int, InventoryItem> item in inventoryDict)
 
         {
-
             if (item.Value.itemCode == 0)
                 return item.Key;
-
         }
 
         return -1;
@@ -121,7 +120,10 @@ public class InventoryManager : Singleton<InventoryManager>
 
         foreach (KeyValuePair<int, InventoryItem> item in inventoryDict)
         {
-            if (item.Value.itemCode == itemCode) return item.Key;
+            
+
+            if (item.Value.itemCode == itemCode)
+                return item.Key;
         }
 
         return -1;
@@ -178,7 +180,7 @@ public class InventoryManager : Singleton<InventoryManager>
     public Sprite GetInventoryItemSprite(Sprite sprite)
     {
         return sprite;
-        
+
     }
 
     public ItemDetails GetSelectedInventoryItemDetails(InventoryLocation inventoryLocation)
@@ -206,7 +208,7 @@ public class InventoryManager : Singleton<InventoryManager>
     public string GetItemTypeDescription(ItemType itemType)
     {
         string itemTypeDescription;
-        
+
         switch (itemType)
         {
             case ItemType.Equipment:
@@ -237,7 +239,7 @@ public class InventoryManager : Singleton<InventoryManager>
         return itemTypeDescription;
     }
 
-    
+
     public void RemoveItem(InventoryLocation inventoryLocation, int itemCode)
     {
 

@@ -1,8 +1,5 @@
-using NUnit.Framework;
-using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
 [CustomPropertyDrawer(typeof(ItemCodeDescriptionAttribute))]
@@ -16,34 +13,27 @@ public class ItemCodeDescriptionDrawer : PropertyDrawer
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        EditorGUI.BeginProperty(position, label,property);
+        EditorGUI.BeginProperty(position, label, property);
 
-        if(property.propertyType == SerializedPropertyType.Integer)
+        if (property.propertyType == SerializedPropertyType.Integer)
         {
             EditorGUI.BeginChangeCheck(); // Start of Check for changed value
 
             // Draw item
-            var newValue = EditorGUI.IntField(new Rect(position.x,position.y,position.width,position.height/2), label, property.intValue);
+            var newValue = EditorGUI.IntField(new Rect(position.x, position.y, position.width, position.height / 2), label, property.intValue);
 
             // Draw item description
-            EditorGUI.LabelField(new Rect(position.x,position.y+position.height/2,position.width, position.height/2),"Item Description",GetItemDescription(property.intValue));
-
-
-
+            EditorGUI.LabelField(new Rect(position.x, position.y + position.height / 2, position.width, position.height / 2), "Item Description", GetItemDescription(property.intValue));
 
             // If item code value has changed, then set value to new value
-            if(EditorGUI.EndChangeCheck())
+            if (EditorGUI.EndChangeCheck())
             {
                 property.intValue = newValue;
             }
 
-
         }
 
-
         EditorGUI.EndProperty();
-
-
     }
 
     private string GetItemDescription(int itemCode)
@@ -56,7 +46,7 @@ public class ItemCodeDescriptionDrawer : PropertyDrawer
 
         ItemDetails itemDetails = itemDetailsList.Find(x => x.itemCode == itemCode);
 
-        if(itemDetails != null)
+        if (itemDetails != null)
         {
             return itemDetails.itemDescription;
         }

@@ -50,7 +50,6 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
     private TileClass[,] world_BackgroundTiles;
     private TileClass[,] world_ForegroundTiles;
 
-    
     protected override void Awake()
     {
 
@@ -76,10 +75,9 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
 
     private void FixedUpdate()
     {
-        RefreshChunk();
+        // RefreshChunk();
 
     }
-
 
 
     public void DrawTextures()
@@ -98,8 +96,6 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
         }
 
     }
-
-
 
     public void CreateChunks()
     {
@@ -174,7 +170,9 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
         float height;
 
         // PerlinNoise
+        // 그리드의 x축에 대해서 1차원 PerlinNosie
         height = Mathf.PerlinNoise((x + seed) * Freq, seed * Freq) * heightMultiplier + heightAddition;
+        
 
         if (y < height)
         {

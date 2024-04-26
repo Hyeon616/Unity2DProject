@@ -8,25 +8,17 @@ public class LightingControl : MonoBehaviour
 {
 
     [SerializeField] private LightingSchedule lightingSchedule;
-    [SerializeField] private bool isLightFlicker = false;
-    [SerializeField][Range(0f, 1f)] private float lightFlickerIntensity;
-    [SerializeField][Range(0f, 0.2f)] private float lightFlickerTimeMin;
-    [SerializeField][Range(0f, 0.2f)] private float lightFlickerTimeMax;
-    
 
     private Light2D light2D;
     private Dictionary<string, float> lightingBrightnessDictionary = new Dictionary<string, float>();
     private float currentLightIntensity;
-    private float lightFlickerTimer = 0f;
     private Coroutine fadeInLightRoutine;
-    private Color currentColor;
 
 
 
     private void Awake()
     {
         
-
         light2D = GetComponentInChildren<Light2D>();
 
         if (light2D == null)
@@ -70,27 +62,12 @@ public class LightingControl : MonoBehaviour
         SetLightingIntensity(gameSeason, gameHour, true);
     }
 
-    private void Update()
-    {
-        if (isLightFlicker)
-        {
-            lightFlickerTimer -= Time.deltaTime;
-        }
-    }
 
     private void LateUpdate()
     {
-        if (lightFlickerTimer <= 0f && isLightFlicker)
-        {
-            LightFlicker();
-
-        }
-        else
-        {
-            light2D.intensity = currentLightIntensity;
-        }
+        light2D.intensity = currentLightIntensity;
+        
     }
-
 
     private void SetLightingAfterSceneLoaded()
     {
@@ -158,12 +135,4 @@ public class LightingControl : MonoBehaviour
 
     }
 
-    private void LightFlicker()
-    {
-        light2D.intensity = Random.Range(currentLightIntensity, currentLightIntensity + (currentLightIntensity * lightFlickerIntensity));
-    
-        lightFlickerTimer = Random.Range(lightFlickerTimeMin, lightFlickerTimeMax);
-    
-    }
-   
 }

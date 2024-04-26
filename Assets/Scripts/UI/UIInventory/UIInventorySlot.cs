@@ -48,7 +48,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private void Start()
     {
         mainCamera = Camera.main;
-        
+
     }
 
     private void SetSelectedItem()
@@ -96,7 +96,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
     }
 
-    
+
 
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -187,7 +187,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        
+
         if (eventData.button == PointerEventData.InputButton.Left)
         {
             if (isSelected == true)
@@ -203,7 +203,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 }
             }
         }
-        else if(eventData.button == PointerEventData.InputButton.Right)
+        else if (eventData.button == PointerEventData.InputButton.Right)
         {
 
         }

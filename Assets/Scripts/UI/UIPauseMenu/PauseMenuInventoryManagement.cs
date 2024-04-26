@@ -90,7 +90,7 @@ public class PauseMenuInventoryManagement : MonoBehaviour
         }
 
 
-        for (int i = InventoryManager.Instance.inventoryListCapacityIntArray[(int)InventoryLocation.player]; i < Settings.playerMaximumInventoryCapacity; i++)
+        for (int i = InventoryManager.Instance.inventoryCapacityIntArray[(int)InventoryLocation.player]; i < Settings.playerMaximumInventoryCapacity; i++)
         {
             inventoryManagementSlot[i].greyedOutImageGO.SetActive(true);
         }

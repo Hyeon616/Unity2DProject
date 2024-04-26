@@ -20,30 +20,19 @@ public class PlayerController : Singleton<PlayerController>
 
     [SerializeField] private PauseMenuInventoryManagementSlot weaponSlot;
 
-    private SpriteRenderer backGroundColor;
-
-    private float backgroundAlphaAt22to3 = 0.9f;
-    private float backgroundAlphaAt3to5And20to22 = 0.8f;
-    private float backgroundAlphaAt5to7And18to20 = 0.6f;
-    private float backgroundAlphaAt7to9And16to18 = 0.4f;
-    private float backgroundAlphaAt9to11And14to16 = 0.2f;
-    private float backgroundAlphaAt11to14 = 0f;
-
-
 
     protected override void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = transform.GetChild(0).GetComponent<Animator>();
-        backGroundColor = transform.GetChild(2).GetComponent<SpriteRenderer>();
         characterAttribute = GetComponentsInChildren<Transform>();
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, Settings.playerRange);
-    }
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireSphere(transform.position, Settings.playerRange);
+    //}
 
     private void FixedUpdate()
     {
@@ -51,41 +40,10 @@ public class PlayerController : Singleton<PlayerController>
 
         rb.velocity = new Vector2(moveMovement.x, rb.velocity.y);
 
-        backGroundColor.color = new Color(0f, 0f, 0f, GetCurrentTimeAlpha());
-
         EquipWeapon();
     }
 
-    private float GetCurrentTimeAlpha()
-    {
-        float currentTime = TimeManager.Instance.GetGameHour();
-
-        if (currentTime < 3 || currentTime >= 22)
-        {
-            return backgroundAlphaAt22to3;
-        }
-        else if ((currentTime >= 3 && currentTime < 5) || (currentTime >= 20 && currentTime < 22))
-        {
-            return backgroundAlphaAt3to5And20to22;
-        }
-        else if ((currentTime >= 5 && currentTime < 7) || (currentTime >= 18 && currentTime < 20))
-        {
-            return backgroundAlphaAt5to7And18to20;
-        }
-        else if ((currentTime >= 7 && currentTime < 9) || (currentTime >= 16 && currentTime < 18))
-        {
-            return backgroundAlphaAt7to9And16to18;
-        }
-        else if ((currentTime >= 9 && currentTime < 11) || (currentTime >= 14 && currentTime < 16))
-        {
-            return backgroundAlphaAt9to11And14to16;
-        }
-        else if (currentTime >= 11 && currentTime < 14)
-        {
-            return backgroundAlphaAt11to14;
-        }
-        return 0;
-    }
+    
 
     private void OnMove(InputValue inputValue)
     {
@@ -189,13 +147,15 @@ public class PlayerController : Singleton<PlayerController>
         
         foreach (Transform weapon in characterAttribute)
         {
-            if (weapon.name == "Weapon" && weaponSlot.itemDetails.itemSprite != null)
+            if(weaponSlot.itemDetails != null)
             {
-                weapon.GetComponent<SpriteRenderer>().sprite = weaponSlot.itemDetails.itemSprite;
-               
+                if (weapon.name == "Weapon")
+                {
+                    weapon.GetComponent<SpriteRenderer>().sprite = weaponSlot.itemDetails.itemSprite;
 
-
+                }
             }
+            
         }
 
     }

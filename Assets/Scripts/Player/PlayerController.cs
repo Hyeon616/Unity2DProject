@@ -41,6 +41,11 @@ public class PlayerController : Singleton<PlayerController>
         rb.velocity = new Vector2(moveMovement.x, rb.velocity.y);
 
         EquipWeapon();
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            anim.SetTrigger("Attack");
+        }
     }
 
     

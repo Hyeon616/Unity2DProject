@@ -4837,6 +4837,7 @@ GameObject:
   - component: {fileID: 5580242978444663832}
   - component: {fileID: 2727847186558577220}
   - component: {fileID: 4081830286607302809}
+  - component: {fileID: -3491129719265072058}
   m_Layer: 9
   m_Name: PF Weapon - Ruby Staff
   m_TagString: Untagged
@@ -4880,7 +4881,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e4329c93ac167164f97b6f6d1464620f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4959,3 +4960,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.25, y: 0.09441733}
   m_EdgeRadius: 0
+--- !u!114 &-3491129719265072058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6805170423116255223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05d70dc4a0dbb034f8456907f89481d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tip: {fileID: 0}

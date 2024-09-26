@@ -157,7 +157,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 256
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: 4
     textureCompression: 1
@@ -206,18 +206,6 @@ TextureImporter:
   - serializedVersion: 3
     buildTarget: Server
     maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: 4
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 1
-    allowsAlphaSplitting: 0
-    overridden: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Windows Store Apps
-    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: 4
     textureCompression: 1
@@ -1144,50 +1132,50 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      TX Pixel Character - Weapon - Arrow 01: -422481050
-      TX Pixel Character - Weapon - Assassin Dagger: -1085705732
-      TX Pixel Character - Weapon - Axe: 21300010
-      TX Pixel Character - Weapon - Battle Axe: 21300050
-      TX Pixel Character - Weapon - Bow: 21300040
-      TX Pixel Character - Weapon - Broom: 21300036
-      TX Pixel Character - Weapon - Dagger: -1048597357
-      TX Pixel Character - Weapon - Emerald Staff: 21300024
-      TX Pixel Character - Weapon - Fish: 21300044
-      TX Pixel Character - Weapon - Flying Broom: 21300034
-      TX Pixel Character - Weapon - Fork: 21300030
-      TX Pixel Character - Weapon - Gladius: 2005369757
-      TX Pixel Character - Weapon - Golden Sword: 21300006
-      TX Pixel Character - Weapon - Hammer: 21300012
-      TX Pixel Character - Weapon - Harpoon: -709920168
-      TX Pixel Character - Weapon - Heavy Sword: 21300056
-      TX Pixel Character - Weapon - Iron Sword: 21300000
-      TX Pixel Character - Weapon - Jian: 1733550941
-      TX Pixel Character - Weapon - Katana: 21300058
       TX Pixel Character - Weapon - Knife: 21300008
       TX Pixel Character - Weapon - Long Bow: -1817107030
-      TX Pixel Character - Weapon - Magic Staff 01: -932558215
-      TX Pixel Character - Weapon - Magic Staff 02: -1766754481
-      TX Pixel Character - Weapon - Magic Wand: 21300018
       TX Pixel Character - Weapon - Pickaxe: 21300014
-      TX Pixel Character - Weapon - Pirate Sword: 21300052
-      TX Pixel Character - Weapon - Plague Doctor Cane: -203126128
-      TX Pixel Character - Weapon - Priest Staff: 33424830
-      TX Pixel Character - Weapon - Quill: 21300032
       TX Pixel Character - Weapon - Ruby Staff: 21300026
-      TX Pixel Character - Weapon - Sapphire Staff: 21300022
-      TX Pixel Character - Weapon - School Bag: 21300038
-      TX Pixel Character - Weapon - Short Sword: 21300046
-      TX Pixel Character - Weapon - Shovel: 21300016
-      TX Pixel Character - Weapon - Shuriken: 1030694015
-      TX Pixel Character - Weapon - Sickle: 1711321484
-      TX Pixel Character - Weapon - Silver Sword: 21300004
-      TX Pixel Character - Weapon - Spear: 21300054
-      TX Pixel Character - Weapon - Topaz Staff: 21300028
-      TX Pixel Character - Weapon - Tree Branch: 21300042
-      TX Pixel Character - Weapon - Umbrella: 21300048
-      TX Pixel Character - Weapon - War Hammer: -1044115361
+      TX Pixel Character - Weapon - Assassin Dagger: -1085705732
+      TX Pixel Character - Weapon - Battle Axe: 21300050
+      TX Pixel Character - Weapon - Magic Wand: 21300018
+      TX Pixel Character - Weapon - Broom: 21300036
+      TX Pixel Character - Weapon - Axe: 21300010
+      TX Pixel Character - Weapon - Arrow 01: -422481050
+      TX Pixel Character - Weapon - Gladius: 2005369757
+      TX Pixel Character - Weapon - Hammer: 21300012
+      TX Pixel Character - Weapon - Harpoon: -709920168
       TX Pixel Character - Weapon - Wooden Staff: 21300020
+      TX Pixel Character - Weapon - Shovel: 21300016
+      TX Pixel Character - Weapon - Fork: 21300030
+      TX Pixel Character - Weapon - Magic Staff 02: -1766754481
+      TX Pixel Character - Weapon - Tree Branch: 21300042
+      TX Pixel Character - Weapon - Dagger: -1048597357
+      TX Pixel Character - Weapon - Flying Broom: 21300034
+      TX Pixel Character - Weapon - War Hammer: -1044115361
+      TX Pixel Character - Weapon - Heavy Sword: 21300056
+      TX Pixel Character - Weapon - Emerald Staff: 21300024
+      TX Pixel Character - Weapon - Jian: 1733550941
+      TX Pixel Character - Weapon - Spear: 21300054
+      TX Pixel Character - Weapon - Umbrella: 21300048
+      TX Pixel Character - Weapon - Priest Staff: 33424830
+      TX Pixel Character - Weapon - Fish: 21300044
+      TX Pixel Character - Weapon - Plague Doctor Cane: -203126128
+      TX Pixel Character - Weapon - Silver Sword: 21300004
+      TX Pixel Character - Weapon - Topaz Staff: 21300028
+      TX Pixel Character - Weapon - Pirate Sword: 21300052
+      TX Pixel Character - Weapon - Short Sword: 21300046
+      TX Pixel Character - Weapon - Sickle: 1711321484
       TX Pixel Character - Weapon - Wooden Sword: 21300002
+      TX Pixel Character - Weapon - Golden Sword: 21300006
+      TX Pixel Character - Weapon - Sapphire Staff: 21300022
+      TX Pixel Character - Weapon - Quill: 21300032
+      TX Pixel Character - Weapon - Shuriken: 1030694015
+      TX Pixel Character - Weapon - School Bag: 21300038
+      TX Pixel Character - Weapon - Bow: 21300040
+      TX Pixel Character - Weapon - Magic Staff 01: -932558215
+      TX Pixel Character - Weapon - Iron Sword: 21300000
+      TX Pixel Character - Weapon - Katana: 21300058
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

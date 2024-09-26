@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Scene1_Mainmenu.unity
     guid: ca8e712cbaae9c549a55697a070da2f5
   - enabled: 1
-    path: Assets/Scenes/Scene2_Mining.unity
+    path: Assets/Scenes/Scene2_InGame.unity
     guid: f8bd55c34668eeb4d9f30c00c765509c
   m_configObjects: {}

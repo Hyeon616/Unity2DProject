@@ -75,7 +75,7 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
 
     private void FixedUpdate()
     {
-        // RefreshChunk();
+         RefreshChunk();
 
     }
 

@@ -10,12 +10,12 @@ public class GameManager : Singleton<GameManager>
 
         base.Awake();
 
-        Screen.SetResolution(1280, 720, false);
+       // Screen.SetResolution(1280, 720, false);
     }
 
     private void FixedUpdate()
     {
-        backGroundColor.color = new Color(0f, 0f, 0f, GetCurrentTimeAlpha());
+        //backGroundColor.color = new Color(0f, 0f, 0f, GetCurrentTimeAlpha());
     }
 
     private float GetCurrentTimeAlpha()

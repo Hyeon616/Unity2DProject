@@ -2011,7 +2011,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7555661977078291545}
   m_Layer: 5
-  m_Name: SkillWindow
+  m_Name: UI_Skill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

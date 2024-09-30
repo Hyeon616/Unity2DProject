@@ -1040,7 +1040,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1957177480726233438}
   m_Layer: 5
-  m_Name: OptionsWindow
+  m_Name: UI_Options
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

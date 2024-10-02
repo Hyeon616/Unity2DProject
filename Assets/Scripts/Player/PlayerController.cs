@@ -18,7 +18,7 @@ public class PlayerController : Singleton<PlayerController>
     public TerrainGeneration terrainGeneration;
     private Transform[] characterAttribute;
 
-    [SerializeField] private PauseMenuInventoryManagementSlot weaponSlot;
+   // [SerializeField] private PauseMenuInventoryManagementSlot weaponSlot;
 
 
     protected override void Awake()
@@ -40,7 +40,7 @@ public class PlayerController : Singleton<PlayerController>
 
         rb.velocity = new Vector2(moveMovement.x, rb.velocity.y);
 
-        EquipWeapon();
+        
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -106,22 +106,22 @@ public class PlayerController : Singleton<PlayerController>
                 anim.SetTrigger("Attack");
                 terrainGeneration.MiningTile(mousePosX, mousePosY);
 
-                if (InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player) != null)
-                {
-                    if (InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemType == ItemType.Block)
-                    {
+                //    if (InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player) != null)
+                //    {
+                //        if (InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemType == ItemType.Block)
+                //        {
 
-                        if (TerrainGeneration.Instance.GetTileFromWorld(mousePosX, mousePosY) == null)
-                        {
-                            DropManager.instance.PlaceBlock(mousePosX, mousePosY, InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemName);
+                //            if (TerrainGeneration.Instance.GetTileFromWorld(mousePosX, mousePosY) == null)
+                //            {
+                //                DropManager.instance.PlaceBlock(mousePosX, mousePosY, InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemName);
 
-                        }
+                //            }
 
-                    }
+                //        }
 
-                }
+                //    }
+                //}
             }
-
 
         }
     }
@@ -146,24 +146,6 @@ public class PlayerController : Singleton<PlayerController>
         }
     }
 
-    
-    public void EquipWeapon()
-    {
-        
-        foreach (Transform weapon in characterAttribute)
-        {
-            if(weaponSlot.itemDetails != null)
-            {
-                if (weapon.name == "Weapon")
-                {
-                    weapon.GetComponent<SpriteRenderer>().sprite = weaponSlot.itemDetails.itemSprite;
-
-                }
-            }
-            
-        }
-
-    }
 
 
 
@@ -178,12 +160,12 @@ public class PlayerController : Singleton<PlayerController>
 
         if (items != null)
         {
-            ItemDetails itemDetails = InventoryManager.Instance.GetItemDetails(items.ItemCode);
+          //  ItemDetails itemDetails = InventoryManager.Instance.GetItemDetails(items.ItemCode);
 
-            if (itemDetails.canBePickedUp == true)
-            {
-                InventoryManager.Instance.AddItem(InventoryLocation.player, items, collision.gameObject);
-            }
+            //if (itemDetails.canBePickedUp == true)
+          //  {
+                //InventoryManager.Instance.AddItem(InventoryLocation.player, items, collision.gameObject);
+            //}
 
         }
 

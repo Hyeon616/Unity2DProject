@@ -57,12 +57,12 @@ public class DropManager : Singleton<DropManager>
             if(TerrainGeneration.Instance.CheckTile(placeBlocks[_itemName], x, y, false))
             {
                 
-                InventoryManager.Instance.RemoveItem(InventoryLocation.player, InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemCode);
+                //InventoryManager.Instance.RemoveItem(InventoryLocation.player, InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemCode);
 
-                if (InventoryManager.Instance.FindItemInInventory(InventoryLocation.player, InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemCode) == -1)
-                {
-                    InventoryManager.Instance.ClearSelectedInventoryItem(InventoryLocation.player);
-                }
+                //if (InventoryManager.Instance.FindItemInInventory(InventoryLocation.player, InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player).itemCode) == -1)
+                //{
+                //    InventoryManager.Instance.ClearSelectedInventoryItem(InventoryLocation.player);
+                //}
             }
 
         }

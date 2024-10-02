@@ -4367,7 +4367,7 @@ GameObject:
   - component: {fileID: 7778059780365672460}
   - component: {fileID: 7778059780365672461}
   m_Layer: 5
-  m_Name: Image (5)
+  m_Name: RingSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4671,7 +4671,7 @@ GameObject:
   - component: {fileID: 7778059780493928105}
   - component: {fileID: 7778059780493928106}
   m_Layer: 5
-  m_Name: Image (6)
+  m_Name: BraceletSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5617,7 +5617,7 @@ GameObject:
   - component: {fileID: 7778059781777734289}
   - component: {fileID: 7778059781777734290}
   m_Layer: 5
-  m_Name: Image (7)
+  m_Name: JewelerySlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5693,7 +5693,7 @@ GameObject:
   - component: {fileID: 7778059781892898593}
   - component: {fileID: 7778059781892898594}
   m_Layer: 5
-  m_Name: Image (8)
+  m_Name: NeckSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5921,7 +5921,7 @@ GameObject:
   - component: {fileID: 7778059782308563213}
   - component: {fileID: 7778059782308563214}
   m_Layer: 5
-  m_Name: Image (10)
+  m_Name: TrinketSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

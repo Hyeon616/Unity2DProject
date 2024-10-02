@@ -16,16 +16,16 @@ public enum Season
 
 }
 
-public enum ItemType
-{
-    Block,
-    Equipment,
-    Food,
-    Furniture,
-    Ingredient,
-    None,
-    Count
-}
+//public enum ItemType
+//{
+//    Block,
+//    Equipment,
+//    Food,
+//    Furniture,
+//    Ingredient,
+//    None,
+//    Count
+//}
 
 public enum EquipmentType
 {

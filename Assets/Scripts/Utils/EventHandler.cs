@@ -5,14 +5,14 @@ public static class EventHandler
 {
     // 인벤토리 이벤트
     // 인벤토리 업데이트
-    public static event Action<InventoryLocation, Dictionary<int, InventoryItem>> InventoryUpdatedDictEvent;
+    //public static event Action<InventoryLocation, Dictionary<int, InventoryItem>> InventoryUpdatedDictEvent;
 
-    public static void CallInventoryUpdatedDictEvent(InventoryLocation inventoryLocation, Dictionary<int, InventoryItem> inventoryDict)
-    {
-        if (InventoryUpdatedDictEvent != null)
-            InventoryUpdatedDictEvent(inventoryLocation, inventoryDict);
+    //public static void CallInventoryUpdatedDictEvent(InventoryLocation inventoryLocation, Dictionary<int, InventoryItem> inventoryDict)
+    //{
+    //    if (InventoryUpdatedDictEvent != null)
+    //        InventoryUpdatedDictEvent(inventoryLocation, inventoryDict);
 
-    }
+    //}
 
 
     // 시간 이벤트

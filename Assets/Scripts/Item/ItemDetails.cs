@@ -7,7 +7,7 @@ public class ItemDetails
 {
 
     public int itemCode;
-    public ItemType itemType;
+   // public ItemType itemType;
     public EquipmentType equipmentType;
     public WeaponType weaponType;
     public string itemName; // Ό³Έν

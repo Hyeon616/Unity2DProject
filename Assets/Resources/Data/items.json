@@ -1,0 +1,81 @@
+{
+  "items": {
+    "1": {
+      "id": 1,
+      "name": "나뭇잎",
+      "description": "나뭇잎",
+      "itemImage": "Leaf",
+      "itemType": [ "Material", "Craftable" ]
+    },
+    "2": {
+      "id": 2,
+      "name": "돌",
+      "description": "돌",
+      "itemImage": "Stone",
+      "itemType": [ "Material", "Craftable" ]
+    },
+    "3": {
+      "id": 3,
+      "name": "나무",
+      "description": "나무",
+      "itemImage": "Log",
+      "itemType": [ "Material", "Craftable" ]
+    },
+    "4": {
+      "id": 4,
+      "name": "구리광석",
+      "description": "구리광석",
+      "itemImage": "Copper",
+      "itemType": [ "Material", "Craftable" ]
+    },
+    "5": {
+      "id": 5,
+      "name": "철광석",
+      "description": "철광석",
+      "itemImage": "Iron",
+      "itemType": [ "Material", "Craftable" ]
+    },
+    "6": {
+      "id": 6,
+      "name": "금광석",
+      "description": "금광석",
+      "itemImage": "Gold",
+      "itemType": [ "Material", "Craftable" ]
+    },
+    "7": {
+      "id": 7,
+      "name": "다이아몬드",
+      "description": "다이아몬드",
+      "itemImage": "Diamond",
+      "itemType": [ "Material", "Craftable" ]
+    },
+    "8": {
+      "id": 8,
+      "name": "버섯",
+      "description": "버섯",
+      "itemImage": "Mushroom",
+      "itemType": [ "Consumable", "Material", "Craftable" ],
+      "healthRestore": 20,
+      "manaRestore": 0,
+      "buffDuration": 0
+    },
+    "9": {
+      "id": 9,
+      "name": "나무 검",
+      "description": "나무로 만든 검",
+      "itemImage": "WoodSword",
+      "itemType": [ "Equipment" ],
+      "ad": 5,
+      "ap": 0,
+      "durability": 100,
+      "defense": 0
+    },
+    "10": {
+      "id": 10,
+      "name": "석탄",
+      "description": "석탄",
+      "itemImage": "Coal",
+      "itemType": [ "Material", "Craftable" ]
+    }
+  }
+}

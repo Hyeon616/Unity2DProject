@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +19,7 @@ public class ItemManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             LoadItems();
             LoadSkills();
+
         }
         else
         {
@@ -24,30 +27,45 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    void LoadItems()
+    private void LoadSkills()
     {
-        string jsonText = File.ReadAllText(Application.dataPath + "/Resources/items.json");
-        ItemDatabase itemDatabase = JsonUtility.FromJson<ItemDatabase>(jsonText);
-
-        foreach (var itemData in itemDatabase.items.Values)
-        {
-            items.Add(itemData.id, new Item(itemData));
-        }
-
-        Debug.Log($"Loaded {items.Count} items.");
+     
     }
 
-    void LoadSkills()
+    void LoadItems()
     {
-        string jsonText = File.ReadAllText(Application.dataPath + "/Resources/skills.json");
-        SkillDatabase skillDatabase = JsonUtility.FromJson<SkillDatabase>(jsonText);
-
-        foreach (var skillData in skillDatabase.skills.Values)
+        TextAsset jsonFile = Resources.Load<TextAsset>("Data/items");
+        if (jsonFile != null)
         {
-            skills.Add(skillData.id, new Skill(skillData));
-        }
+            ItemDatabase database = JsonConvert.DeserializeObject<ItemDatabase>(jsonFile.text);
+            foreach (var kvp in database.items)
+            {
+                int id = int.Parse(kvp.Key);
+                ItemData itemData = kvp.Value;
 
-        Debug.Log($"Loaded {skills.Count} skills.");
+                // ItemData 타입에 따라 적절한 Item 객체 생성
+                Item item;
+                if (itemData is ConsumableItemData)
+                {
+                    item = new Item(itemData as ConsumableItemData);
+                }
+                else if (itemData is EquipmentItemData)
+                {
+                    item = new Item(itemData as EquipmentItemData);
+                }
+                else
+                {
+                    item = new Item(itemData);
+                }
+
+                items[id] = item;
+            }
+            Debug.Log($"Loaded {items.Count} items.");
+        }
+        else
+        {
+            Debug.LogError("Failed to load items.json");
+        }
     }
 
     public Item GetItem(int id)
@@ -60,24 +78,9 @@ public class ItemManager : MonoBehaviour
         return null;
     }
 
-    public Skill GetSkill(int id)
-    {
-        if (skills.TryGetValue(id, out Skill skill))
-        {
-            return skill;
-        }
-        Debug.LogWarning($"Skill with id {id} not found.");
-        return null;
-    }
-
     public List<Item> GetAllItems()
     {
         return new List<Item>(items.Values);
-    }
-
-    public List<Skill> GetAllSkills()
-    {
-        return new List<Skill>(skills.Values);
     }
 
     public Item GetItemByName(string name)
@@ -93,16 +96,4 @@ public class ItemManager : MonoBehaviour
         return null;
     }
 
-    public Skill GetSkillByName(string name)
-    {
-        foreach (var skill in skills.Values)
-        {
-            if (skill.data.name.ToLower() == name.ToLower())
-            {
-                return skill;
-            }
-        }
-        Debug.LogWarning($"Skill with name '{name}' not found.");
-        return null;
-    }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ public class InventorySlot
     {
         item = newItem;
         skill = null;
-        amount = (newItem.data.itemType == ItemType.Consumable || newItem.data.itemType == ItemType.Material) ? quantity : 1;
+        amount = (newItem.data.ItemTypes.HasFlag(ItemType.Consumable) || newItem.data.ItemTypes.HasFlag(ItemType.Material)) ? quantity : 1;
     }
 
     public void SetSkill(Skill newSkill)
@@ -40,27 +41,47 @@ public class InventoryManager : MonoBehaviour
     public Dictionary<int, InventorySlot> inventorySlots = new Dictionary<int, InventorySlot>();
     public Dictionary<string, InventorySlot> equipmentSlots = new Dictionary<string, InventorySlot>();
 
-    void Start()
+    public bool IsInitialized { get; private set; }
+
+    public event Action OnInventoryChanged;
+
+    void Awake()
     {
-        InitializeSlots();
-        InitializeEquipmentSlots();
+        Initialize();
+    }
+
+    private void Start()
+    {
+        AddItem(1,10);
+    }
+
+    public void Initialize()
+    {
+        if (!IsInitialized)
+        {
+            InitializeSlots();
+            InitializeEquipmentSlots();
+            IsInitialized = true;
+        }
     }
 
     void InitializeSlots()
     {
         for (int i = 0; i < 6; i++)
+        {
             hotbarItemSlots[i] = new InventorySlot();
-
-        for (int i = 0; i < 6; i++)
             hotbarSkillSlots[i] = new InventorySlot();
+        }
 
         for (int i = 0; i < 35; i++)
+        {
             inventorySlots[i] = new InventorySlot();
+        }
     }
 
     void InitializeEquipmentSlots()
     {
-        string[] equipmentTypes = { "Weapon", "Head", "Shoulder", "Belt", "Pants", "Shoes", "Gloves", "Accessory1", "Accessory2", "Accessory3", "Accessory4" };
+        string[] equipmentTypes = { "Weapon", "Head", "Shoulder", "Belt", "Pants", "Shoes", "Gloves", "Ring", "Neck", "Jewelery", "Bracelet", "Trinket" };
         foreach (string type in equipmentTypes)
         {
             equipmentSlots[type] = new InventorySlot();
@@ -70,27 +91,33 @@ public class InventoryManager : MonoBehaviour
     public bool AddItem(int itemId, int amount = 1)
     {
         Item itemToAdd = ItemManager.Instance.GetItem(itemId);
-        if (itemToAdd == null) return false;
-
-        if (itemToAdd.data.itemType == ItemType.Consumable || itemToAdd.data.itemType == ItemType.Material)
+        if (itemToAdd == null)
         {
-            // ¼Òºñ ¾ÆÀÌÅÛ°ú Àç·á´Â ÁßÃ¸ °¡´É
+            Debug.LogWarning($"Item with ID {itemId} not found.");
+            return false;
+        }
+
+        if (itemToAdd.data.ItemTypes.HasFlag(ItemType.Consumable) || itemToAdd.data.ItemTypes.HasFlag(ItemType.Material))
+        {
+            // ì†Œë¹„ ì•„ì´í…œê³¼ ìž¬ë£ŒëŠ” ì¤‘ì²© ê°€ëŠ¥
             foreach (var slot in inventorySlots.Values)
             {
                 if (!slot.IsEmpty && slot.item != null && slot.item.data.id == itemId)
                 {
                     slot.amount += amount;
+                    OnInventoryChanged?.Invoke();
                     return true;
                 }
             }
         }
 
-        // »õ ½½·Ô¿¡ ¾ÆÀÌÅÛ Ãß°¡
+        // ìƒˆ ìŠ¬ë¡¯ì— ì•„ì´í…œ ì¶”ê°€
         foreach (var slot in inventorySlots.Values)
         {
             if (slot.IsEmpty)
             {
                 slot.SetItem(itemToAdd, amount);
+                OnInventoryChanged?.Invoke();
                 return true;
             }
         }
@@ -99,30 +126,11 @@ public class InventoryManager : MonoBehaviour
         return false;
     }
 
-    public bool AddSkill(int skillId)
-    {
-        Skill skillToAdd = ItemManager.Instance.GetSkill(skillId);
-        if (skillToAdd == null) return false;
-
-        // ÇÖ¹ÙÀÇ ½ºÅ³ ½½·Ô¿¡ Ãß°¡
-        foreach (var slot in hotbarSkillSlots.Values)
-        {
-            if (slot.IsEmpty)
-            {
-                slot.SetSkill(skillToAdd);
-                return true;
-            }
-        }
-
-        Debug.Log("No empty skill slot in hotbar!");
-        return false;
-    }
-
     public void MoveItem(InventorySlot fromSlot, InventorySlot toSlot)
     {
-        if (fromSlot.IsEmpty) return;
+        if (fromSlot == null || toSlot == null || fromSlot.IsEmpty) return;
 
-        if (fromSlot.item != null) // ¾ÆÀÌÅÛ ÀÌµ¿
+        if (fromSlot.item != null) // ì•„ì´í…œ ì´ë™
         {
             if (toSlot.IsEmpty)
             {
@@ -130,21 +138,21 @@ public class InventoryManager : MonoBehaviour
                 fromSlot.Clear();
             }
             else if (toSlot.item != null && fromSlot.item.data.id == toSlot.item.data.id &&
-                     (fromSlot.item.data.itemType == ItemType.Consumable || fromSlot.item.data.itemType == ItemType.Material))
+                     (fromSlot.item.data.ItemTypes.HasFlag(ItemType.Consumable) || fromSlot.item.data.ItemTypes.HasFlag(ItemType.Material)))
             {
                 toSlot.amount += fromSlot.amount;
                 fromSlot.Clear();
             }
             else
             {
-                // ºñ¼Ò¸ðÇ° ¾ÆÀÌÅÛÀº ±³Ã¼
+                // ë¹„ì†Œëª¨í’ˆ ì•„ì´í…œì€ êµì²´
                 Item tempItem = toSlot.item;
                 int tempAmount = toSlot.amount;
                 toSlot.SetItem(fromSlot.item, fromSlot.amount);
                 fromSlot.SetItem(tempItem, tempAmount);
             }
         }
-        else if (fromSlot.skill != null) // ½ºÅ³ ÀÌµ¿
+        else if (fromSlot.skill != null) // ìŠ¤í‚¬ ì´ë™
         {
             if (toSlot.IsEmpty && IsSkillSlot(toSlot))
             {
@@ -153,19 +161,21 @@ public class InventoryManager : MonoBehaviour
             }
             else if (!toSlot.IsEmpty && IsSkillSlot(toSlot))
             {
-                // ½ºÅ³ ±³Ã¼
+                // ìŠ¤í‚¬ êµì²´
                 Skill tempSkill = toSlot.skill;
                 toSlot.SetSkill(fromSlot.skill);
                 fromSlot.SetSkill(tempSkill);
             }
         }
+
+        OnInventoryChanged?.Invoke();
     }
 
     public void EquipItem(InventorySlot fromSlot, string equipSlot)
     {
-        if (fromSlot.IsEmpty || !equipmentSlots.ContainsKey(equipSlot) || fromSlot.item == null) return;
+        if (fromSlot == null || fromSlot.IsEmpty || !equipmentSlots.ContainsKey(equipSlot) || fromSlot.item == null) return;
 
-        if (fromSlot.item.data.itemType == ItemType.Equipment)
+        if (fromSlot.item.data.ItemTypes.HasFlag(ItemType.Equipment))
         {
             InventorySlot toSlot = equipmentSlots[equipSlot];
             Item tempItem = toSlot.item;
@@ -178,6 +188,7 @@ public class InventoryManager : MonoBehaviour
             {
                 fromSlot.Clear();
             }
+            OnInventoryChanged?.Invoke();
         }
         else
         {
@@ -193,5 +204,14 @@ public class InventoryManager : MonoBehaviour
     public bool IsSkillSlot(InventorySlot slot)
     {
         return hotbarSkillSlots.ContainsValue(slot);
+    }
+
+    public InventorySlot GetSlotByIndex(Dictionary<int, InventorySlot> slotDictionary, int index)
+    {
+        if (slotDictionary.TryGetValue(index, out InventorySlot slot))
+        {
+            return slot;
+        }
+        return null;
     }
 }

@@ -2,51 +2,137 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UISlot : MonoBehaviour
+public class UISlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public InventorySlot slot;
     private Image slotImage;
     private Image iconImage;
     private TextMeshProUGUI amountText;
+    private DragDropManager dragDropManager;
 
     void Awake()
     {
         slotImage = GetComponent<Image>();
         iconImage = transform.Find("IconImage").GetComponent<Image>();
         amountText = transform.Find("AmountText").GetComponent<TextMeshProUGUI>();
+        dragDropManager = FindObjectOfType<DragDropManager>();
     }
 
     public void UpdateUI(InventorySlot slot)
     {
         this.slot = slot;
-
-        if (slot.IsEmpty)
+        if (slot == null || slot.IsEmpty)
         {
-            iconImage.gameObject.SetActive(false);
-            amountText.gameObject.SetActive(false);
+            SetSlotEmpty();
         }
         else if (slot.item != null)
         {
-            iconImage.gameObject.SetActive(true);
-            iconImage.sprite = slot.item.icon;
-
-            if ((slot.item.data.itemType == ItemType.Consumable || slot.item.data.itemType == ItemType.Material) && slot.amount > 1)
-            {
-                amountText.gameObject.SetActive(true);
-                amountText.text = slot.amount.ToString();
-            }
-            else
-            {
-                amountText.gameObject.SetActive(false);
-            }
+            UpdateItemSlot(slot.item);
         }
         else if (slot.skill != null)
         {
-            iconImage.gameObject.SetActive(true);
-            iconImage.sprite = slot.skill.icon;
+            UpdateSkillSlot(slot.skill);
+        }
+        else
+        {
+            Debug.LogWarning("Slot is not empty but contains neither item nor skill.");
+            SetSlotEmpty();
+        }
+    }
+
+    private void SetSlotEmpty()
+    {
+        iconImage.gameObject.SetActive(false);
+        amountText.gameObject.SetActive(false);
+    }
+
+    private void UpdateItemSlot(Item item)
+    {
+        iconImage.gameObject.SetActive(true);
+        if (item.icon != null)
+        {
+            iconImage.sprite = item.icon;
+        }
+        else
+        {
+            Debug.LogWarning($"Icon is null for item: {item.data.name}");
+            iconImage.sprite = null; // 또는 기본 아이콘을 설정
+        }
+
+        if (item.data.ItemTypes.HasFlag(ItemType.Consumable) ||
+            item.data.ItemTypes.HasFlag(ItemType.Material))
+        {
+            UpdateAmountText(slot.amount);
+        }
+        else
+        {
             amountText.gameObject.SetActive(false);
+        }
+    }
+
+    private void UpdateSkillSlot(Skill skill)
+    {
+        iconImage.gameObject.SetActive(true);
+        if (skill.icon != null)
+        {
+            iconImage.sprite = skill.icon;
+        }
+        else
+        {
+            Debug.LogWarning($"Icon is null for skill: {skill.data.name}");
+            iconImage.sprite = null; // 또는 기본 아이콘을 설정
+        }
+        amountText.gameObject.SetActive(false);
+    }
+
+    private void UpdateAmountText(int amount)
+    {
+        if (amount > 1)
+        {
+            amountText.gameObject.SetActive(true);
+            amountText.text = amount.ToString();
+        }
+        else
+        {
+            amountText.gameObject.SetActive(false);
+        }
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (dragDropManager != null && slot != null)
+        {
+            dragDropManager.OnBeginDrag(slot);
+        }
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (dragDropManager != null)
+        {
+            dragDropManager.OnDrag(eventData.position);
+        }
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (dragDropManager != null)
+        {
+            // 마우스 위치에 있는 UISlot을 찾습니다.
+            GameObject hitObject = eventData.pointerCurrentRaycast.gameObject;
+            UISlot targetSlot = hitObject?.GetComponent<UISlot>();
+
+            if (targetSlot != null)
+            {
+                dragDropManager.OnEndDrag(targetSlot.slot);
+            }
+            else
+            {
+                dragDropManager.OnEndDrag(null); // 유효한 슬롯에 드롭하지 않은 경우
+            }
         }
     }
 }

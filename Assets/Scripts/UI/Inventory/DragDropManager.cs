@@ -1,32 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DragDropManager : MonoBehaviour
 {
     private InventoryManager inventoryManager;
-    private UIManager uiManager;
     private InventorySlot draggedSlot;
     private GameObject draggedObj;
     private Image draggedImage;
     private CanvasGroup draggedCanvasGroup;
+    private Canvas uiCanvas;
 
     void Start()
     {
         inventoryManager = GetComponent<InventoryManager>();
-        uiManager = GetComponent<UIManager>();
+       
+        uiCanvas = GameObject.Find("UI_Canvas").GetComponent<Canvas>();
         InitializeDraggedObject();
     }
 
     void InitializeDraggedObject()
     {
         draggedObj = new GameObject("DraggedItem");
-        draggedObj.transform.SetParent(transform);
+        RectTransform rectTransform = draggedObj.AddComponent<RectTransform>();
+        draggedObj.transform.SetParent(uiCanvas.transform);
+
         draggedImage = draggedObj.AddComponent<Image>();
         draggedCanvasGroup = draggedObj.AddComponent<CanvasGroup>();
+
         draggedImage.raycastTarget = false;
         draggedCanvasGroup.alpha = 0.6f;
+        draggedCanvasGroup.blocksRaycasts = false;
+
+        rectTransform.sizeDelta = new Vector2(50, 50);
+
         draggedObj.SetActive(false);
     }
 
@@ -36,6 +45,7 @@ public class DragDropManager : MonoBehaviour
         draggedSlot = slot;
         draggedImage.sprite = slot.item.icon;
         draggedObj.SetActive(true);
+        draggedObj.transform.SetAsLastSibling();
     }
 
     public void OnDrag(Vector2 position)
@@ -62,7 +72,7 @@ public class DragDropManager : MonoBehaviour
 
         draggedSlot = null;
         draggedObj.SetActive(false);
-        uiManager.UpdateAllUI();
+        inventoryManager.UpdateAllUI();
     }
 
     private void HandleEquipmentSlot(string equipSlotType)
@@ -79,6 +89,9 @@ public class DragDropManager : MonoBehaviour
 
     private void HandleInventorySlot(InventorySlot targetSlot)
     {
+        if(targetSlot == null) return;
+
+
         if (targetSlot.IsEmpty)
         {
             inventoryManager.MoveItem(draggedSlot, targetSlot);

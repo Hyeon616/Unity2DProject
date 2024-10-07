@@ -36,14 +36,22 @@ public class InventorySlot
 
 public class InventoryManager : MonoBehaviour
 {
+    public GameObject hotbarUI;
+    public GameObject inventoryUISlot;
+    public GameObject equipmentUI;
+    public GameObject mixingUI;
+
     public Dictionary<int, InventorySlot> hotbarItemSlots = new Dictionary<int, InventorySlot>();
     public Dictionary<int, InventorySlot> hotbarSkillSlots = new Dictionary<int, InventorySlot>();
     public Dictionary<int, InventorySlot> inventorySlots = new Dictionary<int, InventorySlot>();
     public Dictionary<string, InventorySlot> equipmentSlots = new Dictionary<string, InventorySlot>();
+    public Dictionary<int, InventorySlot> mixSlots = new Dictionary<int, InventorySlot>();
+
 
     public bool IsInitialized { get; private set; }
 
     public event Action OnInventoryChanged;
+    public event Action OnMixUIChanged;
 
     void Awake()
     {
@@ -52,7 +60,10 @@ public class InventoryManager : MonoBehaviour
 
     private void Start()
     {
-        AddItem(1,10);
+        AddItem(1,1);
+        AddItem(2,1);
+        AddItem(3,1);
+        UpdateAllUI();
     }
 
     public void Initialize()
@@ -61,6 +72,7 @@ public class InventoryManager : MonoBehaviour
         {
             InitializeSlots();
             InitializeEquipmentSlots();
+            InitializeMixSlots();
             IsInitialized = true;
         }
     }
@@ -87,6 +99,89 @@ public class InventoryManager : MonoBehaviour
             equipmentSlots[type] = new InventorySlot();
         }
     }
+
+    void InitializeMixSlots()
+    {
+        for (int i = 0; i < 9; i++)
+        {
+            mixSlots[i] = new InventorySlot();
+        }
+    }
+
+    public void UpdateAllUI()
+    {
+        UpdateHotbarUI();
+        UpdateInventoryUI();
+        UpdateEquipmentUI();
+        UpdateMixUI();
+    }
+
+    private void UpdateHotbarUI()
+    {
+        if (hotbarUI == null) return;
+        for (int i = 0; i < 6; i++)
+        {
+            UpdateSlotUI(GetUISlotAtIndex(hotbarUI, i), hotbarItemSlots[i]);
+        }
+        for (int i = 6; i < 12; i++)
+        {
+            UpdateSlotUI(GetUISlotAtIndex(hotbarUI, i), hotbarSkillSlots[i - 6]);
+        }
+    }
+
+    private void UpdateInventoryUI()
+    {
+        if (inventoryUISlot == null) return;
+        for (int i = 0; i < inventorySlots.Count; i++)
+        {
+            UpdateSlotUI(GetUISlotAtIndex(inventoryUISlot, i), inventorySlots[i]);
+        }
+    }
+
+    private void UpdateEquipmentUI()
+    {
+        if (equipmentUI == null) return;
+        foreach (var kvp in equipmentSlots)
+        {
+            Transform slotTransform = equipmentUI.transform.Find(kvp.Key);
+            if (slotTransform != null)
+            {
+                UISlot uiSlot = slotTransform.GetComponent<UISlot>();
+                if (uiSlot != null)
+                {
+                    UpdateSlotUI(uiSlot, kvp.Value);
+                }
+            }
+        }
+    }
+
+    private void UpdateMixUI()
+    {
+        if (mixingUI == null) return;
+        for (int i = 0; i < mixSlots.Count; i++)
+        {
+            UpdateSlotUI(GetUISlotAtIndex(mixingUI, i), mixSlots[i]);
+        }
+    }
+
+
+    private void UpdateSlotUI(UISlot uiSlot, InventorySlot inventorySlot)
+    {
+        if (uiSlot != null && inventorySlot != null)
+        {
+            uiSlot.UpdateUI(inventorySlot);
+        }
+    }
+
+    private UISlot GetUISlotAtIndex(GameObject parent, int index)
+    {
+        if (parent == null || index < 0 || index >= parent.transform.childCount)
+        {
+            return null;
+        }
+        return parent.transform.GetChild(index).GetComponent<UISlot>();
+    }
+
 
     public bool AddItem(int itemId, int amount = 1)
     {
@@ -130,6 +225,20 @@ public class InventoryManager : MonoBehaviour
     {
         if (fromSlot == null || toSlot == null || fromSlot.IsEmpty) return;
 
+        // 스킬 슬롯으로의 아이템 이동 방지
+        if (fromSlot.item != null && IsSkillSlot(toSlot))
+        {
+            Debug.Log("Cannot move items to skill slots.");
+            return;
+        }
+
+        // 아이템 슬롯으로의 스킬 이동 방지
+        if (fromSlot.skill != null && !IsSkillSlot(toSlot))
+        {
+            Debug.Log("Cannot move skills to item slots.");
+            return;
+        }
+
         if (fromSlot.item != null) // 아이템 이동
         {
             if (toSlot.IsEmpty)
@@ -154,12 +263,12 @@ public class InventoryManager : MonoBehaviour
         }
         else if (fromSlot.skill != null) // 스킬 이동
         {
-            if (toSlot.IsEmpty && IsSkillSlot(toSlot))
+            if (toSlot.IsEmpty)
             {
                 toSlot.SetSkill(fromSlot.skill);
                 fromSlot.Clear();
             }
-            else if (!toSlot.IsEmpty && IsSkillSlot(toSlot))
+            else
             {
                 // 스킬 교체
                 Skill tempSkill = toSlot.skill;
@@ -206,6 +315,11 @@ public class InventoryManager : MonoBehaviour
         return hotbarSkillSlots.ContainsValue(slot);
     }
 
+    public bool IsHotbarSlot(InventorySlot slot)
+    {
+        return hotbarItemSlots.ContainsValue(slot) || hotbarSkillSlots.ContainsValue(slot);
+    }
+
     public InventorySlot GetSlotByIndex(Dictionary<int, InventorySlot> slotDictionary, int index)
     {
         if (slotDictionary.TryGetValue(index, out InventorySlot slot))
@@ -214,4 +328,12 @@ public class InventoryManager : MonoBehaviour
         }
         return null;
     }
+
+    public void UpdateCrafting()
+    {
+        OnMixUIChanged?.Invoke();
+        OnInventoryChanged?.Invoke();
+    }
+
+
 }

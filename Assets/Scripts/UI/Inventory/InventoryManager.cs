@@ -51,7 +51,7 @@ public class InventoryManager : MonoBehaviour
     public bool IsInitialized { get; private set; }
 
     public event Action OnInventoryChanged;
-    public event Action OnMixUIChanged;
+    public event Action OnMixSlotChanged;
 
     void Awake()
     {
@@ -60,9 +60,9 @@ public class InventoryManager : MonoBehaviour
 
     private void Start()
     {
-        AddItem(1,1);
-        AddItem(2,1);
-        AddItem(3,1);
+        AddItem(1,2);
+        AddItem(2,2);
+        AddItem(3,2);
         UpdateAllUI();
     }
 
@@ -221,7 +221,7 @@ public class InventoryManager : MonoBehaviour
         return false;
     }
 
-    public void MoveItem(InventorySlot fromSlot, InventorySlot toSlot)
+    public void MoveItem(InventorySlot fromSlot, InventorySlot toSlot, int amount)
     {
         if (fromSlot == null || toSlot == null || fromSlot.IsEmpty) return;
 
@@ -238,6 +238,8 @@ public class InventoryManager : MonoBehaviour
             Debug.Log("Cannot move skills to item slots.");
             return;
         }
+
+        bool isMixSlotAffected = mixSlots.ContainsValue(fromSlot) || mixSlots.ContainsValue(toSlot);
 
         if (fromSlot.item != null) // 아이템 이동
         {
@@ -278,6 +280,11 @@ public class InventoryManager : MonoBehaviour
         }
 
         OnInventoryChanged?.Invoke();
+
+        if (isMixSlotAffected)
+        {
+            OnMixSlotChanged?.Invoke();
+        }
     }
 
     public void EquipItem(InventorySlot fromSlot, string equipSlot)
@@ -328,12 +335,5 @@ public class InventoryManager : MonoBehaviour
         }
         return null;
     }
-
-    public void UpdateCrafting()
-    {
-        OnMixUIChanged?.Invoke();
-        OnInventoryChanged?.Invoke();
-    }
-
 
 }

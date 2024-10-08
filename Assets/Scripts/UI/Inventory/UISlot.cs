@@ -121,20 +121,9 @@ public class UISlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
     {
         if (dragDropManager != null)
         {
-            // 마우스 위치에 있는 UISlot을 찾습니다.
             GameObject hitObject = eventData.pointerCurrentRaycast.gameObject;
             UISlot targetSlot = hitObject?.GetComponent<UISlot>();
-
             dragDropManager.OnEndDrag(targetSlot?.slot);
-
-            //if (targetSlot != null)
-            //{
-            //    dragDropManager.OnEndDrag(targetSlot.slot);
-            //}
-            //else
-            //{
-            //    dragDropManager.OnEndDrag(null); // 유효한 슬롯에 드롭하지 않은 경우
-            //}
         }
     }
 }

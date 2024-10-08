@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +20,7 @@ public class UI_Mixing : MonoBehaviour
     private InventoryManager inventoryManager; // 인벤토리 관리자 참조
     public Button craftButton;                // 조합 버튼 참조
     public Image resultImage;
+    public TextMeshProUGUI AmountText;
 
     private Dictionary<string, Recipe> craftingRecipes; // 조합 레시피 저장 dictionary
 
@@ -48,8 +50,19 @@ public class UI_Mixing : MonoBehaviour
             Debug.LogError("Craft button not assigned!");
         }
 
-        // 레시피 로드
+        inventoryManager.OnMixSlotChanged += UpdateCraftingPreview;
+
         LoadRecipes();
+        ClearCraftingPreview();
+    }
+
+    void OnDestroy()
+    {
+        // 이벤트 구독 해제
+        if (inventoryManager != null)
+        {
+            inventoryManager.OnMixSlotChanged -= UpdateCraftingPreview;
+        }
     }
 
     /// <summary>
@@ -82,6 +95,7 @@ public class UI_Mixing : MonoBehaviour
             if (MatchesRecipe(gridVariations, recipe))
             {
                 CraftItem(recipe.result, recipe.count);
+                UpdateCraftingPreview();
                 return;
             }
         }
@@ -173,7 +187,7 @@ public class UI_Mixing : MonoBehaviour
             }
 
             // UI 업데이트
-            inventoryManager.UpdateCrafting();
+            inventoryManager.UpdateAllUI();
         }
         else
         {
@@ -191,20 +205,14 @@ public class UI_Mixing : MonoBehaviour
         for (int rotation = 0; rotation < 4; rotation++)
         {
             int[,] rotatedGrid = RotateGrid(originalGrid, rotation);
-            variations.Add(rotatedGrid);
 
-            // 수평 이동
-            int[,] horizontalShift = ShiftGridHorizontally(rotatedGrid);
-            if (!GridsEqual(horizontalShift, rotatedGrid))
+            for (int verticalShift = 0; verticalShift < 3; verticalShift++)
             {
-                variations.Add(horizontalShift);
-            }
-
-            // 수직 이동
-            int[,] verticalShift = ShiftGridVertically(rotatedGrid);
-            if (!GridsEqual(verticalShift, rotatedGrid) && !GridsEqual(verticalShift, horizontalShift))
-            {
-                variations.Add(verticalShift);
+                for (int horizontalShift = 0; horizontalShift < 3; horizontalShift++)
+                {
+                    int[,] shiftedGrid = ShiftGrid(rotatedGrid, verticalShift, horizontalShift);
+                    variations.Add(shiftedGrid);
+                }
             }
         }
 
@@ -214,42 +222,22 @@ public class UI_Mixing : MonoBehaviour
     /// <summary>
     /// 그리드를 수평으로 이동하는 메서드
     /// </summary>
-    private int[,] ShiftGridHorizontally(int[,] grid)
-    {
-        int[,] shifted = new int[3, 3];
-        int firstNonEmptyColumn = FindFirstNonEmptyColumn(grid);
 
+    private int[,] ShiftGrid(int[,] grid, int verticalShift, int horizontalShift)
+    {
+        int[,] shiftedGrid = new int[3, 3];
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
             {
-                int newJ = (j + firstNonEmptyColumn) % 3;
-                shifted[i, j] = grid[i, newJ];
+                int newI = (i + verticalShift) % 3;
+                int newJ = (j + horizontalShift) % 3;
+                shiftedGrid[newI, newJ] = grid[i, j];
             }
         }
-
-        return shifted;
+        return shiftedGrid;
     }
 
-    /// <summary>
-    /// 그리드를 수직으로 이동하는 메서드
-    /// </summary>
-    private int[,] ShiftGridVertically(int[,] grid)
-    {
-        int[,] shifted = new int[3, 3];
-        int firstNonEmptyRow = FindFirstNonEmptyRow(grid);
-
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                int newI = (i + firstNonEmptyRow) % 3;
-                shifted[i, j] = grid[newI, j];
-            }
-        }
-
-        return shifted;
-    }
 
     private int[,] RotateGrid(int[,] grid, int rotations)
     {
@@ -268,41 +256,65 @@ public class UI_Mixing : MonoBehaviour
         return grid;
     }
 
-
-    /// <summary>
-    /// 첫 번째 비어있지 않은 열을 찾는 메서드
-    /// </summary>
-    private int FindFirstNonEmptyColumn(int[,] grid)
+    private void UpdateCraftingPreview()
     {
-        for (int j = 0; j < 3; j++)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                if (grid[i, j] != 0)
-                {
-                    return j;
-                }
-            }
-        }
-        return 0;
-    }
+        int[,] currentGrid = GetCurrentCraftingGrid();
 
-    /// <summary>
-    /// 첫 번째 비어있지 않은 행을 찾는 메서드
-    /// </summary>
-    private int FindFirstNonEmptyRow(int[,] grid)
-    {
+        // 모든 슬롯이 비어있는지 확인
+        bool allSlotsEmpty = true;
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
             {
-                if (grid[i, j] != 0)
+                if (currentGrid[i, j] != 0)
                 {
-                    return i;
+                    allSlotsEmpty = false;
+                    break;
                 }
             }
+            if (!allSlotsEmpty) break;
         }
-        return 0;
+
+        // 모든 슬롯이 비어있으면 미리보기 초기화
+        if (allSlotsEmpty)
+        {
+            ClearCraftingPreview();
+            return;
+        }
+
+        List<int[,]> gridVariations = GetUniqueVariations(currentGrid);
+
+        foreach (var recipe in craftingRecipes.Values)
+        {
+            if (MatchesRecipe(gridVariations, recipe))
+            {
+                ShowCraftingPreview(recipe.result, recipe.count);
+                return;
+            }
+        }
+
+        // 매칭되는 레시피가 없으면 미리보기 초기화
+        ClearCraftingPreview();
+    }
+
+    private void ShowCraftingPreview(int itemId, int count)
+    {
+        Item item = ItemManager.Instance.GetItem(itemId);
+        if (item != null)
+        {
+            resultImage.gameObject.SetActive(true);
+            resultImage.sprite = item.icon;
+            AmountText.gameObject.SetActive(true);
+            AmountText.text = count.ToString();
+        }
+    }
+
+    private void ClearCraftingPreview()
+    {
+        resultImage.sprite = null;
+        resultImage.gameObject.SetActive(false);
+        AmountText.text = "";
+        AmountText.gameObject.SetActive(false);
     }
 
     private class GridEqualityComparer : IEqualityComparer<int[,]>

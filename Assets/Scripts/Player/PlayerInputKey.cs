@@ -9,20 +9,66 @@ public class PlayerInputKey : MonoBehaviour
     public GameObject OptionUI;
     public GameObject TalentsUI;
     public GameObject EquipUI;
-    // 조합 추가
+    public GameObject MixingUI;
 
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.anyKeyDown)
         {
-            ToggleInventoryUI();
+            switch (Input.inputString.ToLower())
+            {
+                case "i":
+                    ToggleInventoryUI();
+                    break;
+                case "k":
+                    ToggleSkillUI();
+                    break;
+                case "o":
+                    ToggleOptionUI();
+                    break;
+                case "l":
+                    ToggleTalentsUI();
+                    break;
+                case "p":
+                    ToggleEquipUI();
+                    break;
+                case "j":
+                    ToggleMixingUI();
+                    break;
+            }
         }
+
     }
 
     private void ToggleInventoryUI()
     {
         inventoryUI.SetActive(!inventoryUI.activeSelf);
+    }
+
+    private void ToggleSkillUI()
+    {
+        SkillUI.SetActive(!SkillUI.activeSelf);
+    }
+
+    private void ToggleOptionUI()
+    {
+        OptionUI.SetActive(!OptionUI.activeSelf);
+    }
+
+    private void ToggleTalentsUI()
+    {
+        TalentsUI.SetActive(!TalentsUI.activeSelf);
+    }
+
+    private void ToggleEquipUI()
+    {
+        EquipUI.SetActive(!EquipUI.activeSelf);
+    }
+
+    private void ToggleMixingUI()
+    {
+        MixingUI.SetActive(!MixingUI.activeSelf);
     }
 
 }

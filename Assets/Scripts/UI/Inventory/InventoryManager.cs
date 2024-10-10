@@ -60,9 +60,9 @@ public class InventoryManager : MonoBehaviour
 
     private void Start()
     {
-        AddItem(1,2);
-        AddItem(2,2);
-        AddItem(3,2);
+        AddItem(1, 2);
+        AddItem(2, 2);
+        AddItem(3, 2);
         UpdateAllUI();
     }
 
@@ -243,27 +243,44 @@ public class InventoryManager : MonoBehaviour
 
         if (fromSlot.item != null) // 아이템 이동
         {
+            int amountToMove = Mathf.Min(amount, fromSlot.amount);
             if (toSlot.IsEmpty)
             {
-                toSlot.SetItem(fromSlot.item, fromSlot.amount);
-                fromSlot.Clear();
+                toSlot.SetItem(fromSlot.item, amountToMove);
+                fromSlot.amount -= amountToMove;
+                if (fromSlot.amount <= 0) fromSlot.Clear();
+                Debug.Log($"Moved to empty slot. From slot amount: {fromSlot.amount}, To slot amount: {toSlot.amount}");
             }
-            else if (toSlot.item != null && fromSlot.item.data.id == toSlot.item.data.id &&
-                     (fromSlot.item.data.ItemTypes.HasFlag(ItemType.Consumable) || fromSlot.item.data.ItemTypes.HasFlag(ItemType.Material)))
+            else if (toSlot.item != null && fromSlot.item.data.id == toSlot.item.data.id)
             {
-                toSlot.amount += fromSlot.amount;
-                fromSlot.Clear();
+                // 동일한 아이템인 경우 갯수 합치기
+                int maxStack = GetMaxStackSize(fromSlot.item);
+                int spaceAvailable = maxStack - toSlot.amount;
+                int actualAmountToMove = Mathf.Min(amountToMove, spaceAvailable);
+
+                toSlot.amount += actualAmountToMove;
+                fromSlot.amount -= actualAmountToMove;
+                if (fromSlot.amount <= 0) fromSlot.Clear();
+                Debug.Log($"Stacked items. From slot amount: {fromSlot.amount}, To slot amount: {toSlot.amount}");
             }
             else
             {
-                // 비소모품 아이템은 교체
+                // 다른 아이템인 경우 교체
                 Item tempItem = toSlot.item;
                 int tempAmount = toSlot.amount;
-                toSlot.SetItem(fromSlot.item, fromSlot.amount);
-                fromSlot.SetItem(tempItem, tempAmount);
+                toSlot.SetItem(fromSlot.item, amountToMove);
+
+                if (amountToMove < fromSlot.amount)
+                {
+                    fromSlot.amount -= amountToMove;
+                }
+                else
+                {
+                    fromSlot.SetItem(tempItem, tempAmount);
+                }
             }
         }
-        else if (fromSlot.skill != null) // 스킬 이동
+        else if (fromSlot.skill != null) // 스킬 이동 (변경 없음)
         {
             if (toSlot.IsEmpty)
             {
@@ -310,6 +327,16 @@ public class InventoryManager : MonoBehaviour
         {
             Debug.Log("This item cannot be equipped.");
         }
+    }
+
+    private int GetMaxStackSize(Item item)
+    {
+        if (item.data.ItemTypes.HasFlag(ItemType.Consumable) ||
+            item.data.ItemTypes.HasFlag(ItemType.Material))
+        {
+            return int.MaxValue;
+        }
+        return 1;
     }
 
     public bool IsItemSlot(InventorySlot slot)

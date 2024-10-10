@@ -20,6 +20,7 @@ public class DragDropManager : MonoBehaviour
     public Button confirmButton;
 
     private bool isShiftDrag = false;
+    private bool isCtrlDrag = false;
     private InventorySlot targetSlot;
 
     void Start()
@@ -29,7 +30,7 @@ public class DragDropManager : MonoBehaviour
         uiCanvas = GameObject.Find("UI_Canvas").GetComponent<Canvas>();
         InitializeDraggedObject();
 
-        confirmButton.onClick.AddListener(OnAmountConfirmed);
+       // confirmButton.onClick.AddListener(OnAmountConfirmed);
     }
 
     void InitializeDraggedObject()
@@ -59,15 +60,9 @@ public class DragDropManager : MonoBehaviour
         draggedObj.transform.SetAsLastSibling();
 
         isShiftDrag = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        isCtrlDrag = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
 
-        if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
-        {
-            dragAmount = 1;
-        }
-        else
-        {
-            dragAmount = slot.amount;
-        }
+        dragAmount = isCtrlDrag ? 1 : slot.amount;
 
     }
 
@@ -87,11 +82,13 @@ public class DragDropManager : MonoBehaviour
 
         if (isShiftDrag && targetSlot != draggedSlot)
         {
-            ShowAmountInputUI();
+            // UI 작업이 완료되면 이 부분의 주석을 해제하고 else 부분을 주석 처리하세요
+            // ShowAmountInputUI();
+            ItemTransfer(dragAmount);
         }
         else
         {
-            CompleteItemTransfer(dragAmount);
+            ItemTransfer(dragAmount);
         }
 
         draggedObj.SetActive(false);
@@ -110,29 +107,42 @@ public class DragDropManager : MonoBehaviour
         if (int.TryParse(amountInputField.text, out int amount))
         {
             dragAmount = Mathf.Clamp(amount, 1, draggedSlot.amount);
-            CompleteItemTransfer(dragAmount);
+            ItemTransfer(dragAmount);
         }
         amountInputUI.SetActive(false);
     }
 
-    private void CompleteItemTransfer(int amount)
+    private void ItemTransfer(int amount)
     {
+        if (targetSlot == null)
+        {
+            Debug.Log("Target slot is null, aborting transfer");
+            return;
+        }
+
+        if (draggedSlot == null)
+        {
+            Debug.Log("Dragged slot is null, aborting transfer");
+            return;
+        }
+
         string equipSlotType = GetEquipmentSlotType(targetSlot);
         if (equipSlotType != null)
         {
-            HandleEquipmentSlot(equipSlotType);
+            Debug.Log($"Handling equipment slot: {equipSlotType}");
+            EquipmentItem(equipSlotType);
         }
         else
         {
-            HandleInventorySlot(targetSlot, amount);
+            Debug.Log("Calling MoveItem on InventoryManager");
+            inventoryManager.MoveItem(draggedSlot, targetSlot, amount);
         }
 
         draggedSlot = null;
         inventoryManager.UpdateAllUI();
     }
 
-
-    private void HandleEquipmentSlot(string equipSlotType)
+    private void EquipmentItem(string equipSlotType)
     {
         if (draggedSlot.item.data.ItemTypes.HasFlag(ItemType.Equipment))
         {
@@ -144,41 +154,6 @@ public class DragDropManager : MonoBehaviour
         }
     }
 
-    private void HandleInventorySlot(InventorySlot targetSlot, int amount)
-    {
-        if (targetSlot == null) return;
-        if (targetSlot.IsEmpty)
-        {
-            inventoryManager.MoveItem(draggedSlot, targetSlot, amount);
-        }
-        else if (draggedSlot.item.data.id == targetSlot.item.data.id &&
-                 !(draggedSlot.item.data.ItemTypes.HasFlag(ItemType.Equipment) ||
-                   draggedSlot.item.data.ItemTypes.HasFlag(ItemType.Decorative)))
-        {
-            int amountToAdd = Mathf.Min(amount, draggedSlot.amount);
-            targetSlot.amount += amountToAdd;
-            draggedSlot.amount -= amountToAdd;
-            if (draggedSlot.amount <= 0)
-            {
-                draggedSlot.Clear();
-            }
-        }
-        else
-        {
-            // 아이템 교환 로직
-            Item tempItem = targetSlot.item;
-            int tempAmount = targetSlot.amount;
-            targetSlot.SetItem(draggedSlot.item, amount);
-            if (amount < draggedSlot.amount)
-            {
-                draggedSlot.amount -= amount;
-            }
-            else
-            {
-                draggedSlot.SetItem(tempItem, tempAmount);
-            }
-        }
-    }
 
     private string GetEquipmentSlotType(InventorySlot slot)
     {

@@ -24,12 +24,10 @@ public class UI_Mixing : MonoBehaviour
 
     private Dictionary<string, Recipe> craftingRecipes; // 조합 레시피 저장 dictionary
 
-    /// <summary>
-    /// 초기화 메서드
-    /// </summary>
+    
+    // 초기화 
     void Start()
     {
-        // InventoryManager 찾기
         if (inventoryManager == null)
         {
             inventoryManager = FindObjectOfType<InventoryManager>();
@@ -40,7 +38,6 @@ public class UI_Mixing : MonoBehaviour
             }
         }
 
-        // 조합 버튼에 리스너 추가
         if (craftButton != null)
         {
             craftButton.onClick.AddListener(AttemptCrafting);
@@ -58,16 +55,13 @@ public class UI_Mixing : MonoBehaviour
 
     void OnDestroy()
     {
-        // 이벤트 구독 해제
         if (inventoryManager != null)
         {
             inventoryManager.OnMixSlotChanged -= UpdateCraftingPreview;
         }
     }
 
-    /// <summary>
-    /// JSON 파일에서 레시피 로드
-    /// </summary>
+    // JSON 파일에서 레시피 로드
     void LoadRecipes()
     {
         TextAsset recipesJson = Resources.Load<TextAsset>("Data/recipes");
@@ -82,9 +76,7 @@ public class UI_Mixing : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 조합 시도 메서드
-    /// </summary>
+    // 조합
     public void AttemptCrafting()
     {
         int[,] currentGrid = GetCurrentCraftingGrid();
@@ -92,9 +84,9 @@ public class UI_Mixing : MonoBehaviour
 
         foreach (var recipe in craftingRecipes.Values)
         {
-            if (MatchesRecipe(gridVariations, recipe))
+            if (MatchesRecipe(gridVariations, recipe, out int multiplier))
             {
-                CraftItem(recipe.result, recipe.count);
+                CraftItem(recipe.result, recipe.count, recipe.composition, multiplier);
                 UpdateCraftingPreview();
                 return;
             }
@@ -103,9 +95,7 @@ public class UI_Mixing : MonoBehaviour
         Debug.Log("No matching recipe found.");
     }
 
-    /// <summary>
-    /// 현재 조합 그리드 상태를 가져오는 메서드
-    /// </summary>
+    // 현재 조합창 그리드
     private int[,] GetCurrentCraftingGrid()
     {
         int[,] grid = new int[3, 3];
@@ -125,18 +115,49 @@ public class UI_Mixing : MonoBehaviour
         return grid;
     }
 
-    /// <summary>
-    /// 그리드 변형이 레시피와 일치하는지 확인하는 메서드
-    /// </summary>
-    private bool MatchesRecipe(List<int[,]> gridVariations, Recipe recipe)
+    // 그리드가 레시피와 일치하는지 확인
+    private bool MatchesRecipe(List<int[,]> gridVariations, Recipe recipe, out int multiplier)
     {
         int[,] recipeGrid = ConvertPatternToGrid(recipe.composition);
-        return gridVariations.Any(variation => GridsEqual(variation, recipeGrid));
+        foreach (var variation in gridVariations)
+        {
+            if (GridsProportional(variation, recipeGrid, out multiplier))
+            {
+                return true;
+            }
+        }
+        multiplier = 0;
+        return false;
     }
 
-    /// <summary>
-    /// 문자열 패턴을 정수 그리드로 변환하는 메서드
-    /// </summary>
+    private bool GridsProportional(int[,] grid1, int[,] grid2, out int multiplier)
+    {
+        multiplier = int.MaxValue;
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (grid2[i, j] != 0)
+                {
+                    if (grid1[i, j] == 0 || grid1[i, j] < grid2[i, j])
+                    {
+                        multiplier = 0;
+                        return false;
+                    }
+                    int currentMultiplier = grid1[i, j] / grid2[i, j];
+                    multiplier = Mathf.Min(multiplier, currentMultiplier);
+                }
+                else if (grid1[i, j] != 0)
+                {
+                    multiplier = 0;
+                    return false;
+                }
+            }
+        }
+        return multiplier > 0;
+    }
+
+    // 레시피의 그리드를 정수로 변환
     private int[,] ConvertPatternToGrid(List<string> pattern)
     {
         int[,] grid = new int[3, 3];
@@ -150,9 +171,8 @@ public class UI_Mixing : MonoBehaviour
         return grid;
     }
 
-    /// <summary>
-    /// 두 그리드가 동일한지 확인하는 메서드
-    /// </summary>
+    
+    // 조합창과 레시피가 동일한지 확인
     private static bool GridsEqual(int[,] grid1, int[,] grid2)
     {
         for (int i = 0; i < 3; i++)
@@ -168,21 +188,29 @@ public class UI_Mixing : MonoBehaviour
         return true;
     }
 
-    /// <summary>
-    /// 아이템을 조합하는 메서드
-    /// </summary>
-    private void CraftItem(int resultItemId, int count)
+    // 아이템을 조합
+    private void CraftItem(int resultItemId, int count, List<string> recipeComposition, int multiplier)
     {
         if (inventoryManager.AddItem(resultItemId, count))
         {
             Debug.Log($"Successfully crafted {count} of item with ID: {resultItemId}");
 
-            // Mix 슬롯 비우기
-            for (int i = 0; i < 9; i++)
+            // 레시피에 따라 재료 소비
+            int[,] recipeGrid = ConvertPatternToGrid(recipeComposition);
+            for (int i = 0; i < 3; i++)
             {
-                if (inventoryManager.mixSlots.TryGetValue(i, out InventorySlot slot))
+                for (int j = 0; j < 3; j++)
                 {
-                    slot.Clear();
+                    int slotIndex = i * 3 + j;
+                    if (inventoryManager.mixSlots.TryGetValue(slotIndex, out InventorySlot slot) && !slot.IsEmpty)
+                    {
+                        int amountToRemove = recipeGrid[i, j] * multiplier;
+                        slot.amount -= amountToRemove;
+                        if (slot.amount <= 0)
+                        {
+                            slot.Clear();
+                        }
+                    }
                 }
             }
 
@@ -195,9 +223,8 @@ public class UI_Mixing : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 주어진 그리드의 고유한 변형을 생성하는 메서드
-    /// </summary>
+
+    // 레시피의 다양한 형태 생성
     private List<int[,]> GetUniqueVariations(int[,] originalGrid)
     {
         List<int[,]> variations = new List<int[,]>();
@@ -219,9 +246,9 @@ public class UI_Mixing : MonoBehaviour
         return variations.Distinct(new GridEqualityComparer()).ToList();
     }
 
-    /// <summary>
-    /// 그리드를 수평으로 이동하는 메서드
-    /// </summary>
+    
+    // 그리드 이동
+    
 
     private int[,] ShiftGrid(int[,] grid, int verticalShift, int horizontalShift)
     {
@@ -286,7 +313,7 @@ public class UI_Mixing : MonoBehaviour
 
         foreach (var recipe in craftingRecipes.Values)
         {
-            if (MatchesRecipe(gridVariations, recipe))
+            if (MatchesRecipe(gridVariations, recipe, out int multiplier))
             {
                 ShowCraftingPreview(recipe.result, recipe.count);
                 return;

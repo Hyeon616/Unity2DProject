@@ -60,7 +60,6 @@ public class ItemManager : MonoBehaviour
 
                 items[id] = item;
             }
-            Debug.Log($"Loaded {items.Count} items.");
         }
         else
         {

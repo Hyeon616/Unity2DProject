@@ -1,0 +1,96 @@
+{
+  "tiles": [
+    {
+      "name": "grass",
+      "spriteName": "grass_sprite",
+      "wallVariant": "dirt_wall",
+      "tileDrop": "grass",
+      "tileHp": 5,
+      "inBackground": false,
+      "isStackable": true
+    },
+    {
+      "name": "dirt",
+      "spriteName": "dirt_sprite",
+      "wallVariant": "dirt_wall",
+      "tileDrop": "dirt",
+      "tileHp": 5,
+      "inBackground": false,
+      "isStackable": true
+    },
+    {
+      "name": "stone",
+      "spriteName": "stone_sprite",
+      "wallVariant": "stone_wall",
+      "tileDrop": "stone",
+      "tileHp": 8,
+      "inBackground": false,
+      "isStackable": true
+    },
+    {
+      "name": "mars",
+      "spriteName": "mars_sprite",
+      "wallVariant": "mars_wall",
+      "tileDrop": "mars",
+      "tileHp": 11,
+      "inBackground": false,
+      "isStackable": true
+    },
+
+    {
+      "name": "dirt_wall",
+      "spriteName": "dirt_wall_sprite",
+      "wallVariant": null,
+      "tileDrop": "dirt",
+      "tileHp": 100,
+      "inBackground": true,
+      "isStackable": true
+    },
+    {
+      "name": "stone_wall",
+      "spriteName": "stone_wall_sprite",
+      "wallVariant": null,
+      "tileDrop": "stone",
+      "tileHp": 100,
+      "inBackground": true,
+      "isStackable": true
+    },
+    {
+      "name": "mars_wall",
+      "spriteName": "mars_wall_sprite",
+      "wallVariant": null,
+      "tileDrop": "mars",
+      "tileHp": 100,
+      "inBackground": true,
+      "isStackable": true
+    },
+    {
+      "name": "log",
+      "spriteName": "log_sprite",
+      "wallVariant": null,
+      "tileDrop": "wood",
+      "tileHp": 3,
+      "inBackground": false,
+      "isStackable": true
+    },
+    {
+      "name": "leaf",
+      "spriteName": "leaf_sprite",
+      "wallVariant": null,
+      "tileDrop": "leaf",
+      "tileHp": 1,
+      "inBackground": false,
+      "isStackable": true
+    },
+    {
+      "name": "tallGrass",
+      "spriteName": "tall_grass_sprite",
+      "wallVariant": null,
+      "tileDrop": null,
+      "tileHp": 1,
+      "inBackground": false,
+      "isStackable": false
+    }
+    // Add other tile types (tech, mars, coal, iron, gold, diamond) here...
+  ]
+}

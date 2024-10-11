@@ -29,7 +29,7 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
     public int marsLayerHeight = 24;
     public int xenLayerHeight = 32;
 
-    // worldSize´Â chunkSize·Î ³ª´©¾î ¶³¾îÁ®¾ßÇÑ´Ù.
+    // worldSizeëŠ” chunkSizeë¡œ ë‚˜ëˆ„ì–´ ë–¨ì–´ì ¸ì•¼í•œë‹¤.
     public int chunkSize = 20;
     public int worldSize = 100;
 
@@ -68,7 +68,7 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
 
     private void Start()
     {
-        // Map ÃÊ±âÈ­
+        // Map ì´ˆê¸°í™”
         CreateChunks();
         GenerateTerrain();
     }
@@ -170,13 +170,13 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
         float height;
 
         // PerlinNoise
-        // ±×¸®µåÀÇ xÃà¿¡ ´ëÇØ¼­ 1Â÷¿ø PerlinNosie
+        // ê·¸ë¦¬ë“œì˜ xì¶•ì— ëŒ€í•´ì„œ 1ì°¨ì› PerlinNosie
         height = Mathf.PerlinNoise((x + seed) * Freq, seed * Freq) * heightMultiplier + heightAddition;
         
 
         if (y < height)
         {
-            // °èÃş º° ¸Ê »ı¼º
+            // ê³„ì¸µ ë³„ ë§µ ìƒì„±
             if (y < height - xenLayerHeight)
             {
                 tileClass = tileAtlas.tech;
@@ -221,7 +221,7 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
             }
             else
             {
-                // Áö»ó
+                // ì§€ìƒ
                 tileClass = tileAtlas.grass;
             }
 
@@ -231,10 +231,10 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
             if (y >= height - 1)
             {
                 int tree = Random.Range(0, treeChance);
-                // ³ª¹«°¡ »ı¼º µÉ È®·ü 1/treeChance
+                // ë‚˜ë¬´ê°€ ìƒì„± ë  í™•ë¥  1/treeChance
                 if (tree == 1)
                 {
-                    // ³ª¹« »ı¼º
+                    // ë‚˜ë¬´ ìƒì„±
                     if (GetTileFromWorld(x, y))
                     {
                         GenerateTree(Random.Range(minTreeHeight, maxTreeHeight), x, y + 1);
@@ -244,7 +244,7 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
                 else
                 {
                     int i = Random.Range(0, tallGrassChance + 1);
-                    // ½Ä¹° »ı¼º
+                    // ì‹ë¬¼ ìƒì„±
                     if (i == 1)
                     {
                         if ((GetTileFromWorld(x, y)))
@@ -280,17 +280,17 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
         noiseTexture.Apply();
     }
 
-    // ³ª¹« »ı¼º
+    // ë‚˜ë¬´ ìƒì„±
     void GenerateTree(int treeHeight, int x, int y)
     {
 
-        // ³ª¹« ±âµÕ »ı¼º
+        // ë‚˜ë¬´ ê¸°ë‘¥ ìƒì„±
         for (int i = 0; i < treeHeight; i++)
         {
             PlaceTile(tileAtlas.log, x, y + i, true);
         }
 
-        // ÀÙ »ı¼º
+        // ì ìƒì„±
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
@@ -302,7 +302,7 @@ public class TerrainGeneration : Singleton<TerrainGeneration>
     }
 
 
-    // Å¸ÀÏ »ı¼º
+    // íƒ€ì¼ ìƒì„±
     public void PlaceTile(TileClass tile, int x, int y, bool isNaturallyPlaced)
     {
         if (InWorld(x, y))

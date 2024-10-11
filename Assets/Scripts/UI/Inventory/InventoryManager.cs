@@ -185,40 +185,66 @@ public class InventoryManager : MonoBehaviour
 
     public bool AddItem(int itemId, int amount = 1)
     {
-        Item itemToAdd = ItemManager.Instance.GetItem(itemId);
-        if (itemToAdd == null)
+        Item addItem = ItemManager.Instance.GetItem(itemId);
+        if (addItem == null)
         {
             Debug.LogWarning($"Item with ID {itemId} not found.");
             return false;
         }
 
-        if (itemToAdd.data.ItemTypes.HasFlag(ItemType.Consumable) || itemToAdd.data.ItemTypes.HasFlag(ItemType.Material))
+        int remainingAmount = amount;
+
+        if (addItem.data.ItemTypes.HasFlag(ItemType.Consumable) || addItem.data.ItemTypes.HasFlag(ItemType.Material))
         {
             // 소비 아이템과 재료는 중첩 가능
             foreach (var slot in inventorySlots.Values)
             {
                 if (!slot.IsEmpty && slot.item != null && slot.item.data.id == itemId)
                 {
-                    slot.amount += amount;
-                    OnInventoryChanged?.Invoke();
-                    return true;
+                    int spaceInSlot = GetMaxStackSize(addItem) - slot.amount;
+                    int amountToAdd = Mathf.Min(remainingAmount, spaceInSlot);
+                    slot.amount += amountToAdd;
+                    remainingAmount -= amountToAdd;
+
+                    if (remainingAmount <= 0)
+                    {
+                        OnInventoryChanged?.Invoke();
+                        return true;
+                    }
                 }
             }
         }
 
-        // 새 슬롯에 아이템 추가
+        // 남은 아이템을 새 슬롯에 추가
+        while (remainingAmount > 0)
+        {
+            InventorySlot emptySlot = FindEmptySlot();
+            if (emptySlot == null)
+            {
+                Debug.Log("Inventory is full!");
+                OnInventoryChanged?.Invoke();
+                return false;
+            }
+
+            int amountToAdd = Mathf.Min(remainingAmount, GetMaxStackSize(addItem));
+            emptySlot.SetItem(addItem, amountToAdd);
+            remainingAmount -= amountToAdd;
+        }
+
+        OnInventoryChanged?.Invoke();
+        return true;
+    }
+
+    private InventorySlot FindEmptySlot()
+    {
         foreach (var slot in inventorySlots.Values)
         {
             if (slot.IsEmpty)
             {
-                slot.SetItem(itemToAdd, amount);
-                OnInventoryChanged?.Invoke();
-                return true;
+                return slot;
             }
         }
-
-        Debug.Log("Inventory is full!");
-        return false;
+        return null;
     }
 
     public void MoveItem(InventorySlot fromSlot, InventorySlot toSlot, int amount)
@@ -248,8 +274,8 @@ public class InventoryManager : MonoBehaviour
             {
                 toSlot.SetItem(fromSlot.item, amountToMove);
                 fromSlot.amount -= amountToMove;
-                if (fromSlot.amount <= 0) fromSlot.Clear();
-                Debug.Log($"Moved to empty slot. From slot amount: {fromSlot.amount}, To slot amount: {toSlot.amount}");
+                if (fromSlot.amount <= 0) 
+                    fromSlot.Clear();
             }
             else if (toSlot.item != null && fromSlot.item.data.id == toSlot.item.data.id)
             {

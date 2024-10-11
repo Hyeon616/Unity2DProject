@@ -6,58 +6,50 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[System.Serializable]
-public class Recipe
-{
-    public List<string> composition;
-    public int result;          
-    public int count;           
-}
-
-
 public class UI_Mixing : MonoBehaviour
 {
-    private InventoryManager inventoryManager; // 인벤토리 관리자 참조
-    public Button craftButton;                // 조합 버튼 참조
+    private InventoryManager inventoryManager;
+    private MixingItem mixingItem;
+
+    public Button craftButton; 
     public Image resultImage;
     public TextMeshProUGUI AmountText;
 
     private Dictionary<string, Recipe> craftingRecipes; // 조합 레시피 저장 dictionary
 
-    
+
     // 초기화 
     void Start()
     {
-        if (inventoryManager == null)
+        inventoryManager = FindObjectOfType<InventoryManager>();
+        mixingItem = GetComponent<MixingItem>();
+
+        if (inventoryManager == null || mixingItem == null)
         {
-            inventoryManager = FindObjectOfType<InventoryManager>();
-            if (inventoryManager == null)
-            {
-                Debug.LogError("InventoryManager not found!");
-                return;
-            }
+            Debug.LogError("Required components not found!");
+            return;
         }
 
         if (craftButton != null)
         {
-            craftButton.onClick.AddListener(AttemptCrafting);
+            craftButton.onClick.AddListener(OnClickCrafting);
         }
         else
         {
             Debug.LogError("Craft button not assigned!");
         }
 
-        inventoryManager.OnMixSlotChanged += UpdateCraftingPreview;
+        inventoryManager.OnMixSlotChanged += UpdateCraftingUI;
 
         LoadRecipes();
-        ClearCraftingPreview();
+        ClearCraftingResult();
     }
 
     void OnDestroy()
     {
         if (inventoryManager != null)
         {
-            inventoryManager.OnMixSlotChanged -= UpdateCraftingPreview;
+            inventoryManager.OnMixSlotChanged -= UpdateCraftingUI;
         }
     }
 
@@ -69,34 +61,30 @@ public class UI_Mixing : MonoBehaviour
         {
             var recipeData = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Recipe>>>(recipesJson.text);
             craftingRecipes = recipeData["recipes"];
+            mixingItem.LoadRecipes(craftingRecipes);
         }
         else
         {
             Debug.LogError("Recipes JSON file not found!");
         }
     }
-
     // 조합
-    public void AttemptCrafting()
+    public void OnClickCrafting()
     {
-        int[,] currentGrid = GetCurrentCraftingGrid();
-        List<int[,]> gridVariations = GetUniqueVariations(currentGrid);
-
-        foreach (var recipe in craftingRecipes.Values)
+        int[,] currentGrid = GetCraftingGrid();
+        if (mixingItem.ExcuteCrafting(currentGrid, out int resultItemId, out int count, out int minMaterials))
         {
-            if (MatchesRecipe(gridVariations, recipe, out int multiplier))
-            {
-                CraftItem(recipe.result, recipe.count, recipe.composition, multiplier);
-                UpdateCraftingPreview();
-                return;
-            }
+            CraftItem(resultItemId, count, minMaterials);
+            UpdateCraftingUI();
         }
-
-        Debug.Log("No matching recipe found.");
+        else
+        {
+            Debug.Log("No matching recipe found.");
+        }
     }
 
     // 현재 조합창 그리드
-    private int[,] GetCurrentCraftingGrid()
+    private int[,] GetCraftingGrid()
     {
         int[,] grid = new int[3, 3];
         for (int i = 0; i < 9; i++)
@@ -109,112 +97,39 @@ public class UI_Mixing : MonoBehaviour
             }
             else
             {
-                grid[row, col] = 0; // 빈 슬롯
+                grid[row, col] = 0;
             }
         }
         return grid;
-    }
-
-    // 그리드가 레시피와 일치하는지 확인
-    private bool MatchesRecipe(List<int[,]> gridVariations, Recipe recipe, out int multiplier)
-    {
-        int[,] recipeGrid = ConvertPatternToGrid(recipe.composition);
-        foreach (var variation in gridVariations)
-        {
-            if (GridsProportional(variation, recipeGrid, out multiplier))
-            {
-                return true;
-            }
-        }
-        multiplier = 0;
-        return false;
-    }
-
-    private bool GridsProportional(int[,] grid1, int[,] grid2, out int multiplier)
-    {
-        multiplier = int.MaxValue;
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                if (grid2[i, j] != 0)
-                {
-                    if (grid1[i, j] == 0 || grid1[i, j] < grid2[i, j])
-                    {
-                        multiplier = 0;
-                        return false;
-                    }
-                    int currentMultiplier = grid1[i, j] / grid2[i, j];
-                    multiplier = Mathf.Min(multiplier, currentMultiplier);
-                }
-                else if (grid1[i, j] != 0)
-                {
-                    multiplier = 0;
-                    return false;
-                }
-            }
-        }
-        return multiplier > 0;
-    }
-
-    // 레시피의 그리드를 정수로 변환
-    private int[,] ConvertPatternToGrid(List<string> pattern)
-    {
-        int[,] grid = new int[3, 3];
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                grid[i, j] = int.Parse(pattern[i][j].ToString());
-            }
-        }
-        return grid;
-    }
-
-    
-    // 조합창과 레시피가 동일한지 확인
-    private static bool GridsEqual(int[,] grid1, int[,] grid2)
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                if (grid1[i, j] != grid2[i, j])
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     // 아이템을 조합
-    private void CraftItem(int resultItemId, int count, List<string> recipeComposition, int multiplier)
+    private void CraftItem(int resultItemId, int count, int minMaterials)
     {
-        if (inventoryManager.AddItem(resultItemId, count))
-        {
-            Debug.Log($"Successfully crafted {count} of item with ID: {resultItemId}");
+        int maxCraftingAmount = CheckCraftingItems(minMaterials);
+        int totalCraftedCount = count * maxCraftingAmount;
 
-            // 레시피에 따라 재료 소비
-            int[,] recipeGrid = ConvertPatternToGrid(recipeComposition);
-            for (int i = 0; i < 3; i++)
+        if (inventoryManager.AddItem(resultItemId, totalCraftedCount))
+        {
+            for (int i = 0; i < 9; i++)
             {
-                for (int j = 0; j < 3; j++)
+                if (inventoryManager.mixSlots.TryGetValue(i, out InventorySlot slot) && !slot.IsEmpty)
                 {
-                    int slotIndex = i * 3 + j;
-                    if (inventoryManager.mixSlots.TryGetValue(slotIndex, out InventorySlot slot) && !slot.IsEmpty)
+                    int useItemAmount = minMaterials * maxCraftingAmount;
+                    int slotItemAmount = slot.amount - useItemAmount;
+
+                    if (slotItemAmount > 0)
                     {
-                        int amountToRemove = recipeGrid[i, j] * multiplier;
-                        slot.amount -= amountToRemove;
-                        if (slot.amount <= 0)
-                        {
-                            slot.Clear();
-                        }
+                        slot.amount = slotItemAmount;
+                    }
+                    else
+                    {
+                        slot.Clear();
                     }
                 }
             }
 
-            // UI 업데이트
+            Debug.Log($"Successfully crafted {totalCraftedCount} of item with ID: {resultItemId}");
             inventoryManager.UpdateAllUI();
         }
         else
@@ -224,107 +139,41 @@ public class UI_Mixing : MonoBehaviour
     }
 
 
-    // 레시피의 다양한 형태 생성
-    private List<int[,]> GetUniqueVariations(int[,] originalGrid)
+    private int CheckCraftingItems(int minMaterials)
     {
-        List<int[,]> variations = new List<int[,]>();
+        int maxTimes = int.MaxValue;
 
-        for (int rotation = 0; rotation < 4; rotation++)
+        for (int i = 0; i < 9; i++)
         {
-            int[,] rotatedGrid = RotateGrid(originalGrid, rotation);
-
-            for (int verticalShift = 0; verticalShift < 3; verticalShift++)
+            if (inventoryManager.mixSlots.TryGetValue(i, out InventorySlot slot) && !slot.IsEmpty)
             {
-                for (int horizontalShift = 0; horizontalShift < 3; horizontalShift++)
-                {
-                    int[,] shiftedGrid = ShiftGrid(rotatedGrid, verticalShift, horizontalShift);
-                    variations.Add(shiftedGrid);
-                }
+                int timesPossible = slot.amount / minMaterials;
+                maxTimes = Mathf.Min(maxTimes, timesPossible);
             }
         }
 
-        return variations.Distinct(new GridEqualityComparer()).ToList();
-    }
-
-    
-    // 그리드 이동
-    
-
-    private int[,] ShiftGrid(int[,] grid, int verticalShift, int horizontalShift)
-    {
-        int[,] shiftedGrid = new int[3, 3];
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                int newI = (i + verticalShift) % 3;
-                int newJ = (j + horizontalShift) % 3;
-                shiftedGrid[newI, newJ] = grid[i, j];
-            }
-        }
-        return shiftedGrid;
+        return maxTimes;
     }
 
 
-    private int[,] RotateGrid(int[,] grid, int rotations)
+
+    private void UpdateCraftingUI()
     {
-        int[,] rotated = new int[3, 3];
-        for (int r = 0; r < rotations; r++)
+        int[,] currentGrid = GetCraftingGrid();
+
+        if (mixingItem.ExcuteCrafting(currentGrid, out int resultItemId, out int count, out int minMaterials))
         {
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    rotated[j, 2 - i] = grid[i, j];
-                }
-            }
-            grid = (int[,])rotated.Clone();
+            int maxCraftingAmount = CheckCraftingItems(minMaterials);
+            int totalCraftedCount = count * maxCraftingAmount;
+            CraftingResult(resultItemId, totalCraftedCount);
         }
-        return grid;
+        else
+        {
+            ClearCraftingResult();
+        }
     }
 
-    private void UpdateCraftingPreview()
-    {
-        int[,] currentGrid = GetCurrentCraftingGrid();
-
-        // 모든 슬롯이 비어있는지 확인
-        bool allSlotsEmpty = true;
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                if (currentGrid[i, j] != 0)
-                {
-                    allSlotsEmpty = false;
-                    break;
-                }
-            }
-            if (!allSlotsEmpty) break;
-        }
-
-        // 모든 슬롯이 비어있으면 미리보기 초기화
-        if (allSlotsEmpty)
-        {
-            ClearCraftingPreview();
-            return;
-        }
-
-        List<int[,]> gridVariations = GetUniqueVariations(currentGrid);
-
-        foreach (var recipe in craftingRecipes.Values)
-        {
-            if (MatchesRecipe(gridVariations, recipe, out int multiplier))
-            {
-                ShowCraftingPreview(recipe.result, recipe.count);
-                return;
-            }
-        }
-
-        // 매칭되는 레시피가 없으면 미리보기 초기화
-        ClearCraftingPreview();
-    }
-
-    private void ShowCraftingPreview(int itemId, int count)
+    private void CraftingResult(int itemId, int count)
     {
         Item item = ItemManager.Instance.GetItem(itemId);
         if (item != null)
@@ -336,30 +185,12 @@ public class UI_Mixing : MonoBehaviour
         }
     }
 
-    private void ClearCraftingPreview()
+    private void ClearCraftingResult()
     {
         resultImage.sprite = null;
         resultImage.gameObject.SetActive(false);
         AmountText.text = "";
         AmountText.gameObject.SetActive(false);
-    }
-
-    private class GridEqualityComparer : IEqualityComparer<int[,]>
-    {
-        public bool Equals(int[,] x, int[,] y)
-        {
-            return GridsEqual(x, y);
-        }
-
-        public int GetHashCode(int[,] obj)
-        {
-            int hash = 17;
-            foreach (var item in obj)
-            {
-                hash = hash * 31 + item.GetHashCode();
-            }
-            return hash;
-        }
     }
 
 }

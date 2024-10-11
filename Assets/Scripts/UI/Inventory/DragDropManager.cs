@@ -134,7 +134,6 @@ public class DragDropManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Calling MoveItem on InventoryManager");
             inventoryManager.MoveItem(draggedSlot, targetSlot, amount);
         }
 

@@ -23,6 +23,9 @@ public class UISlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
     public void UpdateUI(InventorySlot slot)
     {
+        if (iconImage == null || amountText == null)
+            return;
+
         this.slot = slot;
         if (slot == null || slot.IsEmpty)
         {
@@ -51,6 +54,8 @@ public class UISlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
     private void UpdateItemSlot(Item item)
     {
+        
+
         iconImage.gameObject.SetActive(true);
         if (item.icon != null)
         {
